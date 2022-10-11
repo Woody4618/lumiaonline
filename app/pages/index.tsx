@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 import Head from "next/head"
 
-import { Heading, Text, Label } from "@theme-ui/components"
+import { Heading, Text, Label, Flex } from "@theme-ui/components"
 
 import Header from "@/components/Header/Header"
 import Link from "next/link"
@@ -26,8 +26,22 @@ export default function Home() {
           This is definitely an RPG
         </Heading>
         <Text>Exactly as the title says.</Text>
-        <Link href="/create">Create</Link> or{" "}
-        <Link href="/characters">List</Link>
+        <Heading mt="3.2rem" variant="heading2">
+          Characters
+        </Heading>
+        <Flex
+          sx={{
+            gap: "1.6rem",
+            marginBottom: "3.2rem",
+          }}
+        >
+          <Link href="/create">Create</Link> or{" "}
+          <Link href="/characters">List</Link>
+        </Flex>
+        <Heading variant="heading2">Quests</Heading>
+        <Flex>
+          <Link href="/quests">List</Link>
+        </Flex>
       </main>
     </>
   )

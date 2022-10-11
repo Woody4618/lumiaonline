@@ -5,23 +5,42 @@ import {
   MemcmpFilter,
   PublicKey,
 } from "@solana/web3.js"
-import { CharacterAccount } from "./gen/accounts"
+import { CharacterAccount, QuestAccount } from "./gen/accounts"
 import { PROGRAM_ID } from "./gen/programId"
 
 export const TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 )
 
+export const getQuests = async (
+  connection: Connection
+  // owner: PublicKey,
+) => {
+  const filters = [
+    accountFilter(QuestAccount.discriminator),
+    // memcmp(10, owner.toBase58()),
+  ]
+
+  const accounts = await fetchAccounts(connection, filters)
+
+  return Promise.all(
+    accounts.map(async ({ pubkey, account }) => ({
+      pubkey,
+      account: QuestAccount.decode(account.data),
+    }))
+  )
+}
+
 export const getCharacters = async (
   connection: Connection
   // owner: PublicKey,
 ) => {
-  // const filters = [
-  //   accountFilter(CharacterAccount.discriminator),
-  //   memcmp(10, owner.toBase58()),
-  // ]
+  const filters = [
+    accountFilter(CharacterAccount.discriminator),
+    // memcmp(10, owner.toBase58()),
+  ]
 
-  const accounts = await fetchAccounts(connection, [])
+  const accounts = await fetchAccounts(connection, filters)
 
   return Promise.all(
     accounts.map(async ({ pubkey, account }) => ({
