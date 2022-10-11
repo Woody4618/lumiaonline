@@ -13,7 +13,6 @@ import { RpgProgram } from "../target/types/rpg_program"
 describe("rpg-program", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env())
-  const provider = anchor.AnchorProvider.env()
 
   const program = anchor.workspace.RpgProgram as Program<RpgProgram>
 
