@@ -2,6 +2,7 @@ import * as anchor from "@project-serum/anchor"
 import { Program } from "@project-serum/anchor"
 import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
 import { expect } from "chai"
+import { createCharacter } from "../app/lib/gen/instructions"
 import { RpgProgram } from "../target/types/rpg_program"
 
 const getCharacterAddress = (
@@ -35,6 +36,7 @@ const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
 describe("rpg-program", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env())
+  const provider = anchor.AnchorProvider.env()
 
   const program = anchor.workspace.RpgProgram as Program<RpgProgram>
 
@@ -52,9 +54,11 @@ describe("rpg-program", () => {
       program.programId
     )
 
-    await program.methods
-      .createCharacter("test")
-      .accounts({
+    const ix = createCharacter(
+      {
+        name: "test",
+      },
+      {
         character,
         owner,
         systemProgram,
@@ -62,8 +66,11 @@ describe("rpg-program", () => {
         nftMint: mint,
         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
         tokenMetadata: getTokenMetadataAddress(mint),
-      })
-      .rpc()
+      }
+    )
+
+    const tx = new anchor.web3.Transaction().add(ix)
+    await program.provider.sendAndConfirm(tx)
 
     const accountInfo = await program.account.characterAccount.fetch(character)
     console.log(accountInfo)
