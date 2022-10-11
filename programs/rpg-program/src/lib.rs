@@ -1,4 +1,4 @@
-use std::mem::size_of;
+use std::{ mem::size_of };
 
 use anchor_lang::{ prelude::* };
 use anchor_spl::token::{ Mint, TokenAccount };
@@ -23,6 +23,56 @@ pub mod rpg_program {
 
         Ok(())
     }
+
+    pub fn create_quest(ctx: Context<CreateQuest>, config: QuestConfig) -> Result<()> {
+        let quest = QuestAccount::new(config);
+        ctx.accounts.quest.set_inner(quest);
+
+        Ok(())
+    }
+}
+
+impl QuestAccount {
+    pub fn new(config: QuestConfig) -> Self {
+        Self {
+            config,
+        }
+    }
+}
+
+#[account]
+pub struct QuestAccount {
+    pub config: QuestConfig,
+}
+
+impl QuestAccount {
+    pub fn space() -> usize {
+        8 + size_of::<Self>()
+    }
+}
+
+#[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
+pub struct QuestConfig {
+    pub duration: u64,
+    pub reward_exp: u64,
+    pub uuid: String,
+}
+
+#[derive(Accounts)]
+#[instruction(config: QuestConfig)]
+pub struct CreateQuest<'info> {
+    #[account(
+        init,
+        seeds = [b"quest".as_ref(), config.uuid.as_ref()],
+        bump,
+        payer = signer,
+        space = QuestAccount::space()
+    )]
+    pub quest: Account<'info, QuestAccount>,
+
+    #[account(mut)]
+    pub signer: Signer<'info>,
+    pub system_program: Program<'info, System>,
 }
 
 #[account]
