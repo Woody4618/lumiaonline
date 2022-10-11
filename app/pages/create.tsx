@@ -15,6 +15,7 @@ import {
   TOKEN_METADATA_PROGRAM_ID,
 } from "lib/utils"
 import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
+import WalletManager from "@/components/WalletManager/WalletManager"
 
 const systemProgram = web3.SystemProgram.programId
 
@@ -28,24 +29,26 @@ export default function Create() {
 
     const data = new FormData(e.currentTarget)
 
-    const mint = new web3.PublicKey(
-      "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
-    )
+    const name = data.get("name").toString()
+    const nftMint = new web3.PublicKey(data.get("mint").toString())
 
-    const character = getCharacterAddress(publicKey, mint, PROGRAM_ID)
+    const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
 
     const ix = createCharacter(
       {
-        name: "test",
+        name,
       },
       {
         character,
         owner: publicKey,
         systemProgram,
-        ownerTokenAccount: await associatedAddress({ mint, owner: publicKey }),
-        nftMint: mint,
+        ownerTokenAccount: await associatedAddress({
+          mint: nftMint,
+          owner: publicKey,
+        }),
+        nftMint,
         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-        tokenMetadata: getTokenMetadataAddress(mint),
+        tokenMetadata: getTokenMetadataAddress(nftMint),
       }
     )
 
@@ -78,7 +81,7 @@ export default function Create() {
         </Heading>
         <Text mb="3.2rem">Create now</Text>
 
-        {walletNFTs ? (
+        {publicKey ? (
           <form
             sx={{
               display: "flex",
@@ -93,7 +96,7 @@ export default function Create() {
               }}
             >
               Choose a name:
-              <Input name="name" />
+              <Input name="name" required autoComplete="off" />
             </Label>
             <Label
               sx={{
@@ -101,11 +104,15 @@ export default function Create() {
               }}
             >
               Select an NFT of yours:
-              <NFTSelectInput name="NFT" NFTs={walletNFTs} />
+              <NFTSelectInput name="mint" NFTs={walletNFTs} />
             </Label>
             <Button>Create</Button>
           </form>
-        ) : null}
+        ) : (
+          <Text>
+            Please, connect your wallet first: <WalletManager />
+          </Text>
+        )}
       </main>
     </>
   )

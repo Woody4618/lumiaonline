@@ -45,3 +45,39 @@ address = "Bwm3HPASeew1gZrYnRb16FfjA5xfRhedxwQzLfec6aCs"
 # Metadata Program Derived address
 [[test.validator.clone]]
 address = "H3TR9fz47jSaNhBcTB2KW7Bf3pqvn4jmTSdUa2qTLTgT"
+
+
+## NFT #1 (Orizorwyn)
+# Mint address
+[[test.validator.clone]]
+address = "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
+# Associated Token Account address
+[[test.validator.clone]]
+address = "3ZBrMDQ4kKQPZP7UjahaRRYGdCWhM5hMepkHYqBvUjsG"
+# Metadata Program Derived address
+[[test.validator.clone]]
+address = "EvJJKzVeVv88BXucWoZsWn59CXFnMCEoHs64ghbsCTeg"
+
+
+## NFT #4 (Nifty Nanas #3201)
+# Mint address
+[[test.validator.clone]]
+address = "GihWyxyECP7KFUdkH5XKhqYWexBX49nE2T49pRDPfYd2"
+# Associated Token Account address
+[[test.validator.clone]]
+address = "9UwRFxbtqo7fsn7GUgQRCztTeAAVtD9UJcxMNFXs1DpS"
+# Metadata Program Derived address
+[[test.validator.clone]]
+address = "3U9Q19oN5Kzw9UVtEyhs4fvEKx1ycxk3UdGvxktN5ZuF"
+
+
+## NFT #5 (Nifty Nanas #8798)
+# Mint address
+[[test.validator.clone]]
+address = "Bs8iUNpsrrae4rRJPDXyd22yGkmjb9DNk5XnPpuRrzEb"
+# Associated Token Account address
+[[test.validator.clone]]
+address = "BXhwcyoef44goum29mq3FeaQ7Zh8Fq8ubxaPVB8Te8RR"
+# Metadata Program Derived address
+[[test.validator.clone]]
+address = "FoB1gGWYm6V1esyXZTNKsDiBkmW6g6rhP7MNd2wKxt8s"

@@ -69,30 +69,37 @@ export default function Characters() {
         </Heading>
         <Text mb="3.2rem">List of created characters</Text>
 
-        {characters ? (
-          characters.map((character) => {
-            return (
-              <Flex
-                sx={{
-                  alignItems: "center",
-                  gap: ".8rem",
-                }}
-                key={character.pubkey.toString()}
-              >
-                <img
+        <Flex
+          sx={{
+            flexDirection: "column",
+            gap: "1.6rem",
+          }}
+        >
+          {characters ? (
+            characters.map((character) => {
+              return (
+                <Flex
                   sx={{
-                    maxWidth: "6.4rem",
-                    borderRadius: ".4rem",
+                    alignItems: "center",
+                    gap: ".8rem",
                   }}
-                  src={character.nft.json.image}
-                />
-                {character.account.name}
-              </Flex>
-            )
-          })
-        ) : (
-          <LoadingIcon />
-        )}
+                  key={character.pubkey.toString()}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "6.4rem",
+                      borderRadius: ".4rem",
+                    }}
+                    src={character.nft.json.image}
+                  />
+                  {character.account.name}
+                </Flex>
+              )
+            })
+          ) : (
+            <LoadingIcon />
+          )}
+        </Flex>
       </main>
     </>
   )
