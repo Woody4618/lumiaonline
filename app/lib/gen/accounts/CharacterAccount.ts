@@ -8,21 +8,21 @@ export interface CharacterAccountFields {
   owner: PublicKey
   nftMint: PublicKey
   name: string
-  experience: number
+  experience: BN
 }
 
 export interface CharacterAccountJSON {
   owner: string
   nftMint: string
   name: string
-  experience: number
+  experience: string
 }
 
 export class CharacterAccount {
   readonly owner: PublicKey
   readonly nftMint: PublicKey
   readonly name: string
-  readonly experience: number
+  readonly experience: BN
 
   static readonly discriminator = Buffer.from([
     152, 189, 17, 17, 119, 227, 48, 55,
@@ -32,7 +32,7 @@ export class CharacterAccount {
     borsh.publicKey("owner"),
     borsh.publicKey("nftMint"),
     borsh.str("name"),
-    borsh.u32("experience"),
+    borsh.u64("experience"),
   ])
 
   constructor(fields: CharacterAccountFields) {
@@ -96,7 +96,7 @@ export class CharacterAccount {
       owner: this.owner.toString(),
       nftMint: this.nftMint.toString(),
       name: this.name,
-      experience: this.experience,
+      experience: this.experience.toString(),
     }
   }
 
@@ -105,7 +105,7 @@ export class CharacterAccount {
       owner: new PublicKey(obj.owner),
       nftMint: new PublicKey(obj.nftMint),
       name: obj.name,
-      experience: obj.experience,
+      experience: new BN(obj.experience),
     })
   }
 }

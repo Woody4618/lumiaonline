@@ -30,6 +30,26 @@ pub mod rpg_program {
 
         Ok(())
     }
+
+    pub fn join_quest(ctx: Context<JoinQuest>) -> Result<()> {
+        ctx.accounts.character.experience += ctx.accounts.quest.config.reward_exp;
+
+        Ok(())
+    }
+}
+
+#[derive(Accounts)]
+pub struct JoinQuest<'info> {
+    pub quest: Account<'info, QuestAccount>,
+    #[account(
+        mut,
+        seeds = [PREFIX.as_ref(), owner.key().as_ref(), nft_mint.key().as_ref()],
+        bump
+    )]
+    pub character: Account<'info, CharacterAccount>,
+    #[account(mut)]
+    pub owner: Signer<'info>,
+    pub nft_mint: Account<'info, Mint>,
 }
 
 impl QuestAccount {
@@ -81,7 +101,7 @@ pub struct CharacterAccount {
     pub owner: Pubkey,
     pub nft_mint: Pubkey,
     pub name: String,
-    pub experience: u32,
+    pub experience: u64,
 }
 
 const NAME_MAX_LENGTH: usize = 16;

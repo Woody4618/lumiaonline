@@ -4,6 +4,7 @@ import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
 import { expect } from "chai"
 import { createCharacter } from "../app/lib/gen/instructions"
 import { createQuest } from "../app/lib/gen/instructions/createQuest"
+import { joinQuest } from "../app/lib/gen/instructions/joinQuest"
 import { PROGRAM_ID } from "../app/lib/gen/programId"
 import {
   getCharacterAddress,
@@ -124,6 +125,42 @@ describe("rpg-program", () => {
 
       const questAcc = await program.account.questAccount.fetch(quest)
       console.log(questAcc)
+    })
+
+    it("Can join a quest and earn experience", async () => {
+      const uuid = "1"
+      const quest = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("quest"), Buffer.from(uuid)],
+        PROGRAM_ID
+      )[0]
+
+      const mint = new anchor.web3.PublicKey(
+        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+      )
+
+      const character = getCharacterAddress(
+        program.provider.publicKey,
+        mint,
+        program.programId
+      )
+
+      const ix = joinQuest({
+        quest,
+        character,
+        nftMint: mint,
+        owner: program.provider.publicKey,
+      })
+
+      const tx = new anchor.web3.Transaction().add(ix)
+      await program.provider.sendAndConfirm(tx)
+
+      /** Expect character experience to be increased  */
+      const questAcc = await program.account.questAccount.fetch(quest)
+      const characterAcc = await program.account.characterAccount.fetch(
+        character
+      )
+
+      expect(characterAcc.experience.cmp(questAcc.config.rewardExp)).to.eq(0)
     })
   })
 })
