@@ -98,7 +98,9 @@ export default function Characters() {
                     }}
                   >
                     <Text>{character.account.name}</Text>
-                    <Text>Lvl. {character.account.experience}</Text>
+                    <Text>
+                      Experience: {character.account.experience.toNumber()}
+                    </Text>
                   </Flex>
                 </Flex>
               )
