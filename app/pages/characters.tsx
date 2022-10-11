@@ -8,11 +8,19 @@ import { web3 } from "@project-serum/anchor"
 import { getCharacters } from "lib/utils"
 import { CharacterAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
-import { Metaplex } from "@metaplex-foundation/js"
+import {
+  Metaplex,
+  Nft,
+  NftWithToken,
+  Sft,
+  SftWithToken,
+} from "@metaplex-foundation/js"
 
 type CharacterResponse = {
   pubkey: web3.PublicKey
   account: CharacterAccount
+} & {
+  nft: Sft | SftWithToken | Nft | NftWithToken
 }
 export default function Characters() {
   const { connection } = useConnection()
@@ -21,18 +29,22 @@ export default function Characters() {
   useEffect(() => {
     ;(async () => {
       if (connection) {
-        const res = await getCharacters(connection)
+        const characters = await getCharacters(connection)
 
         const metaplex = Metaplex.make(connection)
 
-        const withNft = res.map((res) => {
-          const nft = metaplex
-            .nfts()
-            .findByMint({ mintAddress: res.account })
-            .run()
-        })
-        console.log(res)
-        setCharacters(res)
+        const withNft = await Promise.all(
+          characters.map(async (character) => {
+            const nft = await metaplex
+              .nfts()
+              .findByMint({ mintAddress: character.account.nftMint })
+              .run()
+
+            return Object.assign(character, { nft })
+          })
+        )
+
+        setCharacters(withNft)
       }
     })()
   }, [connection])
@@ -60,7 +72,20 @@ export default function Characters() {
         {characters ? (
           characters.map((character) => {
             return (
-              <Flex key={character.pubkey.toString()}>
+              <Flex
+                sx={{
+                  alignItems: "center",
+                  gap: ".8rem",
+                }}
+                key={character.pubkey.toString()}
+              >
+                <img
+                  sx={{
+                    maxWidth: "6.4rem",
+                    borderRadius: ".4rem",
+                  }}
+                  src={character.nft.json.image}
+                />
                 {character.account.name}
               </Flex>
             )
