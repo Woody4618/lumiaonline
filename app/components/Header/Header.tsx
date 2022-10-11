@@ -35,7 +35,7 @@ const Header = () => {
             <Flex as="a" sx={{ alignItems: "center", flexDirection: "column" }}>
               <Flex sx={{ alignItems: "center" }}>
                 <Text as="h1" variant="headingSpecial" ml=".4rem">
-                  This definitely is an RPG
+                  This is definitely an RPG
                 </Text>
               </Flex>
             </Flex>

@@ -23,7 +23,7 @@ export default function Home() {
         }}
       >
         <Heading mb=".8rem" variant="heading1">
-          This definitely is an RPG
+          This is definitely an RPG
         </Heading>
         <Text>Exactly as the title says.</Text>
         <Link href="/create">Create</Link> or{" "}

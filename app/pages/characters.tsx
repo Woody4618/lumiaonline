@@ -92,7 +92,14 @@ export default function Characters() {
                     }}
                     src={character.nft.json.image}
                   />
-                  {character.account.name}
+                  <Flex
+                    sx={{
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Text>{character.account.name}</Text>
+                    <Text>Lvl. {character.account.experience}</Text>
+                  </Flex>
                 </Flex>
               )
             })
