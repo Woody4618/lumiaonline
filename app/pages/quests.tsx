@@ -12,6 +12,7 @@ import { PROGRAM_ID } from "lib/gen/programId"
 import { joinQuest } from "lib/gen/instructions"
 import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
 import useWalletNFTs from "@/hooks/useWalletNFTs"
+import questsData from "lib/quests.json"
 
 type QuestResponse = {
   pubkey: web3.PublicKey
@@ -96,50 +97,62 @@ export default function Quests() {
         >
           {quests ? (
             quests.map((quest) => {
+              const questData = questsData.find(
+                (questData) => questData.uuid === quest.account.config.uuid
+              )
               return (
                 <Flex
                   sx={{
                     alignItems: "center",
+                    flexDirection: "column",
                     gap: ".8rem",
+                    borderTop: "1px solid",
+                    borderBottom: "1px solid",
+                    borderColor: "primary",
+                    padding: ".8rem 0",
                   }}
                   key={quest.pubkey.toString()}
                 >
-                  {/* <img
+                  <Heading variant="heading2">{questData.name}</Heading>
+                  <img
                     sx={{
-                      maxWidth: "6.4rem",
+                      maxWidth: "32rem",
                       borderRadius: ".4rem",
                     }}
-                    src={quest.}
-                  /> */}
+                    src={questData.image}
+                  />
+                  <Text
+                    sx={{
+                      maxWidth: "32rem",
+                    }}
+                  >
+                    {questData.description}
+                  </Text>
                   <Flex
                     sx={{
                       flexDirection: "column",
                       alignItems: "flex-start",
-                      borderTop: "1px solid",
-                      borderBottom: "1px solid",
-                      borderColor: "primary",
-                      padding: ".8rem 0",
+                      margin: "3.2rem 0",
                     }}
                   >
-                    <Text>{quest.pubkey.toString()}</Text>
                     <Text>
                       Reward Exp: +{quest.account.config.rewardExp.toNumber()}
                     </Text>
                     <Text>
                       Duration: {quest.account.config.duration.toNumber()}s
                     </Text>
-                    <form onSubmit={handleJoinFormSubmit}>
-                      <input
-                        type="hidden"
-                        name="uuid"
-                        value={quest.account.config.uuid.toString()}
-                      />
-                      <NFTSelectInput name="mint" NFTs={walletNFTs} />
-                      <Button type="submit" mt="1.6rem">
-                        Join
-                      </Button>
-                    </form>
                   </Flex>
+                  <form sx={{}} onSubmit={handleJoinFormSubmit}>
+                    <input
+                      type="hidden"
+                      name="uuid"
+                      value={quest.account.config.uuid.toString()}
+                    />
+                    <NFTSelectInput name="mint" NFTs={walletNFTs} />
+                    <Button type="submit" mt="1.6rem">
+                      Join
+                    </Button>
+                  </form>
                 </Flex>
               )
             })
