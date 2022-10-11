@@ -79,13 +79,20 @@ export default function Create() {
         <Text mb="3.2rem">Create now</Text>
 
         {walletNFTs ? (
-          <form onSubmit={onSubmit}>
+          <form
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.6rem",
+            }}
+            onSubmit={onSubmit}
+          >
             <Label
               sx={{
                 flexDirection: "column",
               }}
             >
-              Select an NFT of yours:
+              Choose a name:
               <Input name="name" />
             </Label>
             <Label

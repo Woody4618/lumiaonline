@@ -3,12 +3,13 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react"
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
+import { Adapter, WalletAdapterNetwork } from "@solana/wallet-adapter-base"
 import {
   BackpackWalletAdapter,
   LedgerWalletAdapter,
   PhantomWalletAdapter,
   SlopeWalletAdapter,
+  SolflareWalletAdapter,
   SolletExtensionWalletAdapter,
   SolletWalletAdapter,
 } from "@solana/wallet-adapter-wallets"
@@ -39,6 +40,7 @@ const Wallet = ({ children }: { children: React.ReactChild }) => {
        * your users connect to will be loaded.
        */
       new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
       new BackpackWalletAdapter(),
       new SlopeWalletAdapter(),
       new LedgerWalletAdapter(),
@@ -53,7 +55,7 @@ const Wallet = ({ children }: { children: React.ReactChild }) => {
       endpoint={endpoint}
       config={{ commitment: "confirmed" }}
     >
-      <WalletProvider wallets={wallets} autoConnect>
+      <WalletProvider wallets={wallets as Adapter[]} autoConnect>
         <WalletModalProvider>
           {children}{" "}
           {/* Your app's components go here, nested within the context providers. */}
