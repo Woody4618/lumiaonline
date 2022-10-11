@@ -8,6 +8,7 @@ import { web3 } from "@project-serum/anchor"
 import { getCharacters } from "lib/utils"
 import { CharacterAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
+import { Metaplex } from "@metaplex-foundation/js"
 
 type CharacterResponse = {
   pubkey: web3.PublicKey
@@ -21,6 +22,15 @@ export default function Characters() {
     ;(async () => {
       if (connection) {
         const res = await getCharacters(connection)
+
+        const metaplex = Metaplex.make(connection)
+
+        const withNft = res.map((res) => {
+          const nft = metaplex
+            .nfts()
+            .findByMint({ mintAddress: res.account })
+            .run()
+        })
         console.log(res)
         setCharacters(res)
       }

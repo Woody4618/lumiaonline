@@ -13,7 +13,11 @@ pub mod rpg_program {
 
     #[access_control(CreateCharacter::validate_nft(&ctx))]
     pub fn create_character(ctx: Context<CreateCharacter>, name: String) -> Result<()> {
-        let character = CharacterAccount::new(&name)?;
+        let character = CharacterAccount::new(
+            ctx.accounts.owner.key(),
+            ctx.accounts.nft_mint.key(),
+            &name
+        )?;
 
         ctx.accounts.character.set_inner(character);
 
@@ -24,6 +28,8 @@ pub mod rpg_program {
 #[account]
 #[derive(Default)]
 pub struct CharacterAccount {
+    pub owner: Pubkey,
+    pub nft_mint: Pubkey,
     pub name: String,
     pub experience: u32,
 }
@@ -35,12 +41,14 @@ impl CharacterAccount {
         8 + size_of::<Self>()
     }
 
-    pub fn new(name: &str) -> Result<Self> {
+    pub fn new(owner: Pubkey, nft_mint: Pubkey, name: &str) -> Result<Self> {
         require!(name.len() <= NAME_MAX_LENGTH, CharacterError::MaxNameLengthExceeded);
 
         let account = CharacterAccount {
             name: name.to_string(),
             experience: 0,
+            owner,
+            nft_mint,
             ..Default::default()
         };
 

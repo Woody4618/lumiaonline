@@ -4,16 +4,22 @@ import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript
 import { PROGRAM_ID } from "../programId"
 
 export interface CharacterAccountFields {
+  owner: PublicKey
+  nftMint: PublicKey
   name: string
   experience: number
 }
 
 export interface CharacterAccountJSON {
+  owner: string
+  nftMint: string
   name: string
   experience: number
 }
 
 export class CharacterAccount {
+  readonly owner: PublicKey
+  readonly nftMint: PublicKey
   readonly name: string
   readonly experience: number
 
@@ -22,11 +28,15 @@ export class CharacterAccount {
   ])
 
   static readonly layout = borsh.struct([
+    borsh.publicKey("owner"),
+    borsh.publicKey("nftMint"),
     borsh.str("name"),
     borsh.u32("experience"),
   ])
 
   constructor(fields: CharacterAccountFields) {
+    this.owner = fields.owner
+    this.nftMint = fields.nftMint
     this.name = fields.name
     this.experience = fields.experience
   }
@@ -73,6 +83,8 @@ export class CharacterAccount {
     const dec = CharacterAccount.layout.decode(data.slice(8))
 
     return new CharacterAccount({
+      owner: dec.owner,
+      nftMint: dec.nftMint,
       name: dec.name,
       experience: dec.experience,
     })
@@ -80,6 +92,8 @@ export class CharacterAccount {
 
   toJSON(): CharacterAccountJSON {
     return {
+      owner: this.owner.toString(),
+      nftMint: this.nftMint.toString(),
       name: this.name,
       experience: this.experience,
     }
@@ -87,6 +101,8 @@ export class CharacterAccount {
 
   static fromJSON(obj: CharacterAccountJSON): CharacterAccount {
     return new CharacterAccount({
+      owner: new PublicKey(obj.owner),
+      nftMint: new PublicKey(obj.nftMint),
       name: obj.name,
       experience: obj.experience,
     })

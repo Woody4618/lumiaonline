@@ -1,3 +1,5 @@
+// Author https://github.com/lucasig11
+
 //! Thin Anchor wrapper over [mpl_token_metadata] program.
 use anchor_lang::prelude::*;
 use mpl_token_metadata::state;
