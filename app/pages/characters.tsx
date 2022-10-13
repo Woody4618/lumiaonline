@@ -101,6 +101,10 @@ export default function Characters() {
                     <Text>
                       Experience: {character.account.experience.toNumber()}
                     </Text>
+                    <Text>
+                      Hitpoints: {character.account.hitpoints.toNumber()}
+                    </Text>
+                    <Text>deaths: {character.account.deaths.length}</Text>
                   </Flex>
                 </Flex>
               )

@@ -5,33 +5,34 @@ import Header from "@/components/Header/Header"
 import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
-import { getCharacterAddress, getQuests } from "lib/utils"
-import { QuestAccount } from "lib/gen/accounts"
+import { getCharacterAddress, getMonsters } from "lib/utils"
+import { MonsterAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
-import { joinQuest } from "lib/gen/instructions"
+import { joinBattle } from "lib/gen/instructions"
 import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
 import useWalletNFTs from "@/hooks/useWalletNFTs"
-import questsData from "lib/quests.json"
+import monstersData from "lib/monsters.json"
 
-type QuestResponse = {
+type MonsterResponse = {
   pubkey: web3.PublicKey
-  account: QuestAccount
+  account: MonsterAccount
 }
 
-export default function Quests() {
+export default function Battle() {
   const { connection } = useConnection()
   const { publicKey, sendTransaction } = useWallet()
   const { walletNFTs } = useWalletNFTs()
-  const [quests, setQuests] = useState<QuestResponse[]>(null)
+  const [monsters, setMonsters] = useState<MonsterResponse[]>(null)
+  const [selectedMint, setSelectedMint] = useState<string>()
 
   useEffect(() => {
     ;(async () => {
       if (connection) {
-        const quests = await getQuests(connection)
+        const monsters = await getMonsters(connection)
 
-        console.log(quests)
-        setQuests(quests)
+        console.log(monsters)
+        setMonsters(monsters)
       }
     })()
   }, [connection])
@@ -41,23 +42,21 @@ export default function Quests() {
 
     const data = new FormData(e.currentTarget)
 
-    const nftMint = new web3.PublicKey(data.get("mint").toString())
+    const nftMint = new web3.PublicKey(selectedMint)
 
     const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
 
     const uuid = data.get("uuid").toString()
 
-    const quest = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("quest"), Buffer.from(uuid)],
+    const monster = web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("monster"), Buffer.from(uuid)],
       PROGRAM_ID
     )[0]
 
-    const ix = joinQuest({
-      quest,
+    const ix = joinBattle({
+      monster,
       character,
-      nftMint,
       clock: web3.SYSVAR_CLOCK_PUBKEY,
-      owner: publicKey,
     })
 
     const latest = await connection.getLatestBlockhash()
@@ -86,21 +85,30 @@ export default function Quests() {
         }}
       >
         <Heading mb=".8rem" variant="heading1">
-          Quests
+          Battle
         </Heading>
-        <Text mb="3.2rem">List of created Quests</Text>
+        <Text mb="3.2rem">Select your character and a monster to battle</Text>
 
+        <NFTSelectInput
+          onChange={(newValue) => {
+            setSelectedMint(newValue.value)
+          }}
+          name="mint"
+          NFTs={walletNFTs}
+        />
+        <Text my="3.2rem"></Text>
         <Flex
           sx={{
-            flexDirection: "column",
             gap: "1.6rem",
           }}
         >
-          {quests ? (
-            quests.map((quest) => {
-              const questData = questsData.find(
-                (questData) => questData.uuid === quest.account.config.uuid
+          {monsters ? (
+            monsters.map((monster) => {
+              const monsterData = monstersData.find(
+                (monsterData) =>
+                  monsterData.name === monster.account.config.uuid
               )
+
               return (
                 <Flex
                   sx={{
@@ -112,46 +120,35 @@ export default function Quests() {
                     borderColor: "primary",
                     padding: ".8rem 0",
                   }}
-                  key={quest.pubkey.toString()}
+                  key={monster.pubkey.toString()}
                 >
-                  <Heading variant="heading2">{questData.name}</Heading>
+                  <Heading variant="heading2">{monsterData.name}</Heading>
                   <img
                     sx={{
-                      maxWidth: "32rem",
+                      maxWidth: "8rem",
                       borderRadius: ".4rem",
                     }}
-                    src={questData.image}
+                    src={monsterData.image}
                   />
-                  <Text
-                    sx={{
-                      maxWidth: "32rem",
-                    }}
-                  >
-                    {questData.description}
-                  </Text>
+
                   <Flex
                     sx={{
                       flexDirection: "column",
                       alignItems: "flex-start",
-                      margin: "3.2rem 0",
                     }}
                   >
                     <Text>
-                      Reward Exp: +{quest.account.config.rewardExp.toNumber()}
-                    </Text>
-                    <Text>
-                      Duration: {quest.account.config.duration.toNumber()}s
+                      Hitpoints: {monster.account.config.hitpoints.toNumber()}
                     </Text>
                   </Flex>
                   <form sx={{}} onSubmit={handleJoinFormSubmit}>
                     <input
                       type="hidden"
                       name="uuid"
-                      value={quest.account.config.uuid.toString()}
+                      value={monster.account.config.uuid.toString()}
                     />
-                    <NFTSelectInput name="mint" NFTs={walletNFTs} />
                     <Button type="submit" mt="1.6rem">
-                      Join
+                      Battle
                     </Button>
                   </form>
                 </Flex>

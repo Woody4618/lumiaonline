@@ -2,7 +2,7 @@
 
 import { FindNftsByOwnerOutput } from "@metaplex-foundation/js"
 import { useWallet } from "@solana/wallet-adapter-react"
-import Select, { StylesConfig } from "react-select"
+import Select, { ActionMeta, StylesConfig } from "react-select"
 import { useThemeUI, Flex, Text } from "theme-ui"
 
 const SelectorNFTOptionLabel = ({
@@ -33,9 +33,18 @@ const SelectorNFTOptionLabel = ({
 const NFTSelectInput = ({
   name,
   NFTs = null,
+  onChange,
 }: {
   name: string
   NFTs: FindNftsByOwnerOutput
+  value?: any
+  onChange?: (
+    newValue: {
+      value: string
+      label: JSX.Element
+    },
+    actionMeta: ActionMeta<any>
+  ) => void
 }) => {
   const { publicKey } = useWallet()
   const { theme } = useThemeUI()
@@ -104,6 +113,7 @@ const NFTSelectInput = ({
       name={name}
       options={options || []}
       styles={colourStyles}
+      onChange={onChange}
       placeholder={
         <SelectorNFTOptionLabel
           name={
