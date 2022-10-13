@@ -13,7 +13,9 @@ import {
 } from "../app/lib/utils"
 import { RpgProgram } from "../target/types/rpg_program"
 import quests from "../app/lib/quests.json"
+import monsters from "../app/lib/monsters.json"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
+import { createMonster } from "../app/lib/gen/instructions/createMonster"
 
 describe("rpg-program", () => {
   // Configure the client to use the local cluster.
@@ -23,7 +25,96 @@ describe("rpg-program", () => {
 
   const owner = program.provider.publicKey
   const systemProgram = anchor.web3.SystemProgram.programId
-  describe("characters", () => {
+
+  describe("initialize", () => {
+    it("Can create quests", async () => {
+      const ixs = quests.map((questConfig) => {
+        const uuid = questConfig.uuid
+        const quest = anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("quest"), Buffer.from(uuid)],
+          PROGRAM_ID
+        )[0]
+
+        const ix = createQuest(
+          {
+            config: {
+              duration: new anchor.BN(questConfig.duration),
+              rewardExp: new anchor.BN(questConfig.reward),
+              uuid,
+            },
+          },
+          {
+            quest,
+            signer: program.provider.publicKey,
+            systemProgram,
+          }
+        )
+        return ix
+      })
+
+      const tx = new anchor.web3.Transaction().add(...ixs)
+      await program.provider.sendAndConfirm(tx)
+
+      /** Validate if the account has been created */
+      const questToValidate = quests[0]
+      const questAddress = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("quest"), Buffer.from(questToValidate.uuid)],
+        PROGRAM_ID
+      )[0]
+
+      const questAcc = await program.account.questAccount.fetch(questAddress)
+
+      expect(questAcc.config.duration.toNumber()).to.eq(
+        questToValidate.duration
+      )
+    })
+
+    it("Can create monsters", async () => {
+      const ixs = monsters.map((monsterConfig, index) => {
+        const uuid = monsterConfig.name
+
+        const monster = anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("monster"), Buffer.from(uuid)],
+          PROGRAM_ID
+        )[0]
+
+        const ix = createMonster(
+          {
+            config: {
+              uuid,
+              hitpoints: new anchor.BN(monsterConfig.hitpoints),
+            },
+          },
+          {
+            monster,
+            signer: program.provider.publicKey,
+            systemProgram,
+          }
+        )
+        return ix
+      })
+
+      const tx = new anchor.web3.Transaction().add(...ixs)
+      await program.provider.sendAndConfirm(tx)
+
+      /** Validate if the account has been created */
+      const monsterToValidate = monsters[0]
+      const monsterAddress = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("monster"), Buffer.from(monsterToValidate.name)],
+        PROGRAM_ID
+      )[0]
+
+      const monsterAcc = await program.account.monsterAccount.fetch(
+        monsterAddress
+      )
+
+      expect(monsterAcc.config.hitpoints.toNumber()).to.eq(
+        monsterToValidate.hitpoints
+      )
+    })
+  })
+
+  describe("validate characters", () => {
     it("Can create a character with a valid NFT", async () => {
       const mint = new anchor.web3.PublicKey(
         "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
@@ -99,49 +190,7 @@ describe("rpg-program", () => {
     })
   })
 
-  describe("quests", () => {
-    it("Can create a quest", async () => {
-      const ixs = quests.map((questConfig) => {
-        const uuid = questConfig.uuid
-        const quest = anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("quest"), Buffer.from(uuid)],
-          PROGRAM_ID
-        )[0]
-
-        const ix = createQuest(
-          {
-            config: {
-              duration: new anchor.BN(questConfig.duration),
-              rewardExp: new anchor.BN(questConfig.reward),
-              uuid,
-            },
-          },
-          {
-            quest,
-            signer: program.provider.publicKey,
-            systemProgram,
-          }
-        )
-        return ix
-      })
-
-      const tx = new anchor.web3.Transaction().add(...ixs)
-      await program.provider.sendAndConfirm(tx)
-
-      /** Validate if the account has been created */
-      const questToValidate = quests[0]
-      const questAddress = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("quest"), Buffer.from(questToValidate.uuid)],
-        PROGRAM_ID
-      )[0]
-
-      const questAcc = await program.account.questAccount.fetch(questAddress)
-
-      expect(questAcc.config.duration.toNumber()).to.eq(
-        questToValidate.duration
-      )
-    })
-
+  describe("validate quests", () => {
     it("Can join a quest", async () => {
       const uuid = quests[0].uuid
 

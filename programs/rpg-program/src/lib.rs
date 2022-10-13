@@ -25,8 +25,21 @@ pub mod rpg_program {
     }
 
     pub fn create_quest(ctx: Context<CreateQuest>, config: QuestConfig) -> Result<()> {
-        let quest = QuestAccount::new(config);
+        let quest = QuestAccount {
+            config,
+        };
+
         ctx.accounts.quest.set_inner(quest);
+
+        Ok(())
+    }
+
+    pub fn create_monster(ctx: Context<CreateMonster>, config: MonsterConfig) -> Result<()> {
+        let monster = MonsterAccount {
+            config,
+        };
+
+        ctx.accounts.monster.set_inner(monster);
 
         Ok(())
     }
@@ -36,6 +49,7 @@ pub mod rpg_program {
             quest_uuid: ctx.accounts.quest.config.uuid.clone(),
             started_at: ctx.accounts.clock.unix_timestamp,
         });
+
         Ok(())
     }
 
@@ -55,6 +69,76 @@ pub mod rpg_program {
         ctx.accounts.character.quest_state = None;
 
         Ok(())
+    }
+
+    /**
+     * Character will be able to battle a monster til death.
+     */
+    pub fn join_battle(ctx: Context<JoinBattle>) -> Result<()> {
+        let mut monster_hitpoints = ctx.accounts.monster.config.hitpoints.clone();
+        let mut character_hitpoints = ctx.accounts.character.hitpoints.clone();
+
+        loop {
+            character_hitpoints -= 1;
+            monster_hitpoints -= 1;
+
+            if character_hitpoints == 0 || monster_hitpoints == 0 {
+                break;
+            }
+        }
+
+        msg!("{:?}", character_hitpoints);
+
+        if character_hitpoints == 0 {
+            ctx.accounts.character.deaths.push(Death {
+                monster_uuid: ctx.accounts.monster.config.uuid.clone(),
+                timestamp: ctx.accounts.clock.unix_timestamp,
+            });
+        }
+        Ok(())
+    }
+}
+
+#[derive(Accounts)]
+#[instruction(config: MonsterConfig)]
+pub struct CreateMonster<'info> {
+    #[account(
+        init,
+        seeds = [b"monster".as_ref(), config.uuid.as_ref()],
+        bump,
+        payer = signer,
+        space = MonsterAccount::space()
+    )]
+    pub monster: Account<'info, MonsterAccount>,
+
+    #[account(mut)]
+    pub signer: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub struct MonsterConfig {
+    pub uuid: String,
+    pub hitpoints: u64,
+}
+
+#[derive(Accounts)]
+pub struct JoinBattle<'info> {
+    #[account(mut)]
+    character: Account<'info, CharacterAccount>,
+    #[account(mut)]
+    monster: Account<'info, MonsterAccount>,
+    clock: Sysvar<'info, Clock>,
+}
+
+#[account]
+pub struct MonsterAccount {
+    config: MonsterConfig,
+}
+
+impl MonsterAccount {
+    pub fn space() -> usize {
+        8 + size_of::<Self>()
     }
 }
 
@@ -94,14 +178,6 @@ pub struct JoinQuest<'info> {
     pub clock: Sysvar<'info, Clock>,
 }
 
-impl QuestAccount {
-    pub fn new(config: QuestConfig) -> Self {
-        Self {
-            config,
-        }
-    }
-}
-
 #[account]
 pub struct QuestAccount {
     pub config: QuestConfig,
@@ -137,6 +213,12 @@ pub struct CreateQuest<'info> {
     pub system_program: Program<'info, System>,
 }
 
+#[derive(Clone, AnchorSerialize, AnchorDeserialize)]
+pub struct Death {
+    monster_uuid: String,
+    timestamp: i64,
+}
+
 #[account]
 #[derive(Default)]
 pub struct CharacterAccount {
@@ -144,6 +226,8 @@ pub struct CharacterAccount {
     pub nft_mint: Pubkey,
     pub name: String,
     pub experience: u64,
+    pub hitpoints: u64,
+    pub deaths: Vec<Death>,
     pub quest_state: Option<QuestState>,
 }
 

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Snake",
+    "hitpoints": 5
+  },
+  {
+    "name": "Fish",
+    "hitpoints": 2
+  },
+  {
+    "name": "Hyaena",
+    "hitpoints": 5
+  }
+]
