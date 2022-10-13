@@ -9,6 +9,7 @@ export interface CharacterAccountFields {
   nftMint: PublicKey
   name: string
   experience: BN
+  questState: types.QuestStateFields | null
 }
 
 export interface CharacterAccountJSON {
@@ -16,6 +17,7 @@ export interface CharacterAccountJSON {
   nftMint: string
   name: string
   experience: string
+  questState: types.QuestStateJSON | null
 }
 
 export class CharacterAccount {
@@ -23,6 +25,7 @@ export class CharacterAccount {
   readonly nftMint: PublicKey
   readonly name: string
   readonly experience: BN
+  readonly questState: types.QuestState | null
 
   static readonly discriminator = Buffer.from([
     152, 189, 17, 17, 119, 227, 48, 55,
@@ -33,6 +36,7 @@ export class CharacterAccount {
     borsh.publicKey("nftMint"),
     borsh.str("name"),
     borsh.u64("experience"),
+    borsh.option(types.QuestState.layout(), "questState"),
   ])
 
   constructor(fields: CharacterAccountFields) {
@@ -40,6 +44,9 @@ export class CharacterAccount {
     this.nftMint = fields.nftMint
     this.name = fields.name
     this.experience = fields.experience
+    this.questState =
+      (fields.questState && new types.QuestState({ ...fields.questState })) ||
+      null
   }
 
   static async fetch(
@@ -88,6 +95,9 @@ export class CharacterAccount {
       nftMint: dec.nftMint,
       name: dec.name,
       experience: dec.experience,
+      questState:
+        (dec.questState && types.QuestState.fromDecoded(dec.questState)) ||
+        null,
     })
   }
 
@@ -97,6 +107,7 @@ export class CharacterAccount {
       nftMint: this.nftMint.toString(),
       name: this.name,
       experience: this.experience.toString(),
+      questState: (this.questState && this.questState.toJSON()) || null,
     }
   }
 
@@ -106,6 +117,8 @@ export class CharacterAccount {
       nftMint: new PublicKey(obj.nftMint),
       name: obj.name,
       experience: new BN(obj.experience),
+      questState:
+        (obj.questState && types.QuestState.fromJSON(obj.questState)) || null,
     })
   }
 }

@@ -28,7 +28,7 @@ export class QuestConfig {
 
   static layout(property?: string) {
     return borsh.struct(
-      [borsh.u64("duration"), borsh.u64("rewardExp"), borsh.str("uuid")],
+      [borsh.i64("duration"), borsh.u64("rewardExp"), borsh.str("uuid")],
       property
     )
   }
