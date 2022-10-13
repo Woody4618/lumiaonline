@@ -9,6 +9,8 @@ export interface CharacterAccountFields {
   nftMint: PublicKey
   name: string
   experience: BN
+  hitpoints: BN
+  deaths: Array<types.DeathFields>
   questState: types.QuestStateFields | null
 }
 
@@ -17,6 +19,8 @@ export interface CharacterAccountJSON {
   nftMint: string
   name: string
   experience: string
+  hitpoints: string
+  deaths: Array<types.DeathJSON>
   questState: types.QuestStateJSON | null
 }
 
@@ -25,6 +29,8 @@ export class CharacterAccount {
   readonly nftMint: PublicKey
   readonly name: string
   readonly experience: BN
+  readonly hitpoints: BN
+  readonly deaths: Array<types.Death>
   readonly questState: types.QuestState | null
 
   static readonly discriminator = Buffer.from([
@@ -36,6 +42,8 @@ export class CharacterAccount {
     borsh.publicKey("nftMint"),
     borsh.str("name"),
     borsh.u64("experience"),
+    borsh.u64("hitpoints"),
+    borsh.vec(types.Death.layout(), "deaths"),
     borsh.option(types.QuestState.layout(), "questState"),
   ])
 
@@ -44,6 +52,8 @@ export class CharacterAccount {
     this.nftMint = fields.nftMint
     this.name = fields.name
     this.experience = fields.experience
+    this.hitpoints = fields.hitpoints
+    this.deaths = fields.deaths.map((item) => new types.Death({ ...item }))
     this.questState =
       (fields.questState && new types.QuestState({ ...fields.questState })) ||
       null
@@ -95,6 +105,12 @@ export class CharacterAccount {
       nftMint: dec.nftMint,
       name: dec.name,
       experience: dec.experience,
+      hitpoints: dec.hitpoints,
+      deaths: dec.deaths.map(
+        (
+          item: any /* eslint-disable-line @typescript-eslint/no-explicit-any */
+        ) => types.Death.fromDecoded(item)
+      ),
       questState:
         (dec.questState && types.QuestState.fromDecoded(dec.questState)) ||
         null,
@@ -107,6 +123,8 @@ export class CharacterAccount {
       nftMint: this.nftMint.toString(),
       name: this.name,
       experience: this.experience.toString(),
+      hitpoints: this.hitpoints.toString(),
+      deaths: this.deaths.map((item) => item.toJSON()),
       questState: (this.questState && this.questState.toJSON()) || null,
     }
   }
@@ -117,6 +135,8 @@ export class CharacterAccount {
       nftMint: new PublicKey(obj.nftMint),
       name: obj.name,
       experience: new BN(obj.experience),
+      hitpoints: new BN(obj.hitpoints),
+      deaths: obj.deaths.map((item) => types.Death.fromJSON(item)),
       questState:
         (obj.questState && types.QuestState.fromJSON(obj.questState)) || null,
     })
