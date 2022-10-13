@@ -32,10 +32,51 @@ pub mod rpg_program {
     }
 
     pub fn join_quest(ctx: Context<JoinQuest>) -> Result<()> {
+        ctx.accounts.character.quest_state = Some(QuestState {
+            quest_uuid: ctx.accounts.quest.config.uuid.clone(),
+            started_at: ctx.accounts.clock.unix_timestamp,
+        });
+        Ok(())
+    }
+
+    pub fn claim_quest(ctx: Context<ClaimQuest>) -> Result<()> {
+        let required_timestamp =
+            ctx.accounts.character.quest_state.as_ref().unwrap().started_at +
+            ctx.accounts.quest.config.duration;
+
+        require_gte!(
+            ctx.accounts.clock.unix_timestamp,
+            required_timestamp,
+            QuestError::InvalidTimestamp
+        );
+
         ctx.accounts.character.experience += ctx.accounts.quest.config.reward_exp;
+
+        ctx.accounts.character.quest_state = None;
 
         Ok(())
     }
+}
+
+#[derive(Accounts)]
+pub struct ClaimQuest<'info> {
+    #[account(
+        mut,
+        seeds = [CHARACTER_PREFIX.as_ref(), owner.key().as_ref(), nft_mint.key().as_ref()],
+        bump
+    )]
+    pub character: Account<'info, CharacterAccount>,
+    pub quest: Account<'info, QuestAccount>,
+    pub nft_mint: Account<'info, Mint>,
+    #[account(mut)]
+    pub owner: Signer<'info>,
+    pub clock: Sysvar<'info, Clock>,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub struct QuestState {
+    started_at: i64,
+    quest_uuid: String,
 }
 
 #[derive(Accounts)]
@@ -43,13 +84,14 @@ pub struct JoinQuest<'info> {
     pub quest: Account<'info, QuestAccount>,
     #[account(
         mut,
-        seeds = [PREFIX.as_ref(), owner.key().as_ref(), nft_mint.key().as_ref()],
+        seeds = [CHARACTER_PREFIX.as_ref(), owner.key().as_ref(), nft_mint.key().as_ref()],
         bump
     )]
     pub character: Account<'info, CharacterAccount>,
     #[account(mut)]
     pub owner: Signer<'info>,
     pub nft_mint: Account<'info, Mint>,
+    pub clock: Sysvar<'info, Clock>,
 }
 
 impl QuestAccount {
@@ -73,7 +115,7 @@ impl QuestAccount {
 
 #[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
 pub struct QuestConfig {
-    pub duration: u64,
+    pub duration: i64,
     pub reward_exp: u64,
     pub uuid: String,
 }
@@ -102,6 +144,7 @@ pub struct CharacterAccount {
     pub nft_mint: Pubkey,
     pub name: String,
     pub experience: u64,
+    pub quest_state: Option<QuestState>,
 }
 
 const NAME_MAX_LENGTH: usize = 16;
@@ -126,7 +169,7 @@ impl CharacterAccount {
     }
 }
 
-pub const PREFIX: &str = "character";
+pub const CHARACTER_PREFIX: &str = "character";
 
 #[derive(Accounts)]
 pub struct CreateCharacter<'info> {
@@ -135,7 +178,7 @@ pub struct CreateCharacter<'info> {
         init,
         space = CharacterAccount::space(),
         payer = owner,
-        seeds = [PREFIX.as_ref(), owner.key().as_ref(), nft_mint.key().as_ref()],
+        seeds = [CHARACTER_PREFIX.as_ref(), owner.key().as_ref(), nft_mint.key().as_ref()],
         bump
     )]
     pub character: Account<'info, CharacterAccount>,
@@ -192,4 +235,10 @@ pub enum CharacterError {
     MaxNameLengthExceeded,
     #[msg("Owner must be the current holder.")]
     InvalidOwner,
+}
+
+#[error_code]
+pub enum QuestError {
+    #[msg("The character haven't been on this quest long enough.")]
+    InvalidTimestamp,
 }

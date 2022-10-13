@@ -13,6 +13,7 @@ import {
 } from "../app/lib/utils"
 import { RpgProgram } from "../target/types/rpg_program"
 import quests from "../app/lib/quests.json"
+import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
 
 describe("rpg-program", () => {
   // Configure the client to use the local cluster.
@@ -141,7 +142,7 @@ describe("rpg-program", () => {
       )
     })
 
-    it("Can join a quest and earn experience", async () => {
+    it("Can join a quest", async () => {
       const uuid = quests[0].uuid
 
       const quest = anchor.web3.PublicKey.findProgramAddressSync(
@@ -164,6 +165,7 @@ describe("rpg-program", () => {
         character,
         nftMint: mint,
         owner: program.provider.publicKey,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
       })
 
       const tx = new anchor.web3.Transaction().add(ix)
@@ -175,7 +177,91 @@ describe("rpg-program", () => {
         character
       )
 
+      expect(characterAcc.questState.questUuid).to.eq(questAcc.config.uuid)
+    })
+
+    it("Can claim a quest", async () => {
+      const uuid = quests[0].uuid
+
+      const quest = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("quest"), Buffer.from(uuid)],
+        PROGRAM_ID
+      )[0]
+
+      const mint = new anchor.web3.PublicKey(
+        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+      )
+
+      const character = getCharacterAddress(
+        program.provider.publicKey,
+        mint,
+        program.programId
+      )
+
+      const ix = claimQuest({
+        quest,
+        character,
+        nftMint: mint,
+        owner: program.provider.publicKey,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+      })
+
+      const tx = new anchor.web3.Transaction().add(ix)
+      await program.provider.sendAndConfirm(tx)
+
+      /** Expect character experience to be increased  */
+      const questAcc = await program.account.questAccount.fetch(quest)
+      const characterAcc = await program.account.characterAccount.fetch(
+        character
+      )
       expect(characterAcc.experience.cmp(questAcc.config.rewardExp)).to.eq(0)
+      expect(characterAcc.questState).to.be.null
+    })
+
+    it("Cannot claim a quest before the duration", async () => {
+      const uuid = quests[1].uuid
+
+      const quest = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("quest"), Buffer.from(uuid)],
+        PROGRAM_ID
+      )[0]
+
+      const mint = new anchor.web3.PublicKey(
+        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+      )
+
+      const character = getCharacterAddress(
+        program.provider.publicKey,
+        mint,
+        program.programId
+      )
+
+      /** Join quest 1 */
+      const ix1 = joinQuest({
+        quest,
+        character,
+        nftMint: mint,
+        owner: program.provider.publicKey,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+      })
+
+      const tx1 = new anchor.web3.Transaction().add(ix1)
+      await program.provider.sendAndConfirm(tx1)
+
+      try {
+        /** Try to claim quest 1 */
+        const ix2 = claimQuest({
+          quest,
+          character,
+          nftMint: mint,
+          owner: program.provider.publicKey,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        })
+
+        const tx = new anchor.web3.Transaction().add(ix2)
+        await program.provider.sendAndConfirm(tx)
+        throw new Error("Could claim a quest before the duration")
+      } catch (e) {}
     })
   })
 })
