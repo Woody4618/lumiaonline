@@ -10,6 +10,7 @@ import "@solana/wallet-adapter-react-ui/styles.css"
 import withGA from "next-ga"
 
 import defaultTheme from "../styles/theme"
+import { Toaster } from "react-hot-toast"
 
 const WalletProvider = dynamic(
   () => import("@/components/WalletProvider/WalletProvider"),
@@ -30,7 +31,11 @@ function App(props: AppProps) {
       </Head>
 
       <WalletProvider>
-        <Component {...pageProps} />
+        <>
+          <Toaster />
+
+          <Component {...pageProps} />
+        </>
       </WalletProvider>
     </ThemeProvider>
   )

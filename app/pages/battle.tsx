@@ -6,13 +6,14 @@ import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
 import { getCharacterAddress, getMonsters } from "lib/utils"
-import { MonsterAccount } from "lib/gen/accounts"
+import { CharacterAccount, MonsterAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { joinBattle } from "lib/gen/instructions"
 import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
 import useWalletNFTs from "@/hooks/useWalletNFTs"
 import monstersData from "lib/monsters.json"
+import toast from "react-hot-toast"
 
 type MonsterResponse = {
   pubkey: web3.PublicKey
@@ -25,6 +26,8 @@ export default function Battle() {
   const { walletNFTs } = useWalletNFTs()
   const [monsters, setMonsters] = useState<MonsterResponse[]>(null)
   const [selectedMint, setSelectedMint] = useState<string>()
+  // const [characterSubscriptionId, setCharacterSubscriptionId] =
+  //   useState<string>()
 
   useEffect(() => {
     ;(async () => {
@@ -33,6 +36,23 @@ export default function Battle() {
 
         console.log(monsters)
         setMonsters(monsters)
+
+        /** Create character account subscription */
+        // if (!characterSubscriptionId) {
+        //   console.log("creating subscription...")
+        //   /** Add listener for character acc */
+        //   const subscriptionId = connection.onAccountChange(character, (acc) => {
+        //     console.log(acc)
+        //     const decoded = CharacterAccount.decode(acc.data)
+        //     console.log(decoded)
+
+        //     // @TODO: verify if the character won or lost the battle.
+        //   })
+
+        //   console.log(subscriptionId)
+        //   setCharacterSubscriptionId(subscriptionId.toString())
+        //   // connection.removeSlotUpdateListener(subscriptionId)
+        // }
       }
     })()
   }, [connection])
@@ -65,8 +85,29 @@ export default function Battle() {
     tx.recentBlockhash = latest.blockhash
     tx.add(ix)
 
+    const previousCharacterAccount = CharacterAccount.decode(
+      (await connection.getAccountInfo(character)).data
+    )
+
     const txid = await sendTransaction(tx, connection)
-    console.log(txid)
+
+    await connection.confirmTransaction({
+      blockhash: latest.blockhash,
+      lastValidBlockHeight: latest.lastValidBlockHeight,
+      signature: txid,
+    })
+
+    const newCharacterAcc = CharacterAccount.decode(
+      (await connection.getAccountInfo(character)).data
+    )
+
+    if (
+      newCharacterAcc.deaths.length > previousCharacterAccount.deaths.length
+    ) {
+      toast.error("died ")
+    } else {
+      toast.success("won")
+    }
   }
 
   return (
@@ -137,9 +178,9 @@ export default function Battle() {
                       alignItems: "flex-start",
                     }}
                   >
-                    <Text>
+                    {/* <Text>
                       Hitpoints: {monster.account.config.hitpoints.toNumber()}
-                    </Text>
+                    </Text> */}
                   </Flex>
                   <form sx={{}} onSubmit={handleJoinFormSubmit}>
                     <input

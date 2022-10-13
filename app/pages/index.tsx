@@ -26,6 +26,7 @@ export default function Home() {
           This is definitely an RPG
         </Heading>
         <Text>Exactly as the title says.</Text>
+
         <Heading mt="3.2rem" variant="heading2">
           Characters
         </Heading>
@@ -41,6 +42,12 @@ export default function Home() {
         <Heading variant="heading2">Quests</Heading>
         <Flex>
           <Link href="/quests">List</Link>
+        </Flex>
+        <Heading mt="3.2rem" variant="heading2">
+          Monsters
+        </Heading>
+        <Flex>
+          <Link href="/battle">battle</Link>
         </Flex>
       </main>
     </>
