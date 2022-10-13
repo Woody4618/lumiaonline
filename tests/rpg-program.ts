@@ -2,7 +2,7 @@ import * as anchor from "@project-serum/anchor"
 import { Program } from "@project-serum/anchor"
 import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
 import { expect } from "chai"
-import { createCharacter } from "../app/lib/gen/instructions"
+import { createCharacter, joinBattle } from "../app/lib/gen/instructions"
 import { createQuest } from "../app/lib/gen/instructions/createQuest"
 import { joinQuest } from "../app/lib/gen/instructions/joinQuest"
 import { PROGRAM_ID } from "../app/lib/gen/programId"
@@ -227,6 +227,41 @@ describe("rpg-program", () => {
       )
 
       expect(characterAcc.questState.questUuid).to.eq(questAcc.config.uuid)
+    })
+
+    it("Can start a battle", async () => {
+      const uuid = monsters[0].name
+
+      const monster = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("monster"), Buffer.from(uuid)],
+        PROGRAM_ID
+      )[0]
+
+      const mint = new anchor.web3.PublicKey(
+        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+      )
+
+      const character = getCharacterAddress(
+        program.provider.publicKey,
+        mint,
+        program.programId
+      )
+
+      const ix = joinBattle({
+        monster,
+        character,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+      })
+
+      const tx = new anchor.web3.Transaction().add(ix)
+      await program.provider.sendAndConfirm(tx)
+
+      /** Expect character to die by the monster  */
+      const characterAcc = await program.account.characterAccount.fetch(
+        character
+      )
+
+      expect(characterAcc.deaths).to.length(1)
     })
 
     it("Can claim a quest", async () => {

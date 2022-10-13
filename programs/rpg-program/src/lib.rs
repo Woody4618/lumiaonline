@@ -87,8 +87,6 @@ pub mod rpg_program {
             }
         }
 
-        msg!("{:?}", character_hitpoints);
-
         if character_hitpoints == 0 {
             ctx.accounts.character.deaths.push(Death {
                 monster_uuid: ctx.accounts.monster.config.uuid.clone(),
@@ -246,7 +244,9 @@ impl CharacterAccount {
             experience: 0,
             owner,
             nft_mint,
-            ..Default::default()
+            deaths: vec![],
+            hitpoints: 4,
+            quest_state: None,
         };
 
         Ok(account)
