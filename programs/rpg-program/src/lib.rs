@@ -139,7 +139,8 @@ pub struct JoinBattle<'info> {
         space = 8 + size_of::<BattleAccount>() + size_of::<BattleTurn>() * battle_turns.len()
     )]
     pub battle: Account<'info, BattleAccount>,
-    #[account(mut)]
+    #[account(mut,
+    constraint = character.owner.key() == owner.key())]
     pub character: Account<'info, CharacterAccount>,
     #[account(mut)]
     pub monster: Account<'info, MonsterAccount>,
