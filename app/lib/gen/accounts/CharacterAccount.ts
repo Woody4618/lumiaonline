@@ -10,7 +10,7 @@ export interface CharacterAccountFields {
   name: string
   experience: BN
   hitpoints: BN
-  deaths: Array<types.DeathFields>
+  deaths: number
   questState: types.QuestStateFields | null
   meleeSkill: number
 }
@@ -21,7 +21,7 @@ export interface CharacterAccountJSON {
   name: string
   experience: string
   hitpoints: string
-  deaths: Array<types.DeathJSON>
+  deaths: number
   questState: types.QuestStateJSON | null
   meleeSkill: number
 }
@@ -32,7 +32,7 @@ export class CharacterAccount {
   readonly name: string
   readonly experience: BN
   readonly hitpoints: BN
-  readonly deaths: Array<types.Death>
+  readonly deaths: number
   readonly questState: types.QuestState | null
   readonly meleeSkill: number
 
@@ -46,7 +46,7 @@ export class CharacterAccount {
     borsh.str("name"),
     borsh.u64("experience"),
     borsh.u64("hitpoints"),
-    borsh.vec(types.Death.layout(), "deaths"),
+    borsh.u8("deaths"),
     borsh.option(types.QuestState.layout(), "questState"),
     borsh.u8("meleeSkill"),
   ])
@@ -57,7 +57,7 @@ export class CharacterAccount {
     this.name = fields.name
     this.experience = fields.experience
     this.hitpoints = fields.hitpoints
-    this.deaths = fields.deaths.map((item) => new types.Death({ ...item }))
+    this.deaths = fields.deaths
     this.questState =
       (fields.questState && new types.QuestState({ ...fields.questState })) ||
       null
@@ -111,11 +111,7 @@ export class CharacterAccount {
       name: dec.name,
       experience: dec.experience,
       hitpoints: dec.hitpoints,
-      deaths: dec.deaths.map(
-        (
-          item: any /* eslint-disable-line @typescript-eslint/no-explicit-any */
-        ) => types.Death.fromDecoded(item)
-      ),
+      deaths: dec.deaths,
       questState:
         (dec.questState && types.QuestState.fromDecoded(dec.questState)) ||
         null,
@@ -130,7 +126,7 @@ export class CharacterAccount {
       name: this.name,
       experience: this.experience.toString(),
       hitpoints: this.hitpoints.toString(),
-      deaths: this.deaths.map((item) => item.toJSON()),
+      deaths: this.deaths,
       questState: (this.questState && this.questState.toJSON()) || null,
       meleeSkill: this.meleeSkill,
     }
@@ -143,7 +139,7 @@ export class CharacterAccount {
       name: obj.name,
       experience: new BN(obj.experience),
       hitpoints: new BN(obj.hitpoints),
-      deaths: obj.deaths.map((item) => types.Death.fromJSON(item)),
+      deaths: obj.deaths,
       questState:
         (obj.questState && types.QuestState.fromJSON(obj.questState)) || null,
       meleeSkill: obj.meleeSkill,

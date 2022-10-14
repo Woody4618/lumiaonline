@@ -277,9 +277,9 @@ describe("rpg-program", () => {
       )
 
       if (lastTurn.characterHitpoints.toNumber() <= 0) {
-        expect(characterAcc.deaths).to.length(1)
+        expect(characterAcc.deaths).to.be.eq(1)
       } else {
-        expect(characterAcc.deaths).to.length(0)
+        expect(characterAcc.deaths).to.be.eq(0)
       }
     })
 

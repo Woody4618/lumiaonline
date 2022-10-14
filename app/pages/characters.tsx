@@ -104,7 +104,7 @@ export default function Characters() {
                     <Text>
                       Hitpoints: {character.account.hitpoints.toNumber()}
                     </Text>
-                    <Text>deaths: {character.account.deaths.length}</Text>
+                    <Text>deaths: {character.account.deaths}</Text>
                   </Flex>
                 </Flex>
               )

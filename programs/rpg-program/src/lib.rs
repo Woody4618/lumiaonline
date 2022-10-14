@@ -78,10 +78,12 @@ pub mod rpg_program {
         let last_turn = battle_turns.last().unwrap();
 
         if last_turn.character_hitpoints == 0 {
-            ctx.accounts.character.deaths.push(Death {
-                monster_uuid: ctx.accounts.monster.config.uuid.clone(),
-                timestamp: ctx.accounts.clock.unix_timestamp,
-            });
+            // ctx.accounts.character.deaths.push(Death {
+            //     monster_uuid: ctx.accounts.monster.config.uuid.clone(),
+            //     timestamp: ctx.accounts.clock.unix_timestamp,
+            // });
+
+            ctx.accounts.character.deaths += 1;
         }
         Ok(())
     }
@@ -224,7 +226,8 @@ pub struct CharacterAccount {
     pub name: String,
     pub experience: u64,
     pub hitpoints: u64,
-    pub deaths: Vec<Death>,
+    // pub deaths: Vec<Death>,
+    pub deaths: u8,
     pub quest_state: Option<QuestState>,
     pub melee_skill: u8,
 }
@@ -244,7 +247,7 @@ impl CharacterAccount {
             experience: 0,
             owner,
             nft_mint,
-            deaths: vec![],
+            deaths: 0,
             hitpoints: 4,
             quest_state: None,
             melee_skill: 10,

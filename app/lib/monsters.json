@@ -1,7 +1,7 @@
 [
   {
     "name": "Snake",
-    "hitpoints": 4,
+    "hitpoints": 10,
     "image": "https://replicate.com/api/models/stability-ai/stable-diffusion/files/9de950c5-a1a5-4cba-8bb6-1a0d98b58534/out-0.png",
     "meleeSkill": 20
   },
