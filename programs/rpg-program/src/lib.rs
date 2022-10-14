@@ -77,7 +77,7 @@ pub mod rpg_program {
     pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
         let last_turn = battle_turns.last().unwrap();
 
-        if last_turn.character_hitpoints == 0 {
+        if last_turn.character_hitpoints <= 0 {
             // ctx.accounts.character.deaths.push(Death {
             //     monster_uuid: ctx.accounts.monster.config.uuid.clone(),
             //     timestamp: ctx.accounts.clock.unix_timestamp,
@@ -93,8 +93,8 @@ pub mod rpg_program {
 pub struct BattleTurn {
     character_damage: u64,
     monster_damage: u64,
-    character_hitpoints: u64,
-    monster_hitpoints: u64,
+    character_hitpoints: i64,
+    monster_hitpoints: i64,
 }
 
 #[derive(Accounts)]

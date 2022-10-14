@@ -114,9 +114,7 @@ export default function Battle() {
       (await connection.getAccountInfo(character)).data
     )
 
-    if (
-      newCharacterAcc.deaths.length > previousCharacterAccount.deaths.length
-    ) {
+    if (newCharacterAcc.deaths > previousCharacterAccount.deaths) {
       toast.error("died ", {
         id: loadingToast,
       })

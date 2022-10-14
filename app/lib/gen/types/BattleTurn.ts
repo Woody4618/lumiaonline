@@ -35,8 +35,8 @@ export class BattleTurn {
       [
         borsh.u64("characterDamage"),
         borsh.u64("monsterDamage"),
-        borsh.u64("characterHitpoints"),
-        borsh.u64("monsterHitpoints"),
+        borsh.i64("characterHitpoints"),
+        borsh.i64("monsterHitpoints"),
       ],
       property
     )
