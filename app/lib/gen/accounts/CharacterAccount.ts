@@ -12,6 +12,7 @@ export interface CharacterAccountFields {
   hitpoints: BN
   deaths: Array<types.DeathFields>
   questState: types.QuestStateFields | null
+  meleeSkill: number
 }
 
 export interface CharacterAccountJSON {
@@ -22,6 +23,7 @@ export interface CharacterAccountJSON {
   hitpoints: string
   deaths: Array<types.DeathJSON>
   questState: types.QuestStateJSON | null
+  meleeSkill: number
 }
 
 export class CharacterAccount {
@@ -32,6 +34,7 @@ export class CharacterAccount {
   readonly hitpoints: BN
   readonly deaths: Array<types.Death>
   readonly questState: types.QuestState | null
+  readonly meleeSkill: number
 
   static readonly discriminator = Buffer.from([
     152, 189, 17, 17, 119, 227, 48, 55,
@@ -45,6 +48,7 @@ export class CharacterAccount {
     borsh.u64("hitpoints"),
     borsh.vec(types.Death.layout(), "deaths"),
     borsh.option(types.QuestState.layout(), "questState"),
+    borsh.u8("meleeSkill"),
   ])
 
   constructor(fields: CharacterAccountFields) {
@@ -57,6 +61,7 @@ export class CharacterAccount {
     this.questState =
       (fields.questState && new types.QuestState({ ...fields.questState })) ||
       null
+    this.meleeSkill = fields.meleeSkill
   }
 
   static async fetch(
@@ -114,6 +119,7 @@ export class CharacterAccount {
       questState:
         (dec.questState && types.QuestState.fromDecoded(dec.questState)) ||
         null,
+      meleeSkill: dec.meleeSkill,
     })
   }
 
@@ -126,6 +132,7 @@ export class CharacterAccount {
       hitpoints: this.hitpoints.toString(),
       deaths: this.deaths.map((item) => item.toJSON()),
       questState: (this.questState && this.questState.toJSON()) || null,
+      meleeSkill: this.meleeSkill,
     }
   }
 
@@ -139,6 +146,7 @@ export class CharacterAccount {
       deaths: obj.deaths.map((item) => types.Death.fromJSON(item)),
       questState:
         (obj.questState && types.QuestState.fromJSON(obj.questState)) || null,
+      meleeSkill: obj.meleeSkill,
     })
   }
 }

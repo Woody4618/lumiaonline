@@ -1,5 +1,7 @@
 import * as QuestError from "./QuestError"
 
+export { BattleTurn } from "./BattleTurn"
+export type { BattleTurnFields, BattleTurnJSON } from "./BattleTurn"
 export { MonsterConfig } from "./MonsterConfig"
 export type { MonsterConfigFields, MonsterConfigJSON } from "./MonsterConfig"
 export { QuestState } from "./QuestState"
