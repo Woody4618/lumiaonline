@@ -34,30 +34,35 @@ export const getBattleTurns = async (
   const monsterMaxDamage =
     0.085 * monsterAccount.config.meleeSkill + characterLvl / 5
 
-  let characterHitpoints = characterAccount.hitpoints.toNumber()
-  let monsterHitpoints = monsterAccount.config.hitpoints.toNumber()
+  let characterHitpoints = characterAccount.hitpoints
+  let monsterHitpoints = monsterAccount.config.hitpoints
 
   const battleTurns: {
     characterDamage: BN
     monsterDamage: BN
+    monsterHitpoints: BN
+    characterHitpoints: BN
   }[] = []
 
   do {
-    const characterDamage = getRandomBetween(
-      characterMinDamage,
-      characterMaxDamage
+    const characterDamage = new BN(
+      getRandomBetween(characterMinDamage, characterMaxDamage)
     )
 
-    const monsterDamage = getRandomBetween(monsterMinDamage, monsterMaxDamage)
+    const monsterDamage = new BN(
+      getRandomBetween(monsterMinDamage, monsterMaxDamage)
+    )
 
-    characterHitpoints -= monsterDamage
-    monsterHitpoints -= characterDamage
+    characterHitpoints = characterHitpoints.sub(monsterDamage)
+    monsterHitpoints = monsterHitpoints.sub(characterDamage)
 
     battleTurns.push({
-      characterDamage: new BN(characterDamage),
-      monsterDamage: new BN(monsterDamage),
+      characterDamage,
+      monsterDamage,
+      characterHitpoints,
+      monsterHitpoints,
     })
-  } while (monsterHitpoints > 0 && characterHitpoints > 0)
+  } while (monsterHitpoints.gt(new BN(0)) && characterHitpoints.gt(new BN(0)))
 
   return battleTurns
 }

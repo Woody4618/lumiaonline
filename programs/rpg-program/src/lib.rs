@@ -75,15 +75,9 @@ pub mod rpg_program {
      * Character will be able to battle a monster til death.
      */
     pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
-        let mut monster_hitpoints = ctx.accounts.monster.config.hitpoints.clone();
-        let mut character_hitpoints = ctx.accounts.character.hitpoints.clone();
+        let last_turn = battle_turns.last().unwrap();
 
-        battle_turns.iter().for_each(|turn| {
-            monster_hitpoints -= turn.character_damage;
-            character_hitpoints -= turn.monster_damage;
-        });
-
-        if character_hitpoints == 0 {
+        if last_turn.character_hitpoints == 0 {
             ctx.accounts.character.deaths.push(Death {
                 monster_uuid: ctx.accounts.monster.config.uuid.clone(),
                 timestamp: ctx.accounts.clock.unix_timestamp,
@@ -97,6 +91,8 @@ pub mod rpg_program {
 pub struct BattleTurn {
     character_damage: u64,
     monster_damage: u64,
+    character_hitpoints: u64,
+    monster_hitpoints: u64,
 }
 
 #[derive(Accounts)]

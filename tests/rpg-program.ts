@@ -232,7 +232,7 @@ describe("rpg-program", () => {
       expect(characterAcc.questState.questUuid).to.eq(questAcc.config.uuid)
     })
 
-    it("Can start a battle", async () => {
+    it("Can join a battle with a monster til death", async () => {
       const uuid = monsters[0].name
 
       const monster = anchor.web3.PublicKey.findProgramAddressSync(
@@ -270,12 +270,17 @@ describe("rpg-program", () => {
       const tx = new anchor.web3.Transaction().add(ix)
       await program.provider.sendAndConfirm(tx)
 
-      /** Expect character to die by the monster  */
+      /** Expect character to die or win  */
+      const lastTurn = battleTurns[battleTurns.length - 1]
       const characterAcc = await program.account.characterAccount.fetch(
         character
       )
 
-      expect(characterAcc.deaths).to.length(1)
+      if (lastTurn.characterHitpoints.toNumber() <= 0) {
+        expect(characterAcc.deaths).to.length(1)
+      } else {
+        expect(characterAcc.deaths).to.length(0)
+      }
     })
 
     it("Can claim a quest", async () => {
