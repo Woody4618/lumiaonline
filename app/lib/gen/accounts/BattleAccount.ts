@@ -6,14 +6,17 @@ import { PROGRAM_ID } from "../programId"
 
 export interface BattleAccountFields {
   battleTurns: Array<types.BattleTurnFields>
+  participants: Array<PublicKey>
 }
 
 export interface BattleAccountJSON {
   battleTurns: Array<types.BattleTurnJSON>
+  participants: Array<string>
 }
 
 export class BattleAccount {
   readonly battleTurns: Array<types.BattleTurn>
+  readonly participants: Array<PublicKey>
 
   static readonly discriminator = Buffer.from([
     151, 107, 3, 106, 43, 65, 131, 90,
@@ -21,12 +24,14 @@ export class BattleAccount {
 
   static readonly layout = borsh.struct([
     borsh.vec(types.BattleTurn.layout(), "battleTurns"),
+    borsh.vec(borsh.publicKey(), "participants"),
   ])
 
   constructor(fields: BattleAccountFields) {
     this.battleTurns = fields.battleTurns.map(
       (item) => new types.BattleTurn({ ...item })
     )
+    this.participants = fields.participants
   }
 
   static async fetch(
@@ -76,12 +81,14 @@ export class BattleAccount {
           item: any /* eslint-disable-line @typescript-eslint/no-explicit-any */
         ) => types.BattleTurn.fromDecoded(item)
       ),
+      participants: dec.participants,
     })
   }
 
   toJSON(): BattleAccountJSON {
     return {
       battleTurns: this.battleTurns.map((item) => item.toJSON()),
+      participants: this.participants.map((item) => item.toString()),
     }
   }
 
@@ -90,6 +97,7 @@ export class BattleAccount {
       battleTurns: obj.battleTurns.map((item) =>
         types.BattleTurn.fromJSON(item)
       ),
+      participants: obj.participants.map((item) => new PublicKey(item)),
     })
   }
 }

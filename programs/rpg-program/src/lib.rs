@@ -85,6 +85,7 @@ pub mod rpg_program {
 
         let battle = BattleAccount {
             battle_turns,
+            participants: vec![ctx.accounts.character.key(), ctx.accounts.monster.key()],
         };
 
         ctx.accounts.battle.set_inner(battle);
@@ -128,6 +129,7 @@ pub struct MonsterConfig {
 #[account]
 pub struct BattleAccount {
     battle_turns: Vec<BattleTurn>,
+    participants: Vec<Pubkey>,
 }
 
 #[derive(Accounts)]
@@ -136,7 +138,11 @@ pub struct JoinBattle<'info> {
     #[account(
         init,
         payer = owner,
-        space = 8 + size_of::<BattleAccount>() + size_of::<BattleTurn>() * battle_turns.len()
+        space = 8 +
+        size_of::<BattleAccount>() +
+        size_of::<BattleTurn>() * battle_turns.len() +
+        // space for two participants
+        16 * 2
     )]
     pub battle: Account<'info, BattleAccount>,
     #[account(mut,
