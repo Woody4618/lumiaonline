@@ -9,21 +9,26 @@ export interface JoinBattleArgs {
 }
 
 export interface JoinBattleAccounts {
+  battle: PublicKey
   character: PublicKey
   monster: PublicKey
+  owner: PublicKey
   clock: PublicKey
+  systemProgram: PublicKey
 }
 
 export const layout = borsh.struct([
   borsh.vec(types.BattleTurn.layout(), "battleTurns"),
 ])
 
-/** * Character will be able to battle a monster til death. */
 export function joinBattle(args: JoinBattleArgs, accounts: JoinBattleAccounts) {
   const keys: Array<AccountMeta> = [
+    { pubkey: accounts.battle, isSigner: true, isWritable: true },
     { pubkey: accounts.character, isSigner: false, isWritable: true },
     { pubkey: accounts.monster, isSigner: false, isWritable: true },
+    { pubkey: accounts.owner, isSigner: true, isWritable: true },
     { pubkey: accounts.clock, isSigner: false, isWritable: false },
+    { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]
   const identifier = Buffer.from([126, 0, 69, 130, 127, 145, 54, 100])
   const buffer = Buffer.alloc(1000)
