@@ -82,6 +82,13 @@ pub mod rpg_program {
 
             ctx.accounts.character.deaths += 1;
         }
+
+        let battle = BattleAccount {
+            battle_turns,
+        };
+
+        ctx.accounts.battle.set_inner(battle);
+
         Ok(())
     }
 }
@@ -118,13 +125,28 @@ pub struct MonsterConfig {
     pub melee_skill: u8,
 }
 
+#[account]
+pub struct BattleAccount {
+    battle_turns: Vec<BattleTurn>,
+}
+
 #[derive(Accounts)]
+#[instruction(battle_turns: Vec<BattleTurn>)]
 pub struct JoinBattle<'info> {
+    #[account(
+        init,
+        payer = owner,
+        space = 8 + size_of::<BattleAccount>() + size_of::<BattleTurn>() * battle_turns.len()
+    )]
+    pub battle: Account<'info, BattleAccount>,
     #[account(mut)]
-    character: Account<'info, CharacterAccount>,
+    pub character: Account<'info, CharacterAccount>,
     #[account(mut)]
-    monster: Account<'info, MonsterAccount>,
+    pub monster: Account<'info, MonsterAccount>,
+    #[account(mut)]
+    pub owner: Signer<'info>,
     clock: Sysvar<'info, Clock>,
+    pub system_program: Program<'info, System>,
 }
 
 #[account]

@@ -18,6 +18,7 @@ import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
 import { createMonster } from "../app/lib/gen/instructions/createMonster"
 import { CharacterAccount, MonsterAccount } from "../app/lib/gen/accounts"
 import { getBattleTurns } from "../app/lib/battle"
+import { BattleTurn } from "../app/lib/gen/types"
 
 describe("rpg-program", () => {
   // Configure the client to use the local cluster.
@@ -256,22 +257,31 @@ describe("rpg-program", () => {
         monster
       )
 
+      const battle = anchor.web3.Keypair.generate()
       const ix = joinBattle(
         {
           battleTurns,
         },
         {
+          battle: battle.publicKey,
+          owner,
           monster,
           character,
           clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          systemProgram: anchor.web3.SystemProgram.programId,
         }
       )
 
       const tx = new anchor.web3.Transaction().add(ix)
-      await program.provider.sendAndConfirm(tx)
+
+      await program.provider.sendAndConfirm(tx, [battle])
+
+      const battleAcc: {
+        battleTurns: BattleTurn[]
+      } = await program.account.battleAccount.fetch(battle.publicKey)
 
       /** Expect character to die or win  */
-      const lastTurn = battleTurns[battleTurns.length - 1]
+      const lastTurn = battleAcc.battleTurns[battleAcc.battleTurns.length - 1]
       const characterAcc = await program.account.characterAccount.fetch(
         character
       )
