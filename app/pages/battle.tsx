@@ -73,11 +73,12 @@ export default function Battle() {
       PROGRAM_ID
     )[0]
 
-    const rawIx = await (
+    const rawTx = await (
       await fetch(
         `/api/join-battle-ix?${new URLSearchParams({
           character: character.toString(),
           monster: monster.toString(),
+          owner: publicKey.toString(),
         })}`,
         {
           method: "GET",
@@ -85,13 +86,7 @@ export default function Battle() {
       )
     ).json()
 
-    const ix = getParsedIx(rawIx)
-    const latest = await connection.getLatestBlockhash()
-    const tx = new web3.Transaction()
-
-    tx.recentBlockhash = latest.blockhash
-    tx.feePayer = publicKey
-    tx.add(ix)
+    const tx = web3.Transaction.from(rawTx.data)
 
     const loadingToast = toast.loading("Awaiting approval...")
     const txid = await sendTransaction(tx, connection)
@@ -104,6 +99,7 @@ export default function Battle() {
       (await connection.getAccountInfo(character)).data
     )
 
+    const latest = await connection.getLatestBlockhash("confirmed")
     await connection.confirmTransaction({
       blockhash: latest.blockhash,
       lastValidBlockHeight: latest.lastValidBlockHeight,

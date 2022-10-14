@@ -14,10 +14,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const connection = new web3.Connection(endpoint, "confirmed")
 
-    const { character, monster } = req.query
+    const { character, monster, owner } = req.query
 
     const characterAddress = new web3.PublicKey(character)
     const monsterAddress = new web3.PublicKey(monster)
+    const ownerAddress = new web3.PublicKey(owner)
 
     const battleTurns = await getBattleTurns(
       connection,
@@ -25,16 +26,34 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       monsterAddress
     )
 
+    const battle = web3.Keypair.generate()
     const ix = joinBattle(
       { battleTurns },
       {
         monster: monsterAddress,
         character: characterAddress,
         clock: web3.SYSVAR_CLOCK_PUBKEY,
+        battle: battle.publicKey,
+        owner: ownerAddress,
+        systemProgram: web3.SystemProgram.programId,
       }
     )
 
-    res.send(ix)
+    const tx = new web3.Transaction().add(ix)
+
+    const latest = await connection.getLatestBlockhash("confirmed")
+    tx.feePayer = ownerAddress
+
+    tx.recentBlockhash = latest.blockhash
+    tx.partialSign(battle)
+
+    res.send(
+      JSON.stringify(
+        tx.serialize({
+          verifySignatures: false,
+        })
+      )
+    )
 
     return true
   } catch (e) {
