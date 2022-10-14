@@ -250,16 +250,12 @@ describe("rpg-program", () => {
         program.programId
       )
 
-      const characterAccount = await CharacterAccount.fetch(
+      const battleTurns = await getBattleTurns(
         program.provider.connection,
-        character
-      )
-      const monsterAccount = await MonsterAccount.fetch(
-        program.provider.connection,
+        character,
         monster
       )
 
-      const battleTurns = await getBattleTurns(characterAccount, monsterAccount)
       const ix = joinBattle(
         {
           battleTurns,

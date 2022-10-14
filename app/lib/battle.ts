@@ -1,6 +1,7 @@
 import { getRandomValues } from "crypto"
 import { CharacterAccount, MonsterAccount } from "./gen/accounts"
-import { BN } from "@project-serum/anchor"
+import { BN, web3 } from "@project-serum/anchor"
+import { Connection } from "@solana/web3.js"
 
 const getRandomBetween = (min: number, max: number) => {
   return (
@@ -11,9 +12,12 @@ const getRandomBetween = (min: number, max: number) => {
 }
 
 export const getBattleTurns = async (
-  character: CharacterAccount,
-  monster: MonsterAccount
+  connection: Connection,
+  character: web3.PublicKey,
+  monster: web3.PublicKey
 ) => {
+  const characterAccount = await CharacterAccount.fetch(connection, character)
+  const monsterAccount = await MonsterAccount.fetch(connection, monster)
   /**
    * Static level because there isn't any level attribute.
    * This is basically a base damage calculation.
@@ -21,16 +25,17 @@ export const getBattleTurns = async (
   const characterLvl = 10
 
   /** @TODO add skill attribute to the character account. */
-  const characterSkill = character.meleeSkill
+  const characterSkill = characterAccount.meleeSkill
 
   /** Damage formulas */
   const characterMinDamage = characterLvl / 5
   const characterMaxDamage = 0.085 * characterSkill + characterLvl / 5
   const monsterMinDamage = characterLvl / 5
-  const monsterMaxDamage = 0.085 * monster.config.meleeSkill + characterLvl / 5
+  const monsterMaxDamage =
+    0.085 * monsterAccount.config.meleeSkill + characterLvl / 5
 
-  let characterHitpoints = character.hitpoints.toNumber()
-  let monsterHitpoints = monster.config.hitpoints.toNumber()
+  let characterHitpoints = characterAccount.hitpoints.toNumber()
+  let monsterHitpoints = monsterAccount.config.hitpoints.toNumber()
 
   const battleTurns: {
     characterDamage: BN
