@@ -22,7 +22,7 @@ type MonsterResponse = {
 
 export default function Battle() {
   const { connection } = useConnection()
-  const { publicKey, sendTransaction } = useWallet()
+  const { publicKey, signTransaction } = useWallet()
   const { walletNFTs } = useWalletNFTs()
   const [monsters, setMonsters] = useState<MonsterResponse[]>(null)
   const [selectedMint, setSelectedMint] = useState<string>()
@@ -83,13 +83,34 @@ export default function Battle() {
     const tx = new web3.Transaction()
 
     tx.recentBlockhash = latest.blockhash
+    tx.feePayer = publicKey
     tx.add(ix)
+
+    const loadingToast = toast.loading("Awaiting approval...")
+    const signedtx = await signTransaction(tx)
+
+    const body = {
+      tx: signedtx.serialize({
+        /** Bypass validation since we don't have the authority signature yet */
+        requireAllSignatures: false,
+        verifySignatures: true,
+      }),
+    }
+
+    toast.loading("Sending transaction...", {
+      id: loadingToast,
+    })
+
+    const { txid } = await (
+      await fetch("/api/battle", {
+        method: "POST",
+        body: JSON.stringify(body),
+      })
+    ).json()
 
     const previousCharacterAccount = CharacterAccount.decode(
       (await connection.getAccountInfo(character)).data
     )
-
-    const txid = await sendTransaction(tx, connection)
 
     await connection.confirmTransaction({
       blockhash: latest.blockhash,
@@ -104,9 +125,13 @@ export default function Battle() {
     if (
       newCharacterAcc.deaths.length > previousCharacterAccount.deaths.length
     ) {
-      toast.error("died ")
+      toast.error("died ", {
+        id: loadingToast,
+      })
     } else {
-      toast.success("won")
+      toast.success("won", {
+        id: loadingToast,
+      })
     }
   }
 
