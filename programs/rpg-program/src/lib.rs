@@ -74,18 +74,14 @@ pub mod rpg_program {
     /**
      * Character will be able to battle a monster til death.
      */
-    pub fn join_battle(ctx: Context<JoinBattle>) -> Result<()> {
+    pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
         let mut monster_hitpoints = ctx.accounts.monster.config.hitpoints.clone();
         let mut character_hitpoints = ctx.accounts.character.hitpoints.clone();
 
-        loop {
-            character_hitpoints -= 1;
-            monster_hitpoints -= 1;
-
-            if character_hitpoints == 0 || monster_hitpoints == 0 {
-                break;
-            }
-        }
+        battle_turns.iter().for_each(|turn| {
+            monster_hitpoints -= turn.character_damage;
+            character_hitpoints -= turn.monster_damage;
+        });
 
         if character_hitpoints == 0 {
             ctx.accounts.character.deaths.push(Death {
@@ -95,6 +91,12 @@ pub mod rpg_program {
         }
         Ok(())
     }
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub struct BattleTurn {
+    character_damage: u64,
+    monster_damage: u64,
 }
 
 #[derive(Accounts)]
@@ -118,6 +120,7 @@ pub struct CreateMonster<'info> {
 pub struct MonsterConfig {
     pub uuid: String,
     pub hitpoints: u64,
+    pub melee_skill: u8,
 }
 
 #[derive(Accounts)]
@@ -227,6 +230,7 @@ pub struct CharacterAccount {
     pub hitpoints: u64,
     pub deaths: Vec<Death>,
     pub quest_state: Option<QuestState>,
+    pub melee_skill: u8,
 }
 
 const NAME_MAX_LENGTH: usize = 16;
@@ -247,6 +251,7 @@ impl CharacterAccount {
             deaths: vec![],
             hitpoints: 4,
             quest_state: None,
+            melee_skill: 10,
         };
 
         Ok(account)

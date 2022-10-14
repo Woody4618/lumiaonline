@@ -10,12 +10,14 @@ import {
   getCharacterAddress,
   getTokenMetadataAddress,
   TOKEN_METADATA_PROGRAM_ID,
-} from "../app/lib/utils"
+} from "../app/lib/program-utils"
 import { RpgProgram } from "../target/types/rpg_program"
 import quests from "../app/lib/quests.json"
 import monsters from "../app/lib/monsters.json"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
 import { createMonster } from "../app/lib/gen/instructions/createMonster"
+import { CharacterAccount, MonsterAccount } from "../app/lib/gen/accounts"
+import { getBattleTurns } from "../app/lib/battle"
 
 describe("rpg-program", () => {
   // Configure the client to use the local cluster.
@@ -83,6 +85,7 @@ describe("rpg-program", () => {
             config: {
               uuid,
               hitpoints: new anchor.BN(monsterConfig.hitpoints),
+              meleeSkill: monsterConfig.meleeSkill,
             },
           },
           {
@@ -247,11 +250,26 @@ describe("rpg-program", () => {
         program.programId
       )
 
-      const ix = joinBattle({
-        monster,
-        character,
-        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-      })
+      const characterAccount = await CharacterAccount.fetch(
+        program.provider.connection,
+        character
+      )
+      const monsterAccount = await MonsterAccount.fetch(
+        program.provider.connection,
+        monster
+      )
+
+      const battleTurns = await getBattleTurns(characterAccount, monsterAccount)
+      const ix = joinBattle(
+        {
+          battleTurns,
+        },
+        {
+          monster,
+          character,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        }
+      )
 
       const tx = new anchor.web3.Transaction().add(ix)
       await program.provider.sendAndConfirm(tx)
