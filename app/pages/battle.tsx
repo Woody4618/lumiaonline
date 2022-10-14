@@ -4,12 +4,15 @@ import { Heading, Text, Button, Flex } from "@theme-ui/components"
 import Header from "@/components/Header/Header"
 import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
-import { web3 } from "@project-serum/anchor"
-import { getCharacterAddress, getMonsters } from "lib/program-utils"
+import { web3, BN } from "@project-serum/anchor"
+import {
+  getCharacterAddress,
+  getMonsters,
+  getParsedIx,
+} from "lib/program-utils"
 import { CharacterAccount, MonsterAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
-import { joinBattle } from "lib/gen/instructions"
 import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
 import useWalletNFTs from "@/hooks/useWalletNFTs"
 import monstersData from "lib/monsters.json"
@@ -22,7 +25,7 @@ type MonsterResponse = {
 
 export default function Battle() {
   const { connection } = useConnection()
-  const { publicKey, signTransaction } = useWallet()
+  const { publicKey, sendTransaction } = useWallet()
   const { walletNFTs } = useWalletNFTs()
   const [monsters, setMonsters] = useState<MonsterResponse[]>(null)
   const [selectedMint, setSelectedMint] = useState<string>()
@@ -61,24 +64,28 @@ export default function Battle() {
     e.preventDefault()
 
     const data = new FormData(e.currentTarget)
-
+    const monsterUuid = data.get("uuid").toString()
     const nftMint = new web3.PublicKey(selectedMint)
 
     const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
-
-    const uuid = data.get("uuid").toString()
-
     const monster = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("monster"), Buffer.from(uuid)],
+      [Buffer.from("monster"), Buffer.from(monsterUuid)],
       PROGRAM_ID
     )[0]
 
-    const ix = joinBattle({
-      monster,
-      character,
-      clock: web3.SYSVAR_CLOCK_PUBKEY,
-    })
+    const rawIx = await (
+      await fetch(
+        `/api/join-battle-ix?${new URLSearchParams({
+          character: character.toString(),
+          monster: monster.toString(),
+        })}`,
+        {
+          method: "GET",
+        }
+      )
+    ).json()
 
+    const ix = getParsedIx(rawIx)
     const latest = await connection.getLatestBlockhash()
     const tx = new web3.Transaction()
 
@@ -87,26 +94,11 @@ export default function Battle() {
     tx.add(ix)
 
     const loadingToast = toast.loading("Awaiting approval...")
-    const signedtx = await signTransaction(tx)
+    const txid = await sendTransaction(tx, connection)
 
-    const body = {
-      tx: signedtx.serialize({
-        /** Bypass validation since we don't have the authority signature yet */
-        requireAllSignatures: false,
-        verifySignatures: true,
-      }),
-    }
-
-    toast.loading("Sending transaction...", {
+    toast.loading("Confirming transaction...", {
       id: loadingToast,
     })
-
-    const { txid } = await (
-      await fetch("/api/battle", {
-        method: "POST",
-        body: JSON.stringify(body),
-      })
-    ).json()
 
     const previousCharacterAccount = CharacterAccount.decode(
       (await connection.getAccountInfo(character)).data

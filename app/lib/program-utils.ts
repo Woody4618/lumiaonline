@@ -3,7 +3,7 @@ import {
   Connection,
   GetProgramAccountsFilter,
   MemcmpFilter,
-  PublicKey,
+  TransactionInstruction,
 } from "@solana/web3.js"
 import { CharacterAccount, MonsterAccount, QuestAccount } from "./gen/accounts"
 import { PROGRAM_ID } from "./gen/programId"
@@ -11,6 +11,26 @@ import { PROGRAM_ID } from "./gen/programId"
 export const TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 )
+
+export const getParsedIx = (rawIx: {
+  keys: { pubkey: string; isSigner: boolean; isWritable: boolean }[]
+  programId: string
+  data: Buffer
+}) => {
+  const ixKeys = rawIx.keys.map((key) => {
+    const encodedPubKey = new web3.PublicKey(key.pubkey)
+
+    return Object.assign(key, { pubkey: encodedPubKey })
+  })
+
+  const ix: TransactionInstruction = {
+    keys: ixKeys,
+    data: rawIx.data,
+    programId: new web3.PublicKey(rawIx.programId),
+  }
+
+  return ix
+}
 
 export const getQuests = async (
   connection: Connection
