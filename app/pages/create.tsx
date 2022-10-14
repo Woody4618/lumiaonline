@@ -13,7 +13,7 @@ import {
   getCharacterAddress,
   getTokenMetadataAddress,
   TOKEN_METADATA_PROGRAM_ID,
-} from "lib/utils"
+} from "lib/program-utils"
 import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
 import WalletManager from "@/components/WalletManager/WalletManager"
 

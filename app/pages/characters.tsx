@@ -5,7 +5,7 @@ import Header from "@/components/Header/Header"
 import { useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
-import { getCharacters } from "lib/utils"
+import { getCharacters } from "lib/program-utils"
 import { CharacterAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import {
