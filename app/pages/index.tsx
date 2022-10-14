@@ -44,10 +44,16 @@ export default function Home() {
           <Link href="/quests">List</Link>
         </Flex>
         <Heading mt="3.2rem" variant="heading2">
-          Monsters
+          Battles
         </Heading>
-        <Flex>
-          <Link href="/battle">battle</Link>
+        <Flex
+          sx={{
+            gap: "1.6rem",
+            marginBottom: "3.2rem",
+          }}
+        >
+          <Link href="/battle">join battle</Link>
+          <Link href="/battles">battle list</Link>
         </Flex>
       </main>
     </>

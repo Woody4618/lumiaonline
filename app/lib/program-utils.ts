@@ -5,7 +5,12 @@ import {
   MemcmpFilter,
   TransactionInstruction,
 } from "@solana/web3.js"
-import { CharacterAccount, MonsterAccount, QuestAccount } from "./gen/accounts"
+import {
+  BattleAccount,
+  CharacterAccount,
+  MonsterAccount,
+  QuestAccount,
+} from "./gen/accounts"
 import { PROGRAM_ID } from "./gen/programId"
 
 export const TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey(
@@ -66,6 +71,25 @@ export const getMonsters = async (
     accounts.map(async ({ pubkey, account }) => ({
       pubkey,
       account: MonsterAccount.decode(account.data),
+    }))
+  )
+}
+
+export const getBattles = async (
+  connection: Connection
+  // owner: PublicKey,
+) => {
+  const filters = [
+    accountFilter(BattleAccount.discriminator),
+    // memcmp(10, owner.toBase58()),
+  ]
+
+  const accounts = await fetchAccounts(connection, filters)
+
+  return Promise.all(
+    accounts.map(async ({ pubkey, account }) => ({
+      pubkey,
+      account: BattleAccount.decode(account.data),
     }))
   )
 }

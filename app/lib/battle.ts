@@ -25,14 +25,14 @@ export const getBattleTurns = async (
   const characterLvl = 10
 
   /** @TODO add skill attribute to the character account. */
-  const characterSkill = characterAccount.meleeSkill
+  const characterSkill = characterAccount.meleeSkill + 20
 
   /** Damage formulas */
   const characterMinDamage = characterLvl / 5
   const characterMaxDamage = 0.085 * characterSkill + characterLvl / 5
   const monsterMinDamage = characterLvl / 5
   const monsterMaxDamage =
-    0.085 * monsterAccount.config.meleeSkill + characterLvl / 5
+    0.085 * (monsterAccount.config.meleeSkill + 20) + characterLvl / 5
 
   let characterHitpoints = characterAccount.hitpoints
   let monsterHitpoints = monsterAccount.config.hitpoints
