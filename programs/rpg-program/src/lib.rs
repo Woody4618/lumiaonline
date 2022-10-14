@@ -71,9 +71,6 @@ pub mod rpg_program {
         Ok(())
     }
 
-    /**
-     * Character will be able to battle a monster til death.
-     */
     pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
         let last_turn = battle_turns.last().unwrap();
 
@@ -105,7 +102,7 @@ pub struct CreateMonster<'info> {
         seeds = [b"monster".as_ref(), config.uuid.as_ref()],
         bump,
         payer = signer,
-        space = MonsterAccount::space()
+        space = 8 + size_of::<MonsterAccount>()
     )]
     pub monster: Account<'info, MonsterAccount>,
 
@@ -133,12 +130,6 @@ pub struct JoinBattle<'info> {
 #[account]
 pub struct MonsterAccount {
     config: MonsterConfig,
-}
-
-impl MonsterAccount {
-    pub fn space() -> usize {
-        8 + size_of::<Self>()
-    }
 }
 
 #[derive(Accounts)]
@@ -182,12 +173,6 @@ pub struct QuestAccount {
     pub config: QuestConfig,
 }
 
-impl QuestAccount {
-    pub fn space() -> usize {
-        8 + size_of::<Self>()
-    }
-}
-
 #[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
 pub struct QuestConfig {
     pub duration: i64,
@@ -203,7 +188,7 @@ pub struct CreateQuest<'info> {
         seeds = [b"quest".as_ref(), config.uuid.as_ref()],
         bump,
         payer = signer,
-        space = QuestAccount::space()
+        space = 8 + size_of::<QuestAccount>()
     )]
     pub quest: Account<'info, QuestAccount>,
 
@@ -235,10 +220,6 @@ pub struct CharacterAccount {
 const NAME_MAX_LENGTH: usize = 16;
 
 impl CharacterAccount {
-    pub fn space() -> usize {
-        8 + size_of::<Self>()
-    }
-
     pub fn new(owner: Pubkey, nft_mint: Pubkey, name: &str) -> Result<Self> {
         require!(name.len() <= NAME_MAX_LENGTH, CharacterError::MaxNameLengthExceeded);
 
@@ -264,7 +245,7 @@ pub struct CreateCharacter<'info> {
     // -- Basic accounts
     #[account(
         init,
-        space = CharacterAccount::space(),
+        space = 8 + size_of::<CharacterAccount>(),
         payer = owner,
         seeds = [CHARACTER_PREFIX.as_ref(), owner.key().as_ref(), nft_mint.key().as_ref()],
         bump
