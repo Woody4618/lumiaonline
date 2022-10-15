@@ -231,7 +231,7 @@ const theme: Theme = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        paddingTop: "8rem",
+        paddingTop: "4rem",
       },
 
       img: {
