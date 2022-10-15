@@ -78,12 +78,17 @@ export default function Create() {
         margin: "0 auto",
         marginTop: "4rem",
         padding: "0 1.6rem",
+
+        "@media (min-width: 64rem)": {
+          minWidth: "64rem",
+        },
       }}
     >
       {publicKey ? (
         <Flex
           sx={{
             margin: "3.2rem 0",
+            alignSelf: "flex-end",
           }}
         >
           <WalletManager />

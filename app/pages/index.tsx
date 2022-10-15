@@ -9,7 +9,7 @@ import WalletConnectButton from "@/components/WalletConnectButton"
 import WalletManager from "@/components/WalletManager/WalletManager"
 
 export default function Home() {
-  const { publicKey } = useWallet()
+  const { publicKey, wallet } = useWallet()
 
   return (
     <main
@@ -22,12 +22,17 @@ export default function Home() {
         margin: "0 auto",
         marginTop: "4rem",
         padding: "0 1.6rem",
+
+        "@media (min-width: 64rem)": {
+          minWidth: "64rem",
+        },
       }}
     >
       {publicKey ? (
         <Flex
           sx={{
             margin: "3.2rem 0",
+            alignSelf: "flex-end",
           }}
         >
           <WalletManager />
@@ -48,7 +53,8 @@ export default function Home() {
         <Link href="/characters/new?onboarding=true">
           <Button>Play now!</Button>
         </Link>{" "}
-        {!publicKey ? (
+        {/** Check for wallet as well to prevent flash */}
+        {!publicKey && !wallet ? (
           <Flex
             sx={{
               alignItems: "center",

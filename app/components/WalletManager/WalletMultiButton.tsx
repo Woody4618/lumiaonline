@@ -96,6 +96,14 @@ export const WalletMultiButton = ({ children = null, ...props }) => {
         className={`wallet-adapter-dropdown-list ${
           active && "wallet-adapter-dropdown-list-active"
         }`}
+        sx={{
+          background: "background",
+          "li:hover": {
+            backgroundColor: (theme) => theme.colors.primary + "!important",
+            color: "background",
+            opacity: 0.7,
+          },
+        }}
         ref={ref}
         role="menu"
       >

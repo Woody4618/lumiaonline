@@ -231,8 +231,7 @@ const theme: Theme = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        paddingBottom: "24rem",
+        paddingTop: "8rem",
       },
 
       img: {

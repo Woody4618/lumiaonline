@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 import { useWallet } from "@solana/wallet-adapter-react"
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
 import { Flex } from "theme-ui"
+import { WalletMultiButton } from "./WalletManager/WalletMultiButton"
 
 const WalletConnectButton = ({
   label = <span>Select Wallet</span>,
