@@ -24,16 +24,6 @@ export default function Create() {
           minHeight: "9rem",
         }}
       >
-        <Link href="/" passHref>
-          <a
-            sx={{
-              alignSelf: "flex-start",
-              margin: "1.6rem 0",
-            }}
-          >
-            <BackIcon />
-          </a>
-        </Link>
         {publicKey ? (
           <Flex
             sx={{

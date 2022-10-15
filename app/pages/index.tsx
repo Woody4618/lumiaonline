@@ -15,13 +15,7 @@ export default function Home() {
   const isOnboarding = query.onboarding === "true" || !wallet
 
   return (
-    <Flex
-      sx={{
-        flexDirection: "column",
-        /** Workaround to keep it centralized in relation to the mennu */
-        marginLeft: "-16rem",
-      }}
-    >
+    <>
       <Flex
         sx={{
           justifyContent: "space-between",
@@ -88,6 +82,6 @@ export default function Home() {
           />
         </Flex>
       ) : null}
-    </Flex>
+    </>
   )
 }

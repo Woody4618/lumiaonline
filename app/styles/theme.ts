@@ -231,7 +231,6 @@ const theme: Theme = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        paddingTop: "4rem",
       },
 
       "#__next": {
