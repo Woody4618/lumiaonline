@@ -77,9 +77,9 @@ export default function Battles() {
         }}
       >
         <Heading mb=".8rem" variant="heading1">
-          Characters
+          Battles
         </Heading>
-        <Text mb="3.2rem">List of created battles</Text>
+        <Text mb="3.2rem">List of past battles</Text>
 
         <Flex
           sx={{

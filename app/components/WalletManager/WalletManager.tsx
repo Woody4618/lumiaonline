@@ -40,6 +40,7 @@ const WalletManager = () => {
               "&:hover": {
                 background: "unset",
                 backgroundImage: "unset!important",
+                backgroundColor: "unset!important",
                 color: "primary",
                 cursor: "pointer",
               },

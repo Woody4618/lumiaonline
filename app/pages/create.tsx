@@ -79,7 +79,7 @@ export default function Create() {
         <Heading mb=".8rem" variant="heading1">
           Create a character
         </Heading>
-        <Text mb="3.2rem">Create now</Text>
+        {/* <Text mb="3.2rem">Create now</Text> */}
 
         {publicKey ? (
           <form

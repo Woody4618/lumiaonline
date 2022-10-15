@@ -113,30 +113,63 @@ const Header = () => {
                 <CloseIcon />
               </Button>
             </Flex>
-            {/* Change theme-ui color mode */}
+
             {/* <Flex
               sx={{
                 alignItems: "center",
                 justifyContent: "center",
                 alignSelf: "stretch",
-
-                "&:hover": {
-                  borderBottomWidth: "1px",
-                  borderBottomStyle: "solid",
-                  borderBottomColor: "text",
-                },
+                position: "relative",
               }}
             >
               <Button
                 variant="resetted"
-                onClick={(e) => {
-                  setColorMode(colorMode === "default" ? "light" : "default")
+                sx={{
+                  "&:hover, &:focus": {
+                    "+ div": {
+                      visibility: "visible",
+                      opacity: 1,
+                    },
+                  },
                 }}
               >
-                {colorMode === "default" ? <SunLogo /> : <MoonLogo />}
+                Characters
               </Button>
+              <Flex
+                sx={{
+                  position: "absolute",
+                  visibility: "hidden",
+                  opacity: 0,
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  padding: "2.4rem 1.2rem",
+                  top: 40,
+                  right: 0,
+                  backgroundColor: "background",
+                  transition: "all .125s linear",
+                  boxShadow: "0px 4px 4px rgba(0,0,0,0.25)",
+                  gap: ".8rem",
+                  zIndex: 2,
+                  fontSize: "1.2rem",
+
+                  a: {
+                    whiteSpace: "nowrap",
+                  },
+
+                  "&:hover, &:focus": {
+                    visibility: "visible",
+                    opacity: 1,
+                  },
+                }}
+              >
+                <a rel="noopener noreferrer" target="_blank" tabIndex={1}>
+                  Create a character
+                </a>
+                <a rel="noopener noreferrer" target="_blank" tabIndex={1}>
+                  List characters
+                </a>
+              </Flex>
             </Flex> */}
-            {/* Finish menu items */}
             <WalletManager />
           </Flex>
           <Button

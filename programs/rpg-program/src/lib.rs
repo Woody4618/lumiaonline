@@ -5,7 +5,7 @@ use anchor_spl::token::{ Mint, TokenAccount };
 use metadata::{ TokenMetadata, MetadataAccount };
 pub mod metadata;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("4dtiCyRiiwTdkWvN5b6aXfgYKvzMjjud9xghnDpr6TUY");
 
 #[program]
 pub mod rpg_program {
