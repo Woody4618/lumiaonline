@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 import { useWallet } from "@solana/wallet-adapter-react"
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
+import { WalletMultiButton } from "./WalletMultiButton"
 import { Flex } from "theme-ui"
 import theme from "@/styles/theme"
 
@@ -45,7 +45,7 @@ const WalletManager = () => {
                 cursor: "pointer",
               },
             }}
-          ></WalletMultiButton>
+          />
         ) : (
           <WalletMultiButton
             sx={{

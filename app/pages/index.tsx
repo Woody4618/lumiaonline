@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { WalletIcon } from "@/components/icons"
 import WalletConnectButton from "@/components/WalletConnectButton"
+import WalletManager from "@/components/WalletManager/WalletManager"
 
 export default function Home() {
   const { publicKey } = useWallet()
@@ -23,6 +24,15 @@ export default function Home() {
         padding: "0 1.6rem",
       }}
     >
+      {publicKey ? (
+        <Flex
+          sx={{
+            margin: "3.2rem 0",
+          }}
+        >
+          <WalletManager />
+        </Flex>
+      ) : null}
       <Heading mb=".8rem" variant="heading1">
         This is definitely an RPG
       </Heading>

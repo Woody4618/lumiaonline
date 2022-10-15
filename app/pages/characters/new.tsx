@@ -1,7 +1,6 @@
 /** @jsxImportSource theme-ui */
-import { Heading, Text, Label, Input, Button } from "@theme-ui/components"
+import { Heading, Text, Label, Input, Button, Flex } from "@theme-ui/components"
 
-import Header from "@/components/Header/Header"
 import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
 import useWalletNFTs from "@/hooks/useWalletNFTs"
 import { FormEvent } from "react"
@@ -19,6 +18,7 @@ import { useRouter } from "next/router"
 import WalletConnectButton from "@/components/WalletConnectButton"
 import { BackIcon } from "@/components/icons"
 import Link from "next/link"
+import WalletManager from "@/components/WalletManager/WalletManager"
 
 const systemProgram = web3.SystemProgram.programId
 
@@ -80,6 +80,15 @@ export default function Create() {
         padding: "0 1.6rem",
       }}
     >
+      {publicKey ? (
+        <Flex
+          sx={{
+            margin: "3.2rem 0",
+          }}
+        >
+          <WalletManager />
+        </Flex>
+      ) : null}
       <Link href="/" passHref>
         <a
           sx={{
