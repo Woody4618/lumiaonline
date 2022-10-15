@@ -39,7 +39,7 @@ export default function Home() {
             margin: "6.4rem 0",
           }}
         >
-          <Link href="/create">
+          <Link href="/characters/new">
             <Button>Play now!</Button>
           </Link>{" "}
           {!publicKey ? (
