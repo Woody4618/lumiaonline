@@ -16,38 +16,42 @@ export default function Home() {
 
   return (
     <>
-      <Flex
+      <Heading
         sx={{
-          justifyContent: "space-between",
-          alignItems: "center",
           alignSelf: "stretch",
-          minHeight: "9rem",
         }}
+        mb="1.6rem"
+        variant="heading"
       >
-        {publicKey ? (
-          <Flex
-            sx={{
-              margin: "3.2rem 0",
-              alignSelf: "flex-end",
-            }}
-          >
-            <WalletManager />
-          </Flex>
-        ) : null}
-      </Flex>
-
-      <Heading mb="1.6rem" variant="heading">
-        {isOnboarding ? (
+        {isOnboarding || !publicKey ? (
           <>
-            Gm. <br />
-            Let's start with your character
+            Gm,
+            <Text
+              sx={{
+                display: "flex",
+              }}
+              variant="heading3"
+            >
+              Let's start with your character
+            </Text>
           </>
         ) : (
-          "Create a new character"
+          <>
+            Gm,
+            <Text
+              sx={{
+                display: "flex",
+              }}
+              variant="heading3"
+            >
+              {publicKey.toString().slice(0, 6)}...
+              {/* Let's start with your character */}
+            </Text>
+          </>
         )}
       </Heading>
 
-      <CreateCharacterForm />
+      {isOnboarding || !publicKey ? <CreateCharacterForm /> : null}
 
       {/** Check for wallet as well to prevent flash */}
       {!publicKey && !wallet ? (

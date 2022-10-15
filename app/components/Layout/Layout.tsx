@@ -76,8 +76,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
           sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            maxWidth: "64rem",
+            alignItems: "stretch",
+            maxWidth: "48rem",
             margin: "0 auto",
             padding: "0 1.6rem",
 
@@ -90,7 +90,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             sx={{
               flexDirection: "column",
               /** Workaround to keep it centralized in relation to the mennu */
-              marginLeft: "-16rem",
+              // marginLeft: "-16rem",
               paddingTop: "4rem",
             }}
           >

@@ -1,9 +1,9 @@
 /** @jsxImportSource theme-ui */
 
 import { useWallet } from "@solana/wallet-adapter-react"
+import { CharacterApiResponseWithNft } from "contexts/CharacterContextProvider"
 import Select, { ActionMeta, StylesConfig } from "react-select"
 import { useThemeUI, Flex, Text } from "theme-ui"
-import { CharacterApiResponseWithNft } from "./Layout"
 
 const SelectorNFTOptionLabel = ({
   imgSrc,
@@ -111,6 +111,7 @@ const CharacterSelect = ({
     <Select
       key={"nftselect-" + options?.length}
       name={name}
+      defaultValue={options?.[0]}
       options={options || []}
       styles={colourStyles}
       onChange={onChange}
