@@ -71,7 +71,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           sx={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
             alignItems: "center",
             maxWidth: "64rem",
             margin: "0 auto",
