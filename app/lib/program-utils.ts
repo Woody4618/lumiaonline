@@ -95,13 +95,14 @@ export const getBattles = async (
 }
 
 export const getCharacters = async (
-  connection: Connection
-  // owner: PublicKey,
+  connection: Connection,
+  owner?: web3.PublicKey
 ) => {
-  const filters = [
-    accountFilter(CharacterAccount.discriminator),
-    // memcmp(10, owner.toBase58()),
-  ]
+  const filters = [accountFilter(CharacterAccount.discriminator)]
+
+  if (owner) {
+    filters.push(memcmp(8, owner.toBase58()))
+  }
 
   const accounts = await fetchAccounts(connection, filters)
 

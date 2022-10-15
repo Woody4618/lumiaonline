@@ -3,6 +3,7 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import { WalletMultiButton } from "./WalletMultiButton"
 import { Flex } from "theme-ui"
 import theme from "@/styles/theme"
+import { SettingsIcon } from "../icons"
 
 const WalletManager = () => {
   const wallet = useWallet()
@@ -45,7 +46,9 @@ const WalletManager = () => {
                 cursor: "pointer",
               },
             }}
-          />
+          >
+            <SettingsIcon />
+          </WalletMultiButton>
         ) : (
           <WalletMultiButton
             sx={{
@@ -79,7 +82,9 @@ const WalletManager = () => {
                 opacity: 0.3,
               },
             }}
-          ></WalletMultiButton>
+          >
+            Connect
+          </WalletMultiButton>
         )}
       </Flex>
     </Flex>

@@ -1,12 +1,57 @@
 /** @jsxImportSource theme-ui */
+import {
+  Metaplex,
+  Nft,
+  NftWithToken,
+  Sft,
+  SftWithToken,
+} from "@metaplex-foundation/js"
+import { useConnection, useWallet } from "@solana/wallet-adapter-react"
+import { PublicKey } from "@solana/web3.js"
+import { CharacterAccount } from "lib/gen/accounts"
+import { getCharacters } from "lib/program-utils"
 import Link from "next/link"
-import * as React from "react"
+import { useEffect, useState } from "react"
 import { Flex, Heading } from "theme-ui"
 import Header from "../Header/Header"
+import CharacterSelect from "./CharacterSelect"
 
 export interface ILayoutProps {}
 
+export type CharacterApiResponseWithNft = {
+  pubkey: PublicKey
+  account: CharacterAccount
+} & {
+  nft: Sft | SftWithToken | Nft | NftWithToken
+}
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { publicKey } = useWallet()
+  const { connection } = useConnection()
+  const [characters, setCharacters] =
+    useState<CharacterApiResponseWithNft[]>(null)
+
+  useEffect(() => {
+    if (publicKey) {
+      ;(async () => {
+        const userCharacters = await getCharacters(connection, publicKey)
+
+        const metaplex = Metaplex.make(connection)
+
+        const withNft = await Promise.all(
+          userCharacters.map(async (character) => {
+            const nft = await metaplex
+              .nfts()
+              .findByMint({ mintAddress: character.account.nftMint })
+              .run()
+
+            return Object.assign(character, { nft })
+          })
+        )
+        setCharacters(withNft)
+      })()
+    }
+  }, [publicKey])
+
   return (
     <Flex
       sx={{
@@ -35,6 +80,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           }}
           role="menu"
         >
+          <CharacterSelect name="character" characters={characters} />
           <Flex
             sx={{
               flexDirection: "column",
