@@ -12,6 +12,7 @@ import withGA from "next-ga"
 import defaultTheme from "../styles/theme"
 import { Toaster } from "react-hot-toast"
 import { Layout } from "@/components/Layout/Layout"
+import { CharacterContextProvider } from "contexts/CharacterContextProvider"
 
 const WalletProvider = dynamic(
   () => import("@/components/WalletProvider/WalletProvider"),
@@ -32,11 +33,13 @@ function App(props: AppProps) {
       </Head>
 
       <WalletProvider>
-        <Layout>
-          <Toaster />
+        <CharacterContextProvider>
+          <Layout>
+            <Toaster />
 
-          <Component {...pageProps} />
-        </Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </CharacterContextProvider>
       </WalletProvider>
     </ThemeProvider>
   )
