@@ -1,5 +1,27 @@
 /** @jsxImportSource theme-ui */
 
+export function BackIcon({ className = "" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      sx={{
+        width: "3.2rem",
+        height: "3.2rem",
+        stroke: "text",
+      }}
+      className={className}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+    >
+      <path stroke="none" d="M0 0h24v24H0z"></path>
+      <path d="M9 13L5 9l4-4M5 9h11a4 4 0 010 8h-1"></path>
+    </svg>
+  )
+}
+
 export function WalletIcon({ className = "" }) {
   return (
     <svg

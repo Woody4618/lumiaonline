@@ -17,6 +17,8 @@ import {
 import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
 import { useRouter } from "next/router"
 import WalletConnectButton from "@/components/WalletConnectButton"
+import { BackIcon } from "@/components/icons"
+import Link from "next/link"
 
 const systemProgram = web3.SystemProgram.programId
 
@@ -78,7 +80,17 @@ export default function Create() {
         padding: "0 1.6rem",
       }}
     >
-      <Heading mb=".8rem" variant="heading1">
+      <Link href="/" passHref>
+        <a
+          sx={{
+            alignSelf: "flex-start",
+            margin: "1.6rem 0",
+          }}
+        >
+          <BackIcon />
+        </a>
+      </Link>
+      <Heading mb="1.6rem" variant="heading">
         {isOnboarding
           ? "Let's start with your character"
           : "Create a new character"}
@@ -95,6 +107,7 @@ export default function Create() {
         <Label
           sx={{
             flexDirection: "column",
+            gap: ".8rem",
           }}
         >
           Choose a name:
@@ -103,6 +116,7 @@ export default function Create() {
         <Label
           sx={{
             flexDirection: "column",
+            gap: ".8rem",
           }}
         >
           Select an NFT of yours:

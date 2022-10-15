@@ -158,7 +158,7 @@ const theme: Theme = {
     heading: {
       color: "heading",
       lineHeight: "body",
-      fontSize: "2.2rem",
+      fontSize: "3.2rem",
       fontFamily:
         'AvertaStd-Bold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
       fontWeight: 900,
@@ -232,7 +232,7 @@ const theme: Theme = {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        paddingBottom: "8rem",
+        paddingBottom: "24rem",
       },
 
       img: {
