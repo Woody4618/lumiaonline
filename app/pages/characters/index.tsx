@@ -51,69 +51,55 @@ export default function Characters() {
 
   return (
     <>
-      <Header />
-      <main
+      <Heading mb=".8rem" variant="heading1">
+        Characters
+      </Heading>
+      <Text mb="3.2rem">List of created characters</Text>
+
+      <Flex
         sx={{
-          display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          maxWidth: "64rem",
-          margin: "0 auto",
-          marginTop: "4rem",
-          padding: "0 1.6rem",
+          gap: "1.6rem",
         }}
       >
-        <Heading mb=".8rem" variant="heading1">
-          Characters
-        </Heading>
-        <Text mb="3.2rem">List of created characters</Text>
-
-        <Flex
-          sx={{
-            flexDirection: "column",
-            gap: "1.6rem",
-          }}
-        >
-          {characters ? (
-            characters.map((character) => {
-              return (
+        {characters ? (
+          characters.map((character) => {
+            return (
+              <Flex
+                sx={{
+                  alignItems: "center",
+                  gap: ".8rem",
+                }}
+                key={character.pubkey.toString()}
+              >
+                <img
+                  sx={{
+                    maxWidth: "6.4rem",
+                    borderRadius: ".4rem",
+                  }}
+                  src={character.nft.json.image}
+                />
                 <Flex
                   sx={{
-                    alignItems: "center",
-                    gap: ".8rem",
+                    flexDirection: "column",
                   }}
-                  key={character.pubkey.toString()}
                 >
-                  <img
-                    sx={{
-                      maxWidth: "6.4rem",
-                      borderRadius: ".4rem",
-                    }}
-                    src={character.nft.json.image}
-                  />
-                  <Flex
-                    sx={{
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Text>{character.account.name}</Text>
-                    <Text>
-                      Experience: {character.account.experience.toNumber()}
-                    </Text>
-                    <Text>
-                      Hitpoints: {character.account.hitpoints.toNumber()}
-                    </Text>
-                    <Text>deaths: {character.account.deaths}</Text>
-                  </Flex>
+                  <Text>{character.account.name}</Text>
+                  <Text>
+                    Experience: {character.account.experience.toNumber()}
+                  </Text>
+                  <Text>
+                    Hitpoints: {character.account.hitpoints.toNumber()}
+                  </Text>
+                  <Text>deaths: {character.account.deaths}</Text>
                 </Flex>
-              )
-            })
-          ) : (
-            <LoadingIcon />
-          )}
-        </Flex>
-      </main>
+              </Flex>
+            )
+          })
+        ) : (
+          <LoadingIcon />
+        )}
+      </Flex>
     </>
   )
 }

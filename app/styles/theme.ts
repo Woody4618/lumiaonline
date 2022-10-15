@@ -234,6 +234,12 @@ const theme: Theme = {
         paddingTop: "4rem",
       },
 
+      "#__next": {
+        display: "flex",
+        flexDirection: "column",
+        alignSelf: "stretch",
+      },
+
       img: {
         maxWidth: "100%",
         height: "auto",

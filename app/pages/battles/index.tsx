@@ -63,62 +63,46 @@ export default function Battles() {
 
   return (
     <>
-      <Header />
-      <main
+      <Heading mb=".8rem" variant="heading1">
+        Battles
+      </Heading>
+      <Text mb="3.2rem">List of past battles</Text>
+
+      <Flex
         sx={{
-          display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          maxWidth: "64rem",
-          margin: "0 auto",
-          marginTop: "4rem",
-          padding: "0 1.6rem",
+          gap: "1.6rem",
         }}
       >
-        <Heading mb=".8rem" variant="heading1">
-          Battles
-        </Heading>
-        <Text mb="3.2rem">List of past battles</Text>
+        {battles ? (
+          battles.map((battle) => {
+            const { character, monster } = battle.account.participants
+            const lastTurn =
+              battle.account.battleTurns[battle.account.battleTurns.length - 1]
 
-        <Flex
-          sx={{
-            flexDirection: "column",
-            gap: "1.6rem",
-          }}
-        >
-          {battles ? (
-            battles.map((battle) => {
-              const { character, monster } = battle.account.participants
-              const lastTurn =
-                battle.account.battleTurns[
-                  battle.account.battleTurns.length - 1
-                ]
+            let characterDied = false
+            if (lastTurn.characterHitpoints.toNumber() <= 0) {
+              characterDied = true
+            }
 
-              let characterDied = false
-              if (lastTurn.characterHitpoints.toNumber() <= 0) {
-                characterDied = true
-              }
-
-              return (
-                <Flex
-                  sx={{
-                    alignItems: "center",
-                    gap: ".8rem",
-                  }}
-                  key={battle.pubkey.toString()}
-                >
-                  {characterDied
-                    ? `${character.name} died by a ${monster.config.uuid}`
-                    : `${character.name} killed a ${monster.config.uuid}`}
-                </Flex>
-              )
-            })
-          ) : (
-            <LoadingIcon />
-          )}
-        </Flex>
-      </main>
+            return (
+              <Flex
+                sx={{
+                  alignItems: "center",
+                  gap: ".8rem",
+                }}
+                key={battle.pubkey.toString()}
+              >
+                {characterDied
+                  ? `${character.name} died by a ${monster.config.uuid}`
+                  : `${character.name} killed a ${monster.config.uuid}`}
+              </Flex>
+            )
+          })
+        ) : (
+          <LoadingIcon />
+        )}
+      </Flex>
     </>
   )
 }

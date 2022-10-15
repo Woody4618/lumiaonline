@@ -15,21 +15,7 @@ export default function Create() {
   const isOnboarding = query.onboarding === "true"
 
   return (
-    <main
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        maxWidth: "64rem",
-        margin: "0 auto",
-        padding: "0 1.6rem",
-
-        "@media (min-width: 64rem)": {
-          minWidth: "64rem",
-        },
-      }}
-    >
+    <>
       <Flex
         sx={{
           justifyContent: "space-between",
@@ -65,6 +51,6 @@ export default function Create() {
           : "Create a new character"}
       </Heading>
       <CreateCharacterForm />
-    </main>
+    </>
   )
 }

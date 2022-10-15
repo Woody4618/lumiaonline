@@ -123,94 +123,79 @@ export default function Battle() {
 
   return (
     <>
-      <Header />
-      <main
+      <Heading mb=".8rem" variant="heading1">
+        Battle
+      </Heading>
+      <Text mb="3.2rem">Select your character and a monster to battle</Text>
+
+      <NFTSelectInput
+        onChange={(newValue) => {
+          setSelectedMint(newValue.value)
+        }}
+        name="mint"
+        NFTs={walletNFTs}
+      />
+      <Text my="3.2rem"></Text>
+      <Flex
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          maxWidth: "64rem",
-          margin: "0 auto",
-          marginTop: "4rem",
-          padding: "0 1.6rem",
+          gap: "1.6rem",
         }}
       >
-        <Heading mb=".8rem" variant="heading1">
-          Battle
-        </Heading>
-        <Text mb="3.2rem">Select your character and a monster to battle</Text>
+        {monsters ? (
+          monsters.map((monster) => {
+            const monsterData = monstersData.find(
+              (monsterData) => monsterData.name === monster.account.config.uuid
+            )
 
-        <NFTSelectInput
-          onChange={(newValue) => {
-            setSelectedMint(newValue.value)
-          }}
-          name="mint"
-          NFTs={walletNFTs}
-        />
-        <Text my="3.2rem"></Text>
-        <Flex
-          sx={{
-            gap: "1.6rem",
-          }}
-        >
-          {monsters ? (
-            monsters.map((monster) => {
-              const monsterData = monstersData.find(
-                (monsterData) =>
-                  monsterData.name === monster.account.config.uuid
-              )
+            return (
+              <Flex
+                sx={{
+                  alignItems: "center",
+                  flexDirection: "column",
+                  gap: ".8rem",
+                  borderTop: "1px solid",
+                  borderBottom: "1px solid",
+                  borderColor: "primary",
+                  padding: ".8rem 0",
+                }}
+                key={monster.pubkey.toString()}
+              >
+                <Heading variant="heading2">{monsterData.name}</Heading>
+                <img
+                  sx={{
+                    maxWidth: "8rem",
+                    borderRadius: ".4rem",
+                  }}
+                  src={monsterData.image}
+                />
 
-              return (
                 <Flex
                   sx={{
-                    alignItems: "center",
                     flexDirection: "column",
-                    gap: ".8rem",
-                    borderTop: "1px solid",
-                    borderBottom: "1px solid",
-                    borderColor: "primary",
-                    padding: ".8rem 0",
+                    alignItems: "flex-start",
                   }}
-                  key={monster.pubkey.toString()}
                 >
-                  <Heading variant="heading2">{monsterData.name}</Heading>
-                  <img
-                    sx={{
-                      maxWidth: "8rem",
-                      borderRadius: ".4rem",
-                    }}
-                    src={monsterData.image}
-                  />
-
-                  <Flex
-                    sx={{
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    {/* <Text>
+                  {/* <Text>
                       Hitpoints: {monster.account.config.hitpoints.toNumber()}
                     </Text> */}
-                  </Flex>
-                  <form sx={{}} onSubmit={handleJoinFormSubmit}>
-                    <input
-                      type="hidden"
-                      name="uuid"
-                      value={monster.account.config.uuid.toString()}
-                    />
-                    <Button type="submit" mt="1.6rem">
-                      Battle
-                    </Button>
-                  </form>
                 </Flex>
-              )
-            })
-          ) : (
-            <LoadingIcon />
-          )}
-        </Flex>
-      </main>
+                <form sx={{}} onSubmit={handleJoinFormSubmit}>
+                  <input
+                    type="hidden"
+                    name="uuid"
+                    value={monster.account.config.uuid.toString()}
+                  />
+                  <Button type="submit" mt="1.6rem">
+                    Battle
+                  </Button>
+                </form>
+              </Flex>
+            )
+          })
+        ) : (
+          <LoadingIcon />
+        )}
+      </Flex>
     </>
   )
 }

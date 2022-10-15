@@ -72,96 +72,82 @@ export default function Quests() {
 
   return (
     <>
-      <Header />
-      <main
+      <Heading mb=".8rem" variant="heading1">
+        Quests
+      </Heading>
+      <Text mb="3.2rem">List of created Quests</Text>
+
+      <Flex
         sx={{
-          display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          maxWidth: "64rem",
-          margin: "0 auto",
-          marginTop: "4rem",
-          padding: "0 1.6rem",
+          gap: "1.6rem",
         }}
       >
-        <Heading mb=".8rem" variant="heading1">
-          Quests
-        </Heading>
-        <Text mb="3.2rem">List of created Quests</Text>
-
-        <Flex
-          sx={{
-            flexDirection: "column",
-            gap: "1.6rem",
-          }}
-        >
-          {quests ? (
-            quests.map((quest) => {
-              const questData = questsData.find(
-                (questData) => questData.uuid === quest.account.config.uuid
-              )
-              return (
+        {quests ? (
+          quests.map((quest) => {
+            const questData = questsData.find(
+              (questData) => questData.uuid === quest.account.config.uuid
+            )
+            return (
+              <Flex
+                sx={{
+                  alignItems: "center",
+                  flexDirection: "column",
+                  gap: ".8rem",
+                  borderTop: "1px solid",
+                  borderBottom: "1px solid",
+                  borderColor: "primary",
+                  padding: ".8rem 0",
+                }}
+                key={quest.pubkey.toString()}
+              >
+                <Heading variant="heading2">{questData.name}</Heading>
+                <img
+                  sx={{
+                    maxWidth: "32rem",
+                    borderRadius: ".4rem",
+                  }}
+                  src={questData.image}
+                />
+                <Text
+                  sx={{
+                    maxWidth: "32rem",
+                  }}
+                >
+                  {questData.description}
+                </Text>
                 <Flex
                   sx={{
-                    alignItems: "center",
                     flexDirection: "column",
-                    gap: ".8rem",
-                    borderTop: "1px solid",
-                    borderBottom: "1px solid",
-                    borderColor: "primary",
-                    padding: ".8rem 0",
+                    alignItems: "flex-start",
+                    margin: "3.2rem 0",
                   }}
-                  key={quest.pubkey.toString()}
                 >
-                  <Heading variant="heading2">{questData.name}</Heading>
-                  <img
-                    sx={{
-                      maxWidth: "32rem",
-                      borderRadius: ".4rem",
-                    }}
-                    src={questData.image}
-                  />
-                  <Text
-                    sx={{
-                      maxWidth: "32rem",
-                    }}
-                  >
-                    {questData.description}
+                  <Text>
+                    Reward Exp: +{quest.account.config.rewardExp.toNumber()}
                   </Text>
-                  <Flex
-                    sx={{
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      margin: "3.2rem 0",
-                    }}
-                  >
-                    <Text>
-                      Reward Exp: +{quest.account.config.rewardExp.toNumber()}
-                    </Text>
-                    <Text>
-                      Duration: {quest.account.config.duration.toNumber()}s
-                    </Text>
-                  </Flex>
-                  <form sx={{}} onSubmit={handleJoinFormSubmit}>
-                    <input
-                      type="hidden"
-                      name="uuid"
-                      value={quest.account.config.uuid.toString()}
-                    />
-                    <NFTSelectInput name="mint" NFTs={walletNFTs} />
-                    <Button type="submit" mt="1.6rem">
-                      Join
-                    </Button>
-                  </form>
+                  <Text>
+                    Duration: {quest.account.config.duration.toNumber()}s
+                  </Text>
                 </Flex>
-              )
-            })
-          ) : (
-            <LoadingIcon />
-          )}
-        </Flex>
-      </main>
+                <form sx={{}} onSubmit={handleJoinFormSubmit}>
+                  <input
+                    type="hidden"
+                    name="uuid"
+                    value={quest.account.config.uuid.toString()}
+                  />
+                  <NFTSelectInput name="mint" NFTs={walletNFTs} />
+                  <Button type="submit" mt="1.6rem">
+                    Join
+                  </Button>
+                </form>
+              </Flex>
+            )
+          })
+        ) : (
+          <LoadingIcon />
+        )}
+      </Flex>
     </>
   )
 }

@@ -15,19 +15,11 @@ export default function Home() {
   const isOnboarding = query.onboarding === "true" || !wallet
 
   return (
-    <main
+    <Flex
       sx={{
-        display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        maxWidth: "64rem",
-        margin: "0 auto",
-        padding: "0 1.6rem",
-
-        "@media (min-width: 64rem)": {
-          minWidth: "64rem",
-        },
+        /** Workaround to keep it centralized in relation to the mennu */
+        marginLeft: "-16rem",
       }}
     >
       <Flex
@@ -49,6 +41,7 @@ export default function Home() {
           </Flex>
         ) : null}
       </Flex>
+
       <Heading mb="1.6rem" variant="heading">
         {isOnboarding ? (
           <>
@@ -59,9 +52,9 @@ export default function Home() {
           "Create a new character"
         )}
       </Heading>
-      {/** User Onboarding */}
 
       <CreateCharacterForm />
+
       {/** Check for wallet as well to prevent flash */}
       {!publicKey && !wallet ? (
         <Flex
@@ -95,6 +88,6 @@ export default function Home() {
           />
         </Flex>
       ) : null}
-    </main>
+    </Flex>
   )
 }
