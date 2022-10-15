@@ -2,17 +2,34 @@
 import { Heading, Text, Flex } from "@theme-ui/components"
 
 import { useWallet } from "@solana/wallet-adapter-react"
-import { useRouter } from "next/router"
 import WalletConnectButton from "@/components/WalletConnectButton"
 import { WalletIcon } from "@/components/icons"
-import WalletManager from "@/components/WalletManager/WalletManager"
 import { CreateCharacterForm } from "@/components/CreateCharacterForm"
+import { useEffect, useState } from "react"
 
 export default function Home() {
   const { publicKey, wallet } = useWallet()
-  const { query } = useRouter()
 
-  const isOnboarding = query.onboarding === "true" || !wallet
+  /** Being ready doesn't mean it is connected, it only means the provider has finished running */
+  const [isWalletReady, setIsWalletReady] = useState(false)
+
+  useEffect(() => {
+    /**
+     * If there is localStorage for the wallet adapter
+     * It means the provider will try to connect automatically.
+     * So we wait for the wallet to be ready
+     * Before assuming the user hasn't connected.
+     */
+    const walletName = localStorage.getItem("walletName")
+
+    if (walletName && publicKey) {
+      setIsWalletReady(true)
+    } else if (!walletName) {
+      setIsWalletReady(true)
+    }
+  }, [publicKey, wallet])
+
+  // const isOnboarding = !localStorage.getItem('onboardDone')
 
   return (
     <>
@@ -23,7 +40,7 @@ export default function Home() {
         mb="1.6rem"
         variant="heading"
       >
-        {isOnboarding || !publicKey ? (
+        {isWalletReady && !publicKey ? (
           <>
             Gm,
             <Text
@@ -37,24 +54,23 @@ export default function Home() {
           </>
         ) : (
           <>
-            Gm,
+            {publicKey ? `Gm,` : `Gm`}
             <Text
               sx={{
                 display: "flex",
               }}
               variant="heading3"
             >
-              {publicKey.toString().slice(0, 6)}...
-              {/* Let's start with your character */}
+              {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}
             </Text>
           </>
         )}
       </Heading>
 
-      {isOnboarding || !publicKey ? <CreateCharacterForm /> : null}
+      {isWalletReady && !publicKey ? <CreateCharacterForm /> : null}
 
       {/** Check for wallet as well to prevent flash */}
-      {!publicKey && !wallet ? (
+      {isWalletReady && !publicKey ? (
         <Flex
           sx={{
             alignItems: "center",

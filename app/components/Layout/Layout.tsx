@@ -31,11 +31,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             display: "flex",
 
             flexDirection: "column",
-            width: "16rem",
+            width: "24rem",
             padding: "1.6rem 3.2rem",
             listStyle: "none",
             gap: "1.6rem",
-            background: "background2",
+            borderRight: "1px solid",
+            borderColor: "background2",
           }}
           role="menu"
         >
