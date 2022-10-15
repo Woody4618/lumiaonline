@@ -58,7 +58,7 @@ const theme: Theme = {
   buttons: {
     primary: {
       display: "flex",
-      color: "heading",
+      color: "background",
       background: (theme) => theme.colors?.primaryGradient,
       border: "1px solid transparent",
       transition: "all .125s linear",
@@ -76,7 +76,7 @@ const theme: Theme = {
 
       "&:disabled": {
         cursor: "not-allowed",
-        opacity: 0.3,
+        opacity: 0.7,
       },
     },
     secondary: {
@@ -214,6 +214,8 @@ const theme: Theme = {
       ...base.styles?.root,
       fontSize: "62.5%",
       minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
 
       body: {
         /** Default text styles */
@@ -225,6 +227,12 @@ const theme: Theme = {
         color: "text",
         backgroundColor: "background",
         transition: "all .125s linear",
+
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingBottom: "8rem",
       },
 
       img: {

@@ -15,7 +15,8 @@ import {
   TOKEN_METADATA_PROGRAM_ID,
 } from "lib/program-utils"
 import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
-import WalletManager from "@/components/WalletManager/WalletManager"
+import { useRouter } from "next/router"
+import WalletConnectButton from "@/components/WalletConnectButton"
 
 const systemProgram = web3.SystemProgram.programId
 
@@ -23,6 +24,9 @@ export default function Create() {
   const { walletNFTs } = useWalletNFTs()
   const { publicKey, sendTransaction } = useWallet()
   const { connection } = useConnection()
+  const { query } = useRouter()
+
+  const isOnboarding = query.onboarding === "true"
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -62,58 +66,57 @@ export default function Create() {
     console.log(txid)
   }
   return (
-    <>
-      <Header />
-      <main
+    <main
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        maxWidth: "64rem",
+        margin: "0 auto",
+        marginTop: "4rem",
+        padding: "0 1.6rem",
+      }}
+    >
+      <Heading mb=".8rem" variant="heading1">
+        {isOnboarding
+          ? "Let's start with your character"
+          : "Create a new character"}
+      </Heading>
+
+      <form
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          maxWidth: "64rem",
-          margin: "0 auto",
-          marginTop: "4rem",
-          padding: "0 1.6rem",
+          gap: "1.6rem",
         }}
+        onSubmit={onSubmit}
       >
-        <Heading mb=".8rem" variant="heading1">
-          Create a character
-        </Heading>
-        {/* <Text mb="3.2rem">Create now</Text> */}
+        <Label
+          sx={{
+            flexDirection: "column",
+          }}
+        >
+          Choose a name:
+          <Input name="name" required autoComplete="off" />
+        </Label>
+        <Label
+          sx={{
+            flexDirection: "column",
+          }}
+        >
+          Select an NFT of yours:
+          <NFTSelectInput name="mint" NFTs={walletNFTs} />
+        </Label>
 
-        {publicKey ? (
-          <form
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "1.6rem",
-            }}
-            onSubmit={onSubmit}
-          >
-            <Label
-              sx={{
-                flexDirection: "column",
-              }}
-            >
-              Choose a name:
-              <Input name="name" required autoComplete="off" />
-            </Label>
-            <Label
-              sx={{
-                flexDirection: "column",
-              }}
-            >
-              Select an NFT of yours:
-              <NFTSelectInput name="mint" NFTs={walletNFTs} />
-            </Label>
-            <Button>Create</Button>
-          </form>
+        {!publicKey ? (
+          <WalletConnectButton
+            label={<Button disabled>Connect your wallet first</Button>}
+          />
         ) : (
-          <Text>
-            Please, connect your wallet first: <WalletManager />
-          </Text>
+          <Button>Create</Button>
         )}
-      </main>
-    </>
+      </form>
+    </main>
   )
 }

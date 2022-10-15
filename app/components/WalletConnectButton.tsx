@@ -29,7 +29,7 @@ const WalletConnectButton = ({
       <WalletMultiButton
         sx={{
           backgroundColor: "unset",
-          color: (t) => "text",
+          color: (t) => "unset",
           lineHeight: "body",
           fontSize: "1.4rem",
           padding: "0",
