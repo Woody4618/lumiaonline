@@ -9,7 +9,7 @@ import CharacterSelect from "./CharacterSelect"
 export interface ILayoutProps {}
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { characters } = useContext(characterContext)
+  const { characters, setSelectedCharacter } = useContext(characterContext)
 
   return (
     <Flex
@@ -40,7 +40,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
           }}
           role="menu"
         >
-          <CharacterSelect name="character" characters={characters} />
+          <CharacterSelect
+            onChange={(event) => setSelectedCharacter(event.value)}
+            name="character"
+            characters={characters}
+          />
           <Flex
             sx={{
               flexDirection: "column",

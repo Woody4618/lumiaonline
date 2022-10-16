@@ -13,6 +13,8 @@ import { joinQuest } from "lib/gen/instructions"
 import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
 import useWalletNFTs from "@/hooks/useWalletNFTs"
 import questsData from "lib/quests.json"
+import { useContext } from "react"
+import { characterContext } from "contexts/CharacterContextProvider"
 
 type QuestResponse = {
   pubkey: web3.PublicKey
@@ -24,6 +26,7 @@ export default function Quests() {
   const { publicKey, sendTransaction } = useWallet()
   const { walletNFTs } = useWalletNFTs()
   const [quests, setQuests] = useState<QuestResponse[]>(null)
+  const { selectedCharacter } = useContext(characterContext)
 
   useEffect(() => {
     ;(async () => {
@@ -41,7 +44,8 @@ export default function Quests() {
 
     const data = new FormData(e.currentTarget)
 
-    const nftMint = new web3.PublicKey(data.get("mint").toString())
+    if (!selectedCharacter) throw new Error("Select a character first")
+    const nftMint = selectedCharacter.nft.mint.address
 
     const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
 
@@ -136,7 +140,6 @@ export default function Quests() {
                     name="uuid"
                     value={quest.account.config.uuid.toString()}
                   />
-                  <NFTSelectInput name="mint" NFTs={walletNFTs} />
                   <Button type="submit" mt="1.6rem">
                     Join
                   </Button>

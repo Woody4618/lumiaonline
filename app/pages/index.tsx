@@ -8,26 +8,25 @@ import { CreateCharacterForm } from "@/components/CreateCharacterForm"
 import { useEffect, useState } from "react"
 
 export default function Home() {
-  const { publicKey, wallet } = useWallet()
+  const { publicKey, wallet, autoConnect } = useWallet()
 
-  /** Being ready doesn't mean it is connected, it only means the provider has finished running */
+  /** Boolean for whether the wallet provider has finished running or not. */
   const [isWalletReady, setIsWalletReady] = useState(false)
 
+  /**
+   * If there is localStorage for the wallet adapter
+   * It means the wallet provider will try to connect automatically.
+   * So we wait for the wallet to be ready Before assuming the user hasn't connected.
+   */
   useEffect(() => {
-    /**
-     * If there is localStorage for the wallet adapter
-     * It means the provider will try to connect automatically.
-     * So we wait for the wallet to be ready
-     * Before assuming the user hasn't connected.
-     */
     const walletName = localStorage.getItem("walletName")
 
-    if (walletName && publicKey) {
+    if (autoConnect && walletName && publicKey) {
       setIsWalletReady(true)
-    } else if (!walletName) {
+    } else if (!walletName || !autoConnect) {
       setIsWalletReady(true)
     }
-  }, [publicKey, wallet])
+  }, [publicKey, wallet, autoConnect])
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
 
@@ -69,7 +68,6 @@ export default function Home() {
 
       {isWalletReady && !publicKey ? <CreateCharacterForm /> : null}
 
-      {/** Check for wallet as well to prevent flash */}
       {isWalletReady && !publicKey ? (
         <Flex
           sx={{

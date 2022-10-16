@@ -1,4 +1,10 @@
-import { createContext, useEffect, useState } from "react"
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react"
 import { getCharacters } from "lib/program-utils"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import {
@@ -17,8 +23,15 @@ export type CharacterApiResponseWithNft = {
 } & {
   nft: Sft | SftWithToken | Nft | NftWithToken
 }
-export const characterContext = createContext({
+export const characterContext = createContext<{
+  selectedCharacter: CharacterApiResponseWithNft
+
+  setSelectedCharacter: Dispatch<SetStateAction<CharacterApiResponseWithNft>>
+  characters: CharacterApiResponseWithNft[]
+}>({
   selectedCharacter: null,
+
+  setSelectedCharacter: null,
   characters: null,
 })
 
@@ -27,6 +40,8 @@ export function CharacterContextProvider({ children }) {
   const { connection } = useConnection()
   const [characters, setCharacters] =
     useState<CharacterApiResponseWithNft[]>(null)
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<CharacterApiResponseWithNft>(null)
 
   useEffect(() => {
     if (publicKey) {
@@ -46,12 +61,19 @@ export function CharacterContextProvider({ children }) {
           })
         )
         setCharacters(withNft)
+        setSelectedCharacter(withNft[0])
       })()
     }
   }, [publicKey])
 
   return (
-    <characterContext.Provider value={{ selectedCharacter: null, characters }}>
+    <characterContext.Provider
+      value={{
+        selectedCharacter,
+        characters,
+        setSelectedCharacter,
+      }}
+    >
       {children}
     </characterContext.Provider>
   )

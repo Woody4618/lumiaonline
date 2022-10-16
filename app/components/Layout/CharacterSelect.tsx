@@ -25,7 +25,7 @@ const SelectorNFTOptionLabel = ({
           maxHeight: "4.8rem",
         }}
       />
-      {/* <Text mr="1.6rem">{name}</Text> */}
+      <Text mr="1.6rem">{name}</Text>
     </Flex>
   )
 }
@@ -40,7 +40,7 @@ const CharacterSelect = ({
   value?: any
   onChange?: (
     newValue: {
-      value: string
+      value: CharacterApiResponseWithNft
       label: JSX.Element
     },
     actionMeta: ActionMeta<any>

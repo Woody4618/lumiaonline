@@ -17,6 +17,8 @@ import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
 import useWalletNFTs from "@/hooks/useWalletNFTs"
 import monstersData from "lib/monsters.json"
 import toast from "react-hot-toast"
+import { useContext } from "react"
+import { characterContext } from "contexts/CharacterContextProvider"
 
 type MonsterResponse = {
   pubkey: web3.PublicKey
@@ -28,9 +30,10 @@ export default function Battle() {
   const { publicKey, sendTransaction } = useWallet()
   const { walletNFTs } = useWalletNFTs()
   const [monsters, setMonsters] = useState<MonsterResponse[]>(null)
-  const [selectedMint, setSelectedMint] = useState<string>()
+
   // const [characterSubscriptionId, setCharacterSubscriptionId] =
   //   useState<string>()
+  const { selectedCharacter } = useContext(characterContext)
 
   useEffect(() => {
     ;(async () => {
@@ -65,7 +68,8 @@ export default function Battle() {
 
     const data = new FormData(e.currentTarget)
     const monsterUuid = data.get("uuid").toString()
-    const nftMint = new web3.PublicKey(selectedMint)
+    if (!selectedCharacter) throw new Error("Select a character first")
+    const nftMint = selectedCharacter.nft.mint.address
 
     const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
     const monster = web3.PublicKey.findProgramAddressSync(
@@ -126,15 +130,7 @@ export default function Battle() {
       <Heading mb=".8rem" variant="heading1">
         Battle
       </Heading>
-      <Text mb="3.2rem">Select your character and a monster to battle</Text>
 
-      <NFTSelectInput
-        onChange={(newValue) => {
-          setSelectedMint(newValue.value)
-        }}
-        name="mint"
-        NFTs={walletNFTs}
-      />
       <Text my="3.2rem"></Text>
       <Flex
         sx={{
