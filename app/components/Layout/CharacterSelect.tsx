@@ -107,6 +107,8 @@ const CharacterSelect = ({
     }),
   }
 
+  if (!options?.length) return null
+
   return (
     <Select
       key={"nftselect-" + options?.length}
@@ -120,7 +122,7 @@ const CharacterSelect = ({
           name={
             publicKey
               ? characters
-                ? "Select an character"
+                ? "Select a character"
                 : "Loading characters..."
               : "Connect your wallet."
           }

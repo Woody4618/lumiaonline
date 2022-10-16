@@ -1,4 +1,5 @@
 /** @jsxImportSource theme-ui */
+import useWalletWrapper from "@/hooks/useWalletWrapper"
 import { characterContext } from "contexts/CharacterContextProvider"
 import Link from "next/link"
 import { useContext } from "react"
@@ -10,6 +11,7 @@ export interface ILayoutProps {}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { characters, setSelectedCharacter } = useContext(characterContext)
+  const { publicKey, isWalletReady } = useWalletWrapper()
 
   return (
     <Flex
@@ -40,11 +42,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
           }}
           role="menu"
         >
-          <CharacterSelect
-            onChange={(event) => setSelectedCharacter(event.value)}
-            name="character"
-            characters={characters}
-          />
+          {publicKey && isWalletReady ? (
+            <CharacterSelect
+              onChange={(event) => setSelectedCharacter(event.value)}
+              name="character"
+              characters={characters}
+            />
+          ) : null}
           <Flex
             sx={{
               flexDirection: "column",

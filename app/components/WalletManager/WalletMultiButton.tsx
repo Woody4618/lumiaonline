@@ -5,6 +5,7 @@ import {
   WalletConnectButton,
   WalletModalButton,
 } from "@solana/wallet-adapter-react-ui"
+import Link from "next/link"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "theme-ui"
 
@@ -107,6 +108,21 @@ export const WalletMultiButton = ({ children = null, ...props }) => {
         ref={ref}
         role="menu"
       >
+        Account
+        <li className="wallet-adapter-dropdown-list-item" role="menuitem">
+          <Link href="/characters/new" passHref>
+            <a
+              sx={{
+                "&:hover": {
+                  color: "background",
+                },
+              }}
+            >
+              New Character
+            </a>
+          </Link>
+        </li>
+        Wallet
         <li
           onClick={copyAddress}
           className="wallet-adapter-dropdown-list-item"

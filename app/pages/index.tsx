@@ -1,32 +1,13 @@
 /** @jsxImportSource theme-ui */
 import { Heading, Text, Flex } from "@theme-ui/components"
 
-import { useWallet } from "@solana/wallet-adapter-react"
 import WalletConnectButton from "@/components/WalletConnectButton"
 import { WalletIcon } from "@/components/icons"
 import { CreateCharacterForm } from "@/components/CreateCharacterForm"
-import { useEffect, useState } from "react"
+import useWalletWrapper from "@/hooks/useWalletWrapper"
 
 export default function Home() {
-  const { publicKey, wallet, autoConnect } = useWallet()
-
-  /** Boolean for whether the wallet provider has finished running or not. */
-  const [isWalletReady, setIsWalletReady] = useState(false)
-
-  /**
-   * If there is localStorage for the wallet adapter
-   * It means the wallet provider will try to connect automatically.
-   * So we wait for the wallet to be ready Before assuming the user hasn't connected.
-   */
-  useEffect(() => {
-    const walletName = localStorage.getItem("walletName")
-
-    if (autoConnect && walletName && publicKey) {
-      setIsWalletReady(true)
-    } else if (!walletName || !autoConnect) {
-      setIsWalletReady(true)
-    }
-  }, [publicKey, wallet, autoConnect])
+  const { publicKey, wallet, autoConnect, isWalletReady } = useWalletWrapper()
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
 

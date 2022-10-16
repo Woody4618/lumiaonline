@@ -28,7 +28,7 @@ function App(props: AppProps) {
     <ThemeProvider theme={defaultTheme}>
       <Head>
         {/** Load font styles directly on the document to prevent flashes */}
-        <title>This is definitely an RPG</title>
+        <title>Chainquest</title>
         <link href="/fonts/fonts.css" rel="stylesheet" />
       </Head>
 

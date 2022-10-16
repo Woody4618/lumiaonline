@@ -16,25 +16,6 @@ export default function Create() {
 
   return (
     <>
-      <Flex
-        sx={{
-          justifyContent: "space-between",
-          alignItems: "center",
-          alignSelf: "stretch",
-          minHeight: "9rem",
-        }}
-      >
-        {publicKey ? (
-          <Flex
-            sx={{
-              margin: "3.2rem 0",
-              alignSelf: "flex-end",
-            }}
-          >
-            <WalletManager />
-          </Flex>
-        ) : null}
-      </Flex>
       <Heading mb="1.6rem" variant="heading">
         {isOnboarding
           ? "Let's start with your character"

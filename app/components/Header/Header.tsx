@@ -5,11 +5,9 @@ import { Button, Container, Flex, Text } from "@theme-ui/components"
 import WalletManager from "@/components/WalletManager/WalletManager"
 import { useState } from "react"
 import { CloseIcon, MenuIcon, MoonLogo, ProfileLogo, SunLogo } from "../icons"
-import { useColorMode } from "theme-ui"
 
 const Header = () => {
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false)
-  const [colorMode, setColorMode] = useColorMode()
 
   return (
     <Flex
@@ -35,7 +33,7 @@ const Header = () => {
             <Flex as="a" sx={{ alignItems: "center", flexDirection: "column" }}>
               <Flex sx={{ alignItems: "center" }}>
                 <Text as="h1" variant="headingSpecial" ml=".4rem">
-                  This is definitely an RPG
+                  Chainquest
                 </Text>
               </Flex>
             </Flex>
@@ -170,6 +168,8 @@ const Header = () => {
                 </a>
               </Flex>
             </Flex> */}
+
+            {/* {isWalletReady && publicKey ? <WalletManager /> : null} */}
             <WalletManager />
           </Flex>
           <Button

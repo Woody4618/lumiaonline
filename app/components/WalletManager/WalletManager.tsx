@@ -46,9 +46,7 @@ const WalletManager = () => {
                 cursor: "pointer",
               },
             }}
-          >
-            <SettingsIcon />
-          </WalletMultiButton>
+          ></WalletMultiButton>
         ) : (
           <WalletMultiButton
             sx={{
