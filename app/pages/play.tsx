@@ -92,7 +92,8 @@ export default function Play() {
           {publicKey ? `Gm, ` : `Gm`}
           <Text variant="heading3">
             {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
-            {selectedCharacter?.account.name}. You're in Vivendell
+            {selectedCharacter && selectedCharacter?.account?.name}. You're in
+            Vivendell
           </Text>
         </Heading>
         <WalletManager />
@@ -121,6 +122,7 @@ export default function Play() {
             gap: "1.6rem",
             borderRight: "1px solid",
             borderColor: "background2",
+            minWidth: "28rem",
           }}
           role="menu"
         >
@@ -138,6 +140,13 @@ export default function Play() {
             >
               <Link passHref href="/characters">
                 <Button variant="gameButton">
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                      alignSelf: "flex-start",
+                    }}
+                    src="/assets/icon_equipment.png"
+                  />
                   {/* <ShirtIcon
                         sx={{
                           width: "2.4rem",
@@ -149,6 +158,13 @@ export default function Play() {
               </Link>
               <Link passHref href="/characters">
                 <Button variant="gameButton">
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                      alignSelf: "flex-start",
+                    }}
+                    src="/assets/icon_magic.png"
+                  />
                   {/* <MagicIcon
                         sx={{
                           width: "2.4rem",
@@ -161,6 +177,13 @@ export default function Play() {
 
               <Link passHref href="/characters">
                 <Button variant="gameButton">
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                      alignSelf: "flex-start",
+                    }}
+                    src="/assets/icon_quests.png"
+                  />
                   {/* <DotsIcon
                         sx={{
                           width: "2.4rem",
@@ -173,6 +196,13 @@ export default function Play() {
 
               <Link passHref href="/characters">
                 <Button variant="gameButton">
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                      alignSelf: "flex-start",
+                    }}
+                    src="/assets/icon_sailboat.png"
+                  />
                   {/* <BoatIcon
                         sx={{
                           width: "2.4rem",
@@ -184,6 +214,13 @@ export default function Play() {
               </Link>
               <Link passHref href="/characters">
                 <Button variant="gameButton">
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                      alignSelf: "flex-start",
+                    }}
+                    src="/assets/icon_wilderness.png"
+                  />
                   {/* <WildernessIcon
                         sx={{
                           width: "2.4rem",
@@ -196,21 +233,18 @@ export default function Play() {
             </Flex>
           </Flex>
         </Flex>
-        <img
+        <Flex
           sx={{
-            maxWidth: "78rem",
             order: 1,
-            width: "100%",
-            height: "100%",
 
             "@media (min-width: 768px)": {
               flexDirection: "row",
               order: 2,
             },
-            // maxWidth: "80vw",
           }}
-          src="https://cdn2.inkarnate.com/cdn-cgi/image/width=1800,height=1400/https://inkarnate-api-as-production.s3.amazonaws.com/vvno70tauo7bgaald7mjt2nf5vb6"
-        />
+        >
+          <img src="/assets/teristraz.png" />
+        </Flex>
       </Flex>
     </Flex>
   )

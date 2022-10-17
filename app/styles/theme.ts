@@ -172,14 +172,14 @@ const theme: Theme = {
       },
 
       /** Start custom styles */
-      padding: "1.6rem 0",
+      padding: "1.6rem",
       alignSelf: "flex-start",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       minWidth: "16rem",
       background: "url(assets/long_button_off.png) center no-repeat",
       backgroundSize: "contain",
       alignItems: "center",
-      gap: ".8rem",
+      gap: "1.6rem",
 
       ":hover": {
         background: "url(assets/long_button_on.png) center no-repeat",
