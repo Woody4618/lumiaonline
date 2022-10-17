@@ -22,6 +22,99 @@ export function BackIcon({ className = "" }) {
   )
 }
 
+export function BoatIcon({ className = "" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      sx={{
+        width: "3.2rem",
+        height: "3.2rem",
+        stroke: "text",
+      }}
+      className={className}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+    >
+      <path stroke="none" d="M0 0h24v24H0z"></path>
+      <path d="M2 20a2.4 2.4 0 002 1 2.4 2.4 0 002-1 2.4 2.4 0 012-1 2.4 2.4 0 012 1 2.4 2.4 0 002 1 2.4 2.4 0 002-1 2.4 2.4 0 012-1 2.4 2.4 0 012 1 2.4 2.4 0 002 1 2.4 2.4 0 002-1M4 18l-1-3h18l-1 3M11 12h7l-7-9v9"></path>
+      <path d="M8 7L6 12"></path>
+    </svg>
+  )
+}
+
+export function WildernessIcon({ className = "" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      sx={{
+        width: "3.2rem",
+        height: "3.2rem",
+        stroke: "text",
+      }}
+      className={className}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+    >
+      <path stroke="none" d="M0 0h24v24H0z"></path>
+      <path d="M16 5l3 3-2 1 4 4-3 1 4 4h-9"></path>
+      <path d="M15 21L15 18"></path>
+      <path d="M8 13l-2-2M8 12l2-2M8 21V8M5.824 15.995a3 3 0 01-2.743-3.69 2.998 2.998 0 01.304-4.833A3 3 0 018 3.765a3 3 0 014.614 3.707 2.997 2.997 0 01.305 4.833A3 3 0 0110 16H6z"></path>
+    </svg>
+  )
+}
+
+export function ShirtIcon({ className = "" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      sx={{
+        width: "3.2rem",
+        height: "3.2rem",
+        stroke: "text",
+      }}
+      className={className}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+    >
+      <path stroke="none" d="M0 0h24v24H0z"></path>
+      <path d="M15 4l6 2v5h-3v8a1 1 0 01-1 1H7a1 1 0 01-1-1v-8H3V6l6-2a3 3 0 006 0"></path>
+    </svg>
+  )
+}
+
+export function MagicIcon({ className = "" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      sx={{
+        width: "3.2rem",
+        height: "3.2rem",
+        stroke: "text",
+      }}
+      className={className}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+    >
+      <path stroke="none" d="M0 0h24v24H0z"></path>
+      <path d="M6 21L21 6 18 3 3 18 6 21"></path>
+      <path d="M15 6L18 9"></path>
+      <path d="M9 3a2 2 0 002 2 2 2 0 00-2 2 2 2 0 00-2-2 2 2 0 002-2M19 13a2 2 0 002 2 2 2 0 00-2 2 2 2 0 00-2-2 2 2 0 002-2"></path>
+    </svg>
+  )
+}
+
 export function WalletIcon({ className = "" }) {
   return (
     <svg

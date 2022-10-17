@@ -2,16 +2,52 @@
 import { Heading, Text, Button, Flex } from "@theme-ui/components"
 
 import WalletConnectButton from "@/components/WalletConnectButton"
-import { WalletIcon } from "@/components/icons"
+import {
+  BoatIcon,
+  MagicIcon,
+  ShirtIcon,
+  WalletIcon,
+  WildernessIcon,
+} from "@/components/icons"
 import { CreateCharacterForm } from "@/components/CreateCharacterForm"
 import useWalletWrapper from "@/hooks/useWalletWrapper"
 import WalletManager from "@/components/WalletManager/WalletManager"
 import Link from "next/link"
+import { LoadingIcon } from "@/components/icons/LoadingIcon"
+import { useContext } from "react"
+import { characterContext } from "contexts/CharacterContextProvider"
 
 export default function Play() {
   const { publicKey, wallet, autoConnect, isWalletReady } = useWalletWrapper()
+  const { selectedCharacter } = useContext(characterContext)
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
+
+  if (!isWalletReady) {
+    return (
+      <Text
+        sx={{
+          alignItems: "center",
+          margin: "auto",
+        }}
+      >
+        <LoadingIcon />
+      </Text>
+    )
+  }
+
+  if (!selectedCharacter) {
+    return (
+      <Text
+        sx={{
+          alignItems: "center",
+          margin: "auto",
+        }}
+      >
+        Please, <Link href="/characters/new">create a character</Link> first.
+      </Text>
+    )
+  }
 
   return (
     <Flex
@@ -48,8 +84,8 @@ export default function Play() {
             <Heading variant="heading2">
               {publicKey ? `Gm, ` : `Gm`}
               <Text variant="heading3">
-                {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null};
-                You're in Vivendell
+                {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
+                {selectedCharacter?.account.name}. You're in Vivendell
               </Text>
             </Heading>
           </Flex>
@@ -93,16 +129,73 @@ export default function Play() {
                   }}
                 >
                   <Link href="/characters">
-                    <Button variant="secondary">Magic Shop</Button>
+                    <Button
+                      sx={{
+                        gap: ".4rem",
+                        alignItems: "center",
+                      }}
+                      variant="secondary"
+                    >
+                      <ShirtIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "}
+                      Equipment Shop
+                    </Button>
                   </Link>
                   <Link href="/characters">
-                    <Button variant="secondary">Equipment Shop</Button>
+                    <Button
+                      sx={{
+                        gap: ".4rem",
+                        alignItems: "center",
+                      }}
+                      variant="secondary"
+                    >
+                      <MagicIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "}
+                      Magic Shop
+                    </Button>
+                  </Link>
+
+                  <Link href="/characters">
+                    <Button
+                      sx={{
+                        gap: ".4rem",
+                        alignItems: "center",
+                      }}
+                      variant="secondary"
+                    >
+                      <BoatIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "}
+                      Sailboat
+                    </Button>
                   </Link>
                   <Link href="/characters">
-                    <Button variant="secondary">Wilderness</Button>
-                  </Link>
-                  <Link href="/characters">
-                    <Button variant="secondary">Boat</Button>
+                    <Button
+                      sx={{
+                        gap: ".4rem",
+                        alignItems: "center",
+                      }}
+                      variant="secondary"
+                    >
+                      <WildernessIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "}
+                      Wilderness
+                    </Button>
                   </Link>
                 </Flex>
               </Flex>
