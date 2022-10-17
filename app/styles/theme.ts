@@ -159,17 +159,7 @@ const theme: Theme = {
         "inherit" /*if you want the span the same colour as the rest of the sentence*/,
       cursor:
         "pointer" /*make sure you add this, but if you really want it to behave like a span you would leave this out*/,
-      transition: "all .125s linear",
-
-      "&:not(:disabled):hover": {
-        cursor: "pointer",
-        opacity: 0.7,
-      },
-
-      "&:disabled": {
-        cursor: "not-allowed",
-        opacity: 0.3,
-      },
+      // transition: "all .125s linear",
 
       /** Start custom styles */
       padding: "1.6rem",

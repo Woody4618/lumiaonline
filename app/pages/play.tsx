@@ -17,22 +17,26 @@ import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
+import CharacterSelect from "@/components/Layout/CharacterSelect"
 
 export default function Play() {
   const { publicKey, wallet, autoConnect, isWalletReady } = useWalletWrapper()
-  const { selectedCharacter } = useContext(characterContext)
+  const { selectedCharacter, characters, setSelectedCharacter, isLoading } =
+    useContext(characterContext)
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
 
-  if (!isWalletReady || selectedCharacter === null) {
+  if (!isWalletReady || isLoading) {
     return (
       <Text
         sx={{
           alignItems: "center",
           margin: "auto",
+          display: "flex",
+          gap: ".8rem",
         }}
       >
-        <LoadingIcon />
+        <LoadingIcon /> Loading wallet...
       </Text>
     )
   }
@@ -53,7 +57,7 @@ export default function Play() {
     )
   }
 
-  if (selectedCharacter !== null && !selectedCharacter) {
+  if (!selectedCharacter) {
     return (
       <Text
         sx={{
@@ -86,24 +90,73 @@ export default function Play() {
           alignSelf: "stretch",
           alignItems: "center",
           justifyContent: "space-evenly",
+          zIndex: 9,
         }}
       >
-        <Heading variant="heading2">
-          {publicKey ? `Gm, ` : `Gm`}
-          <Text variant="heading3">
-            {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
-            {selectedCharacter && selectedCharacter?.account?.name}. You're in
-            Vivendell
-          </Text>
-        </Heading>
+        <Flex
+          sx={{
+            alignItems: "center",
+            gap: ".8rem",
+          }}
+        >
+          <Flex
+            sx={{
+              alignItems: "center",
+              gap: "1.6rem",
+            }}
+          >
+            <img
+              src={selectedCharacter.nft.json.image}
+              sx={{
+                maxHeight: "4.8rem",
+              }}
+            />
+            <Text mr="1.6rem">{selectedCharacter.account.name}</Text>
+          </Flex>
+          <Heading
+            sx={{
+              display: "none",
+              "@media screen and (min-width: 768px)": {
+                display: "flex",
+                alignItems: "center",
+              },
+            }}
+            variant="heading2"
+          >
+            {publicKey ? `Gm, ` : `Gm`}
+            <Text variant="heading3">
+              {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
+              {selectedCharacter && selectedCharacter?.account?.name}. You're in
+              Teristraz
+            </Text>
+          </Heading>
+        </Flex>
         <WalletManager />
       </Flex>
+      <Heading
+        sx={{
+          display: "flex",
+          alignItems: "center",
+
+          "@media screen and (min-width: 768px)": {
+            display: "none",
+          },
+        }}
+        variant="heading2"
+      >
+        {publicKey ? `Gm, ` : `Gm`}
+        <Text variant="heading3">
+          {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
+          {selectedCharacter && selectedCharacter?.account?.name}. You're in
+          Teristraz
+        </Text>
+      </Heading>
+
       <Flex
         sx={{
           alignSelf: "stretch",
           flexDirection: "column",
           order: 2,
-          justifyContent: "center",
 
           "@media (min-width: 768px)": {
             flexDirection: "row",
@@ -123,10 +176,31 @@ export default function Play() {
             borderRight: "1px solid",
             borderColor: "background2",
             minWidth: "28rem",
+            alignSelf: "flex-start",
+
+            position: "absolute",
+            top: "8vw",
+            right: 0,
+            left: 0,
+            margin: "0 auto",
+            background: "background",
+            maxWidth: "28rem",
+            boxShadow: "0px 4px 4px rgba(0,0,0,0.25)",
+            zIndex: 9,
           }}
           role="menu"
         >
-          <Heading variant="heading3">Waypoints</Heading>
+          <Heading variant="heading3">
+            Waypoints{" "}
+            <Text
+              sx={{
+                display: "inline-flex",
+              }}
+            >
+              In Teristraz
+            </Text>
+          </Heading>
+
           <Flex
             sx={{
               flexDirection: "column",
@@ -246,6 +320,23 @@ export default function Play() {
           <img src="/assets/teristraz.png" />
         </Flex>
       </Flex>
+
+      {/** Background Blur */}
+      <div
+        sx={{
+          "::before": {
+            content: "''",
+            position: "fixed",
+            backgroundColor: "background",
+            zIndex: 8,
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            opacity: 0.3,
+          },
+        }}
+      ></div>
     </Flex>
   )
 }

@@ -24,17 +24,17 @@ export type CharacterApiResponseWithNft = {
   nft: Sft | SftWithToken | Nft | NftWithToken
 }
 export const characterContext = createContext<{
-  selectedCharacter: CharacterApiResponseWithNft | false
+  selectedCharacter: CharacterApiResponseWithNft
 
-  setSelectedCharacter: Dispatch<
-    SetStateAction<CharacterApiResponseWithNft | false>
-  >
+  setSelectedCharacter: Dispatch<SetStateAction<CharacterApiResponseWithNft>>
   characters: CharacterApiResponseWithNft[]
+  isLoading: boolean
 }>({
   selectedCharacter: null,
 
   setSelectedCharacter: null,
   characters: null,
+  isLoading: false,
 })
 
 export function CharacterContextProvider({ children }) {
@@ -42,13 +42,14 @@ export function CharacterContextProvider({ children }) {
   const { connection } = useConnection()
   const [characters, setCharacters] =
     useState<CharacterApiResponseWithNft[]>(null)
-  const [selectedCharacter, setSelectedCharacter] = useState<
-    CharacterApiResponseWithNft | false
-  >(null)
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<CharacterApiResponseWithNft>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (publicKey) {
       ;(async () => {
+        setIsLoading(true)
         const userCharacters = await getCharacters(connection, publicKey)
 
         const metaplex = Metaplex.make(connection)
@@ -67,9 +68,9 @@ export function CharacterContextProvider({ children }) {
 
         if (withNft.length) {
           setSelectedCharacter(withNft[0])
-        } else {
-          setSelectedCharacter(false)
         }
+
+        setIsLoading(false)
       })()
     }
   }, [publicKey])
@@ -80,6 +81,7 @@ export function CharacterContextProvider({ children }) {
         selectedCharacter,
         characters,
         setSelectedCharacter,
+        isLoading,
       }}
     >
       {children}
