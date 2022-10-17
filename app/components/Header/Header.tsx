@@ -32,7 +32,7 @@ const Header = () => {
           <Link href="/" passHref>
             <Flex as="a" sx={{ alignItems: "center", flexDirection: "column" }}>
               <Flex sx={{ alignItems: "center" }}>
-                <Text as="h1" variant="headingSpecial" ml=".4rem">
+                <Text as="h1" variant="heading" ml=".4rem">
                   Chainquest
                 </Text>
               </Flex>

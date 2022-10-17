@@ -67,7 +67,13 @@ export default function Play() {
       >
         Please,{" "}
         <Link passHref href="/characters/new">
-          create a character
+          <a
+            sx={{
+              color: (theme) => theme.colors.primary + "!important",
+            }}
+          >
+            create a character
+          </a>
         </Link>{" "}
         first.
       </Text>
@@ -103,6 +109,7 @@ export default function Play() {
             sx={{
               alignItems: "center",
               gap: "1.6rem",
+              marginRight: "3.2rem",
             }}
           >
             <img
@@ -111,7 +118,7 @@ export default function Play() {
                 maxHeight: "4.8rem",
               }}
             />
-            <Text mr="1.6rem">{selectedCharacter.account.name}</Text>
+            {/* <Text mr="1.6rem">{selectedCharacter.account.name}</Text> */}
           </Flex>
           <Heading
             sx={{
@@ -123,11 +130,11 @@ export default function Play() {
             }}
             variant="heading2"
           >
-            {publicKey ? `Gm, ` : `Gm`}
+            {publicKey ? `Gm,` : `Gm`}
             <Text variant="heading3">
               {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
-              {selectedCharacter && selectedCharacter?.account?.name}. You're in
-              Teristraz
+              &nbsp;{selectedCharacter && selectedCharacter?.account?.name}.
+              You're in <b>Teristraz</b>
             </Text>
           </Heading>
         </Flex>

@@ -52,7 +52,7 @@ const theme: Theme = {
 
   fonts: {
     heading:
-      'IBMBold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+      'IBM, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
   },
 
   buttons: {
@@ -166,13 +166,14 @@ const theme: Theme = {
       alignSelf: "flex-start",
       justifyContent: "flex-start",
       minWidth: "16rem",
-      background: "url(assets/long_button_off.png) center no-repeat",
+      background: "url(/assets/long_button_off.png) center no-repeat",
       backgroundSize: "contain",
       alignItems: "center",
       gap: ".8rem",
+      fontWeight: "600",
 
       ":hover": {
-        background: "url(assets/long_button_on.png) center no-repeat",
+        background: "url(/assets/long_button_on.png) center no-repeat",
         backgroundSize: "contain",
       },
 
@@ -193,26 +194,14 @@ const theme: Theme = {
         'IBMBold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
       fontWeight: 900,
     },
-    headingSpecial: {
-      color: "heading",
-      lineHeight: "body",
-      fontSize: "2.2rem",
-      fontFamily:
-        'IBMBold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
-      fontWeight: 900,
-    },
     heading2: {
       color: "heading",
       lineHeight: "body",
       fontSize: "1.9rem",
-      fontFamily: "heading",
-      fontWeight: 600,
     },
     heading3: {
-      color: "heading",
       lineHeight: "body",
       fontSize: "1.7rem",
-      fontWeight: 600,
     },
     heading4: {
       color: "heading",
@@ -285,7 +274,7 @@ const theme: Theme = {
         },
 
         "&:-webkit-any-link": {
-          color: "heading",
+          color: "text",
           textDecoration: "none",
           transition: "all .125s linear",
 
