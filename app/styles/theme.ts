@@ -227,14 +227,11 @@ const theme: Theme = {
         color: "text",
         backgroundColor: "background",
         transition: "all .125s linear",
-
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
       },
 
-      "#__next": {
+      "#__next, body": {
         display: "flex",
+        flex: 1,
         flexDirection: "column",
         alignSelf: "stretch",
       },

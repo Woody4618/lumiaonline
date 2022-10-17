@@ -15,39 +15,23 @@ export default function Home() {
 
   return (
     <Layout>
-      <Heading
-        sx={{
-          alignSelf: "stretch",
-        }}
-        mb="1.6rem"
-        variant="heading"
-      >
-        {isWalletReady && !publicKey ? (
-          <>
-            Gm,
-            <Text
-              sx={{
-                display: "flex",
-              }}
-              variant="heading3"
-            >
-              Let's start with your character
-            </Text>
-          </>
-        ) : (
-          <>
-            {publicKey ? `Gm,` : `Gm`}
-            <Text
-              sx={{
-                display: "flex",
-              }}
-              variant="heading3"
-            >
-              {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}
-            </Text>
-          </>
-        )}
-      </Heading>
+      {isWalletReady && !publicKey ? (
+        <>Gm</>
+      ) : (
+        <Heading
+          sx={{
+            alignSelf: "stretch",
+          }}
+          mb="1.6rem"
+          variant="heading"
+        >
+          {publicKey ? `Gm, ` : `Gm`}
+          <Text variant="heading3">
+            {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}
+          </Text>
+        </Heading>
+      )}
+
       <Link href="/play">
         <Button
           sx={{
@@ -60,8 +44,16 @@ export default function Home() {
       </Link>
 
       {/** User onboarding */}
-      {isWalletReady && !publicKey ? (
+      {/* {isWalletReady && !publicKey ? (
         <>
+        <Text
+              sx={{
+                display: "flex",
+              }}
+              variant="heading3"
+            >
+              Let's start with your character
+            </Text>
           <CreateCharacterForm />
 
           <Flex
@@ -95,7 +87,7 @@ export default function Home() {
             />
           </Flex>
         </>
-      ) : null}
+      ) : null} */}
 
       <Heading variant="heading2">Latest news</Heading>
       <Text>
