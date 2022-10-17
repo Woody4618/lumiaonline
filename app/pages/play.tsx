@@ -133,6 +133,8 @@ export default function Play() {
         </Flex>
         <WalletManager />
       </Flex>
+
+      {/** Mobile status bar */}
       <Heading
         sx={{
           display: "flex",
@@ -157,6 +159,7 @@ export default function Play() {
           alignSelf: "stretch",
           flexDirection: "column",
           order: 2,
+          justifyContent: "center",
 
           "@media (min-width: 768px)": {
             flexDirection: "row",
@@ -170,7 +173,7 @@ export default function Play() {
             display: "flex",
 
             flexDirection: "column",
-            padding: "1.6rem 3.2rem",
+            padding: "1.6rem 4.8rem",
             listStyle: "none",
             gap: "1.6rem",
             borderRight: "1px solid",
@@ -180,11 +183,9 @@ export default function Play() {
 
             position: "absolute",
             top: "8vw",
-            right: 0,
-            left: 0,
             margin: "0 auto",
+            flex: 0,
             background: "background",
-            maxWidth: "28rem",
             boxShadow: "0px 4px 4px rgba(0,0,0,0.25)",
             zIndex: 9,
           }}
@@ -212,6 +213,42 @@ export default function Play() {
                 gap: ".8rem",
               }}
             >
+              <Link passHref href="/characters">
+                <Button variant="gameButton">
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                      alignSelf: "flex-start",
+                    }}
+                    src="/assets/icon_bank.png"
+                  />
+                  {/* <DotsIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "} */}
+                  Bank
+                </Button>
+              </Link>
+              <Link passHref href="/characters">
+                <Button variant="gameButton">
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                      alignSelf: "flex-start",
+                    }}
+                    src="/assets/icon_quests.png"
+                  />
+                  {/* <DotsIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "} */}
+                  Dungeons
+                </Button>
+              </Link>
               <Link passHref href="/characters">
                 <Button variant="gameButton">
                   <img
@@ -256,25 +293,6 @@ export default function Play() {
                       maxWidth: "2.4rem",
                       alignSelf: "flex-start",
                     }}
-                    src="/assets/icon_quests.png"
-                  />
-                  {/* <DotsIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
-                  Quests
-                </Button>
-              </Link>
-
-              <Link passHref href="/characters">
-                <Button variant="gameButton">
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                      alignSelf: "flex-start",
-                    }}
                     src="/assets/icon_sailboat.png"
                   />
                   {/* <BoatIcon
@@ -284,6 +302,24 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Sailboat
+                </Button>
+              </Link>
+              <Link passHref href="/characters">
+                <Button variant="gameButton">
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                      alignSelf: "flex-start",
+                    }}
+                    src="/assets/icon_temple.png"
+                  />
+                  {/* <WildernessIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "} */}
+                  Temple
                 </Button>
               </Link>
               <Link passHref href="/characters">

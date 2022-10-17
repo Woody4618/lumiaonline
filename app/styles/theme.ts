@@ -52,7 +52,7 @@ const theme: Theme = {
 
   fonts: {
     heading:
-      'AvertaStd-Bold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+      'IBMBold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
   },
 
   buttons: {
@@ -162,14 +162,14 @@ const theme: Theme = {
       // transition: "all .125s linear",
 
       /** Start custom styles */
-      padding: "1.6rem",
+      padding: "1rem 1.2rem",
       alignSelf: "flex-start",
       justifyContent: "flex-start",
       minWidth: "16rem",
       background: "url(assets/long_button_off.png) center no-repeat",
       backgroundSize: "contain",
       alignItems: "center",
-      gap: "1.6rem",
+      gap: ".8rem",
 
       ":hover": {
         background: "url(assets/long_button_on.png) center no-repeat",
@@ -190,7 +190,7 @@ const theme: Theme = {
       lineHeight: "body",
       fontSize: "3.2rem",
       fontFamily:
-        'AvertaStd-Bold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+        'IBMBold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
       fontWeight: 900,
     },
     headingSpecial: {
@@ -198,7 +198,7 @@ const theme: Theme = {
       lineHeight: "body",
       fontSize: "2.2rem",
       fontFamily:
-        'AvertaStd-Bold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+        'IBMBold, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
       fontWeight: 900,
     },
     heading2: {
@@ -251,7 +251,7 @@ const theme: Theme = {
         /** Default text styles */
         fontSize: "1.4rem",
         fontFamily:
-          'AvertaStd-Regular, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+          'IBM, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
         lineHeight: 1.45,
         minHeight: "100vh",
         color: "text",

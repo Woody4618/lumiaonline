@@ -8,3 +8,14 @@
   src: url("/fonts/AvertaStdBold/font.woff2") format("woff2"),
     url("/fonts/AvertaStdBold/font.woff") format("woff");
 }
+
+@font-face {
+  font-family: "IBM";
+  src: url("/fonts/IBMPlexMono-Bold.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "IBMBold";
+  src: url("/fonts/IBMPlexMono-Regular.ttf") format("truetype");
+}

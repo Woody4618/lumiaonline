@@ -44,7 +44,7 @@ export function CharacterContextProvider({ children }) {
     useState<CharacterApiResponseWithNft[]>(null)
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterApiResponseWithNft>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     if (publicKey) {
