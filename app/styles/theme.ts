@@ -150,6 +150,42 @@ const theme: Theme = {
         opacity: 0.3,
       },
     },
+    gameButton: {
+      /** Copy from resetted variant */
+      display: "flex",
+      border: "none" /*essential*/,
+      font: "inherit" /*important as otherwise the text will look slightly different*/,
+      color:
+        "inherit" /*if you want the span the same colour as the rest of the sentence*/,
+      cursor:
+        "pointer" /*make sure you add this, but if you really want it to behave like a span you would leave this out*/,
+      transition: "all .125s linear",
+
+      "&:not(:disabled):hover": {
+        cursor: "pointer",
+        opacity: 0.7,
+      },
+
+      "&:disabled": {
+        cursor: "not-allowed",
+        opacity: 0.3,
+      },
+
+      /** Start custom styles */
+      padding: "1.6rem 0",
+      alignSelf: "flex-start",
+      justifyContent: "center",
+      minWidth: "16rem",
+      background: "url(assets/long_button_off.png) center no-repeat",
+      backgroundSize: "contain",
+      alignItems: "center",
+      gap: ".8rem",
+
+      ":hover": {
+        background: "url(assets/long_button_on.png) center no-repeat",
+        backgroundSize: "contain",
+      },
+    },
   },
 
   lineHeights: { body: 1.45 },

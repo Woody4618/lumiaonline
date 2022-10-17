@@ -42,13 +42,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
           }}
           role="menu"
         >
-          {publicKey && isWalletReady ? (
+          {/* {publicKey && isWalletReady ? (
             <CharacterSelect
               onChange={(event) => setSelectedCharacter(event.value)}
               name="character"
               characters={characters}
             />
-          ) : null}
+          ) : null} */}
           <Flex
             sx={{
               flexDirection: "column",

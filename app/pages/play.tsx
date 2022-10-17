@@ -4,6 +4,7 @@ import { Heading, Text, Button, Flex } from "@theme-ui/components"
 import WalletConnectButton from "@/components/WalletConnectButton"
 import {
   BoatIcon,
+  DotsIcon,
   MagicIcon,
   ShirtIcon,
   WalletIcon,
@@ -44,7 +45,11 @@ export default function Play() {
           margin: "auto",
         }}
       >
-        Please, <Link href="/characters/new">create a character</Link> first.
+        Please,{" "}
+        <Link passHref href="/characters/new">
+          create a character
+        </Link>{" "}
+        first.
       </Text>
     )
   }
@@ -78,7 +83,7 @@ export default function Play() {
               padding: ".8rem 0",
               alignSelf: "stretch",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-evenly",
             }}
           >
             <Heading variant="heading2">
@@ -88,6 +93,7 @@ export default function Play() {
                 {selectedCharacter?.account.name}. You're in Vivendell
               </Text>
             </Heading>
+            <WalletManager />
           </Flex>
           <Flex
             sx={{
@@ -128,72 +134,60 @@ export default function Play() {
                     gap: ".8rem",
                   }}
                 >
-                  <Link href="/characters">
-                    <Button
-                      sx={{
-                        gap: ".4rem",
-                        alignItems: "center",
-                      }}
-                      variant="secondary"
-                    >
-                      <ShirtIcon
+                  <Link passHref href="/characters">
+                    <Button variant="gameButton">
+                      {/* <ShirtIcon
                         sx={{
                           width: "2.4rem",
                           height: "2.4rem",
                         }}
-                      />{" "}
+                      />{" "} */}
                       Equipment Shop
                     </Button>
                   </Link>
-                  <Link href="/characters">
-                    <Button
-                      sx={{
-                        gap: ".4rem",
-                        alignItems: "center",
-                      }}
-                      variant="secondary"
-                    >
-                      <MagicIcon
+                  <Link passHref href="/characters">
+                    <Button variant="gameButton">
+                      {/* <MagicIcon
                         sx={{
                           width: "2.4rem",
                           height: "2.4rem",
                         }}
-                      />{" "}
+                      />{" "} */}
                       Magic Shop
                     </Button>
                   </Link>
 
-                  <Link href="/characters">
-                    <Button
-                      sx={{
-                        gap: ".4rem",
-                        alignItems: "center",
-                      }}
-                      variant="secondary"
-                    >
-                      <BoatIcon
+                  <Link passHref href="/characters">
+                    <Button variant="gameButton">
+                      {/* <DotsIcon
                         sx={{
                           width: "2.4rem",
                           height: "2.4rem",
                         }}
-                      />{" "}
+                      />{" "} */}
+                      Quests
+                    </Button>
+                  </Link>
+
+                  <Link passHref href="/characters">
+                    <Button variant="gameButton">
+                      {/* <BoatIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "} */}
                       Sailboat
                     </Button>
                   </Link>
-                  <Link href="/characters">
-                    <Button
-                      sx={{
-                        gap: ".4rem",
-                        alignItems: "center",
-                      }}
-                      variant="secondary"
-                    >
-                      <WildernessIcon
+                  <Link passHref href="/characters">
+                    <Button variant="gameButton">
+                      {/* <WildernessIcon
                         sx={{
                           width: "2.4rem",
                           height: "2.4rem",
                         }}
-                      />{" "}
+                      />{" "} */}
                       Wilderness
                     </Button>
                   </Link>
