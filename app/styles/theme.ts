@@ -150,16 +150,11 @@ const theme: Theme = {
         opacity: 0.3,
       },
     },
+  },
+
+  links: {
     gameButton: {
-      /** Copy from resetted variant */
       display: "flex",
-      border: "none" /*essential*/,
-      font: "inherit" /*important as otherwise the text will look slightly different*/,
-      color:
-        "inherit" /*if you want the span the same colour as the rest of the sentence*/,
-      cursor:
-        "pointer" /*make sure you add this, but if you really want it to behave like a span you would leave this out*/,
-      // transition: "all .125s linear",
 
       /** Start custom styles */
       padding: "1rem 1.2rem",
@@ -177,7 +172,7 @@ const theme: Theme = {
         backgroundSize: "contain",
       },
 
-      "a:hover": {
+      "&:-webkit-any-link:hover": {
         textDecoration: "none!important",
       },
     },

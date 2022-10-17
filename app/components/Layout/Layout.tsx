@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 import Link from "next/link"
-import { Button, Flex, Heading } from "theme-ui"
+import { Button, Flex, Heading, Link as ThemeLink } from "theme-ui"
 import Header from "../Header/Header"
 
 export interface ILayoutProps {}
@@ -53,15 +53,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 flexDirection: "column",
               }}
             >
-              <Button variant="gameButton">
+              <ThemeLink variant="gameButton">
                 <Link href="/characters">Characters</Link>
-              </Button>
-              <Button variant="gameButton">
+              </ThemeLink>
+              <ThemeLink variant="gameButton">
                 <Link href="/battles">Latest Battles</Link>
-              </Button>
-              <Button variant="gameButton">
+              </ThemeLink>
+              <ThemeLink variant="gameButton">
                 <Link href="/highscores">Highscores</Link>
-              </Button>
+              </ThemeLink>
             </Flex>
           </Flex>
           {/* <Flex

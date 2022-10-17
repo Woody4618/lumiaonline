@@ -1,15 +1,14 @@
 /** @jsxImportSource theme-ui */
-import { Heading, Text, Button, Flex } from "@theme-ui/components"
+import {
+  Heading,
+  Text,
+  Button,
+  Flex,
+  Link as ThemeLink,
+} from "@theme-ui/components"
 
 import WalletConnectButton from "@/components/WalletConnectButton"
-import {
-  BoatIcon,
-  DotsIcon,
-  MagicIcon,
-  ShirtIcon,
-  WalletIcon,
-  WildernessIcon,
-} from "@/components/icons"
+
 import { CreateCharacterForm } from "@/components/CreateCharacterForm"
 import useWalletWrapper from "@/hooks/useWalletWrapper"
 import WalletManager from "@/components/WalletManager/WalletManager"
@@ -146,6 +145,7 @@ export default function Play() {
         sx={{
           display: "flex",
           alignItems: "center",
+          zIndex: 9,
 
           "@media screen and (min-width: 768px)": {
             display: "none",
@@ -164,7 +164,6 @@ export default function Play() {
       <Flex
         sx={{
           alignSelf: "stretch",
-          flexDirection: "column",
           order: 2,
           justifyContent: "center",
 
@@ -189,7 +188,7 @@ export default function Play() {
             alignSelf: "flex-start",
 
             position: "absolute",
-            top: "8vw",
+            top: "12rem",
             margin: "0 auto",
             flex: 0,
             background: "background",
@@ -221,7 +220,7 @@ export default function Play() {
               }}
             >
               <Link passHref href="/characters">
-                <Button variant="gameButton">
+                <ThemeLink variant="gameButton">
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -236,10 +235,10 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Bank
-                </Button>
+                </ThemeLink>
               </Link>
               <Link passHref href="/characters">
-                <Button variant="gameButton">
+                <ThemeLink variant="gameButton">
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -254,10 +253,10 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Dungeons
-                </Button>
+                </ThemeLink>
               </Link>
               <Link passHref href="/characters">
-                <Button variant="gameButton">
+                <ThemeLink variant="gameButton">
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -272,10 +271,10 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Equipment Shop
-                </Button>
+                </ThemeLink>
               </Link>
               <Link passHref href="/characters">
-                <Button variant="gameButton">
+                <ThemeLink variant="gameButton">
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -290,11 +289,11 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Magic Shop
-                </Button>
+                </ThemeLink>
               </Link>
 
               <Link passHref href="/characters">
-                <Button variant="gameButton">
+                <ThemeLink variant="gameButton">
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -309,10 +308,10 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Sailboat
-                </Button>
+                </ThemeLink>
               </Link>
               <Link passHref href="/characters">
-                <Button variant="gameButton">
+                <ThemeLink variant="gameButton">
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -327,10 +326,10 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Temple
-                </Button>
+                </ThemeLink>
               </Link>
               <Link passHref href="/characters">
-                <Button variant="gameButton">
+                <ThemeLink variant="gameButton">
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -345,7 +344,7 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Wilderness
-                </Button>
+                </ThemeLink>
               </Link>
             </Flex>
           </Flex>
