@@ -24,9 +24,11 @@ export type CharacterApiResponseWithNft = {
   nft: Sft | SftWithToken | Nft | NftWithToken
 }
 export const characterContext = createContext<{
-  selectedCharacter: CharacterApiResponseWithNft
+  selectedCharacter: CharacterApiResponseWithNft | false
 
-  setSelectedCharacter: Dispatch<SetStateAction<CharacterApiResponseWithNft>>
+  setSelectedCharacter: Dispatch<
+    SetStateAction<CharacterApiResponseWithNft | false>
+  >
   characters: CharacterApiResponseWithNft[]
 }>({
   selectedCharacter: null,
@@ -40,8 +42,9 @@ export function CharacterContextProvider({ children }) {
   const { connection } = useConnection()
   const [characters, setCharacters] =
     useState<CharacterApiResponseWithNft[]>(null)
-  const [selectedCharacter, setSelectedCharacter] =
-    useState<CharacterApiResponseWithNft>(null)
+  const [selectedCharacter, setSelectedCharacter] = useState<
+    CharacterApiResponseWithNft | false
+  >(null)
 
   useEffect(() => {
     if (publicKey) {
@@ -61,7 +64,12 @@ export function CharacterContextProvider({ children }) {
           })
         )
         setCharacters(withNft)
-        setSelectedCharacter(withNft[0])
+
+        if (withNft.length) {
+          setSelectedCharacter(withNft[0])
+        } else {
+          setSelectedCharacter(false)
+        }
       })()
     }
   }, [publicKey])

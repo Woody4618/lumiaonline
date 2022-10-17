@@ -185,6 +185,10 @@ const theme: Theme = {
         background: "url(assets/long_button_on.png) center no-repeat",
         backgroundSize: "contain",
       },
+
+      "a:hover": {
+        textDecoration: "none!important",
+      },
     },
   },
 

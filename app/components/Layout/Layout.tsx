@@ -1,18 +1,11 @@
 /** @jsxImportSource theme-ui */
-import useWalletWrapper from "@/hooks/useWalletWrapper"
-import { characterContext } from "contexts/CharacterContextProvider"
 import Link from "next/link"
-import { useContext } from "react"
-import { Flex, Heading } from "theme-ui"
+import { Button, Flex, Heading } from "theme-ui"
 import Header from "../Header/Header"
-import CharacterSelect from "./CharacterSelect"
 
 export interface ILayoutProps {}
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { characters, setSelectedCharacter } = useContext(characterContext)
-  const { publicKey, isWalletReady } = useWalletWrapper()
-
   return (
     <Flex
       sx={{
@@ -60,9 +53,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 flexDirection: "column",
               }}
             >
-              <Link href="/characters">Characters</Link>
-              <Link href="/battles">Latest Battles</Link>
-              <Link href="/highscores">Highscores</Link>
+              <Button variant="gameButton">
+                <Link href="/characters">Characters</Link>
+              </Button>
+              <Button variant="gameButton">
+                <Link href="/battles">Latest Battles</Link>
+              </Button>
+              <Button variant="gameButton">
+                <Link href="/highscores">Highscores</Link>
+              </Button>
             </Flex>
           </Flex>
           {/* <Flex
