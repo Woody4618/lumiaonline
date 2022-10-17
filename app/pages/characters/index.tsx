@@ -15,6 +15,7 @@ import {
   Sft,
   SftWithToken,
 } from "@metaplex-foundation/js"
+import { Layout } from "@/components/Layout/Layout"
 
 type CharacterResponse = {
   pubkey: web3.PublicKey
@@ -50,7 +51,7 @@ export default function Characters() {
   }, [connection])
 
   return (
-    <>
+    <Layout>
       <Heading mb=".8rem" variant="heading1">
         Characters
       </Heading>
@@ -100,6 +101,6 @@ export default function Characters() {
           <LoadingIcon />
         )}
       </Flex>
-    </>
+    </Layout>
   )
 }

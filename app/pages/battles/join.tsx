@@ -19,6 +19,7 @@ import monstersData from "lib/monsters.json"
 import toast from "react-hot-toast"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
+import { Layout } from "@/components/Layout/Layout"
 
 type MonsterResponse = {
   pubkey: web3.PublicKey
@@ -126,7 +127,7 @@ export default function Battle() {
   }
 
   return (
-    <>
+    <Layout>
       <Heading mb=".8rem" variant="heading1">
         Battle
       </Heading>
@@ -192,6 +193,6 @@ export default function Battle() {
           <LoadingIcon />
         )}
       </Flex>
-    </>
+    </Layout>
   )
 }

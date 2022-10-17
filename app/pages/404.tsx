@@ -1,3 +1,4 @@
+import { Layout } from "@/components/Layout/Layout"
 import Error from "next/error"
 import Head from "next/head"
 
@@ -45,7 +46,7 @@ export default function Page() {
   const statusCode = 404
   const title = "This page could not be found"
   return (
-    <>
+    <Layout>
       <Head>
         <title>
           {statusCode
@@ -80,6 +81,6 @@ export default function Page() {
           <h2 style={styles.h2}>{title}.</h2>
         </div>
       </div>
-    </>
+    </Layout>
   )
 }

@@ -34,11 +34,9 @@ function App(props: AppProps) {
 
       <WalletProvider>
         <CharacterContextProvider>
-          <Layout>
-            <Toaster />
+          <Toaster />
 
-            <Component {...pageProps} />
-          </Layout>
+          <Component {...pageProps} />
         </CharacterContextProvider>
       </WalletProvider>
     </ThemeProvider>

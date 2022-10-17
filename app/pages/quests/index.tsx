@@ -15,6 +15,7 @@ import useWalletNFTs from "@/hooks/useWalletNFTs"
 import questsData from "lib/quests.json"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
+import { Layout } from "@/components/Layout/Layout"
 
 type QuestResponse = {
   pubkey: web3.PublicKey
@@ -75,7 +76,7 @@ export default function Quests() {
   }
 
   return (
-    <>
+    <Layout>
       <Heading mb=".8rem" variant="heading1">
         Quests
       </Heading>
@@ -151,6 +152,6 @@ export default function Quests() {
           <LoadingIcon />
         )}
       </Flex>
-    </>
+    </Layout>
   )
 }

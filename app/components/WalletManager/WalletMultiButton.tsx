@@ -103,26 +103,20 @@ export const WalletMultiButton = ({ children = null, ...props }) => {
             backgroundColor: (theme) => theme.colors.primary + "!important",
             color: "background",
             opacity: 0.7,
+
+            a: {
+              color: "background",
+            },
           },
         }}
         ref={ref}
         role="menu"
       >
-        Account
+        Your Account
         <li className="wallet-adapter-dropdown-list-item" role="menuitem">
-          <Link href="/characters/new" passHref>
-            <a
-              sx={{
-                "&:hover": {
-                  color: "background",
-                },
-              }}
-            >
-              New Character
-            </a>
-          </Link>
+          <Link href="/characters/new">Create A New Character</Link>
         </li>
-        Wallet
+        Your Wallet
         <li
           onClick={copyAddress}
           className="wallet-adapter-dropdown-list-item"

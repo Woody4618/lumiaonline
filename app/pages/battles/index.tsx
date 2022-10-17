@@ -13,6 +13,7 @@ import {
 } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { Metaplex } from "@metaplex-foundation/js"
+import { Layout } from "@/components/Layout/Layout"
 
 type BattleWithParticipants = {
   account: BattleAccount & {
@@ -62,7 +63,7 @@ export default function Battles() {
   }, [connection])
 
   return (
-    <>
+    <Layout>
       <Heading mb=".8rem" variant="heading1">
         Battles
       </Heading>
@@ -103,6 +104,6 @@ export default function Battles() {
           <LoadingIcon />
         )}
       </Flex>
-    </>
+    </Layout>
   )
 }

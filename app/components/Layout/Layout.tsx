@@ -65,7 +65,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Link href="/highscores">Highscores</Link>
             </Flex>
           </Flex>
-          <Flex
+          {/* <Flex
             sx={{
               flexDirection: "column",
             }}
@@ -79,7 +79,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Link href="/battles/join">Join Battle</Link>
               <Link href="/quests">Join Quest</Link>
             </Flex>
-          </Flex>
+          </Flex> */}
         </Flex>
         <main
           sx={{
