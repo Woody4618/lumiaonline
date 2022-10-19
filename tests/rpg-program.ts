@@ -12,8 +12,8 @@ import {
   TOKEN_METADATA_PROGRAM_ID,
 } from "../app/lib/program-utils"
 import { RpgProgram } from "../target/types/rpg_program"
-import quests from "../app/lib/quests.json"
-import monsters from "../app/lib/monsters.json"
+import { quests } from "../app/data/quests"
+import { monsters } from "../app/data/monsters"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
 import { createMonster } from "../app/lib/gen/instructions/createMonster"
 import { CharacterAccount, MonsterAccount } from "../app/lib/gen/accounts"
