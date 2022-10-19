@@ -157,10 +157,10 @@ const theme: Theme = {
       display: "flex",
 
       /** Start custom styles */
-      padding: "1rem 1.2rem",
+      padding: "1rem 1.6rem",
       alignSelf: "flex-start",
       justifyContent: "flex-start",
-      minWidth: "16rem",
+      minWidth: "19rem",
       background: "url(/assets/long_button_off.png) center no-repeat",
       backgroundSize: "contain",
       alignItems: "center",

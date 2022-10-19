@@ -18,6 +18,7 @@ import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import CharacterSelect from "@/components/Layout/CharacterSelect"
 import { ArrowLeftIcon, BackIcon } from "@/components/icons"
+import WayPoints from "components/Waypoints"
 
 export default function Play() {
   const { publicKey, wallet, autoConnect, isWalletReady } = useWalletWrapper()
@@ -79,6 +80,9 @@ export default function Play() {
       </Text>
     )
   }
+
+  const currentWaypoint = "Wilderness"
+  const WaypointComponent = WayPoints[currentWaypoint]
 
   return (
     <Flex
@@ -214,7 +218,7 @@ export default function Play() {
           role="menu"
         >
           <Heading variant="heading3">
-            Waypoints{" "}
+            You're in {currentWaypoint} -
             <Text
               sx={{
                 display: "inline-flex",
@@ -226,7 +230,13 @@ export default function Play() {
 
           <Flex
             sx={{
+              gap: "3.2rem",
               flexDirection: "column",
+              alignItems: "center",
+
+              "@media (min-width: 768px)": {
+                flexDirection: "row",
+              },
             }}
           >
             <Flex
@@ -363,6 +373,7 @@ export default function Play() {
                 </ThemeLink>
               </Link>
             </Flex>
+            {currentWaypoint ? <WaypointComponent /> : null}
           </Flex>
         </Flex>
         <Flex
