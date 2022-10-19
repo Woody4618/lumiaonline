@@ -19,11 +19,13 @@ import { characterContext } from "contexts/CharacterContextProvider"
 import CharacterSelect from "@/components/Layout/CharacterSelect"
 import { ArrowLeftIcon, BackIcon } from "@/components/icons"
 import WayPoints from "components/Waypoints"
+import { useRouter } from "next/router"
 
 export default function Play() {
   const { publicKey, wallet, autoConnect, isWalletReady } = useWalletWrapper()
   const { selectedCharacter, characters, setSelectedCharacter, isLoading } =
     useContext(characterContext)
+  const { query } = useRouter()
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
 
@@ -81,8 +83,13 @@ export default function Play() {
     )
   }
 
-  const currentWaypoint = "Wilderness"
-  const WaypointComponent = WayPoints[currentWaypoint]
+  const currentWaypoint = query.waypoint?.toString()
+  /** Make it uppercase */
+  const WaypointComponent = currentWaypoint
+    ? WayPoints[
+        currentWaypoint?.charAt(0).toUpperCase() + currentWaypoint?.slice(1)
+      ]
+    : null
 
   return (
     <Flex
@@ -354,7 +361,7 @@ export default function Play() {
                   Temple
                 </ThemeLink>
               </Link>
-              <Link passHref href="/characters">
+              <Link passHref href="/play?waypoint=wilderness">
                 <ThemeLink variant="gameButton">
                   <img
                     sx={{

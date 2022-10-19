@@ -16,6 +16,7 @@ import {
 } from "@metaplex-foundation/js"
 import { PublicKey } from "@solana/web3.js"
 import { CharacterAccount } from "lib/gen/accounts"
+import useWalletWrapper from "@/hooks/useWalletWrapper"
 
 export type CharacterApiResponseWithNft = {
   pubkey: PublicKey
@@ -38,7 +39,7 @@ export const characterContext = createContext<{
 })
 
 export function CharacterContextProvider({ children }) {
-  const { publicKey } = useWallet()
+  const { publicKey, isWalletReady } = useWalletWrapper()
   const { connection } = useConnection()
   const [characters, setCharacters] =
     useState<CharacterApiResponseWithNft[]>(null)
@@ -47,7 +48,7 @@ export function CharacterContextProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (publicKey) {
+    if (isWalletReady && publicKey) {
       ;(async () => {
         setIsLoading(true)
         const userCharacters = await getCharacters(connection, publicKey)
@@ -72,8 +73,10 @@ export function CharacterContextProvider({ children }) {
 
         setIsLoading(false)
       })()
+    } else if (isWalletReady && !publicKey) {
+      setIsLoading(false)
     }
-  }, [publicKey])
+  }, [isWalletReady, publicKey])
 
   return (
     <characterContext.Provider
