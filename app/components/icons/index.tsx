@@ -22,6 +22,30 @@ export function BackIcon({ className = "" }) {
   )
 }
 
+export function ArrowLeftIcon({ className = "" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      sx={{
+        width: "3.2rem",
+        height: "3.2rem",
+        stroke: "text",
+      }}
+      className={className}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      <path stroke="none" d="M0 0h24v24H0z"></path>
+      <path d="M5 12L19 12"></path>
+      <path d="M5 12L11 18"></path>
+      <path d="M5 12L11 6"></path>
+    </svg>
+  )
+}
+
 export function BoatIcon({ className = "" }) {
   return (
     <svg

@@ -17,6 +17,7 @@ import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import CharacterSelect from "@/components/Layout/CharacterSelect"
+import { ArrowLeftIcon, BackIcon } from "@/components/icons"
 
 export default function Play() {
   const { publicKey, wallet, autoConnect, isWalletReady } = useWalletWrapper()
@@ -104,11 +105,26 @@ export default function Play() {
             gap: ".8rem",
           }}
         >
+          <Link href="/" passHref>
+            <a
+              sx={{
+                alignItems: "center",
+                display: "flex",
+              }}
+            >
+              <ArrowLeftIcon
+                sx={{
+                  width: "2.4rem",
+                  height: "2.4rem",
+                }}
+              />
+            </a>
+          </Link>
           <Flex
             sx={{
               alignItems: "center",
               gap: "1.6rem",
-              marginRight: "3.2rem",
+              marginRight: ".8rem",
             }}
           >
             <img
@@ -130,9 +146,9 @@ export default function Play() {
             variant="heading2"
           >
             {publicKey ? `Gm,` : `Gm`}
-            <Text variant="heading3">
+            &nbsp;{selectedCharacter && selectedCharacter?.account?.name}.
+            <Text ml="1.6rem" variant="small">
               {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
-              &nbsp;{selectedCharacter && selectedCharacter?.account?.name}.
               You're in <b>Teristraz</b>
             </Text>
           </Heading>

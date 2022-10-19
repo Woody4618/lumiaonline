@@ -53,15 +53,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 flexDirection: "column",
               }}
             >
-              <ThemeLink variant="gameButton">
-                <Link href="/characters">Characters</Link>
-              </ThemeLink>
-              <ThemeLink variant="gameButton">
-                <Link href="/battles">Latest Battles</Link>
-              </ThemeLink>
-              <ThemeLink variant="gameButton">
-                <Link href="/highscores">Highscores</Link>
-              </ThemeLink>
+              <Link href="/characters" passHref>
+                <ThemeLink variant="gameButton">Characters</ThemeLink>
+              </Link>
+
+              <Link href="/battles" passHref>
+                <ThemeLink variant="gameButton">Latest Battles</ThemeLink>
+              </Link>
+
+              <Link href="/highscores" passHref>
+                <ThemeLink variant="gameButton">Highscores</ThemeLink>
+              </Link>
             </Flex>
           </Flex>
           {/* <Flex

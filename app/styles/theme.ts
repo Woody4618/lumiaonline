@@ -172,6 +172,10 @@ const theme: Theme = {
         backgroundSize: "contain",
       },
 
+      "&:-webkit-any-link": {
+        transition: "unset",
+      },
+
       "&:-webkit-any-link:hover": {
         textDecoration: "none!important",
       },
