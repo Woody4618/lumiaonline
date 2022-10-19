@@ -211,10 +211,10 @@ export default function Play() {
             gap: "1.6rem",
             borderRight: "1px solid",
             borderColor: "background2",
-            minWidth: "28rem",
             alignSelf: "flex-start",
 
             position: "absolute",
+            width: "64rem",
             top: "12rem",
             margin: "0 auto",
             flex: 0,
@@ -243,6 +243,7 @@ export default function Play() {
 
               "@media (min-width: 768px)": {
                 flexDirection: "row",
+                alignItems: "flex-start",
               },
             }}
           >
@@ -252,7 +253,7 @@ export default function Play() {
                 gap: ".8rem",
               }}
             >
-              <Link passHref href="/characters">
+              <Link passHref href="/play">
                 <ThemeLink variant="gameButton">
                   <img
                     sx={{
@@ -270,7 +271,7 @@ export default function Play() {
                   Bank
                 </ThemeLink>
               </Link>
-              <Link passHref href="/characters">
+              <Link passHref href="/play?waypoint=dungeons">
                 <ThemeLink variant="gameButton">
                   <img
                     sx={{
@@ -288,7 +289,7 @@ export default function Play() {
                   Dungeons
                 </ThemeLink>
               </Link>
-              <Link passHref href="/characters">
+              <Link passHref href="/play">
                 <ThemeLink variant="gameButton">
                   <img
                     sx={{
@@ -306,7 +307,7 @@ export default function Play() {
                   Equipment Shop
                 </ThemeLink>
               </Link>
-              <Link passHref href="/characters">
+              <Link passHref href="/play">
                 <ThemeLink variant="gameButton">
                   <img
                     sx={{
@@ -325,7 +326,7 @@ export default function Play() {
                 </ThemeLink>
               </Link>
 
-              <Link passHref href="/characters">
+              <Link passHref href="/play">
                 <ThemeLink variant="gameButton">
                   <img
                     sx={{
@@ -343,7 +344,7 @@ export default function Play() {
                   Sailboat
                 </ThemeLink>
               </Link>
-              <Link passHref href="/characters">
+              <Link passHref href="/play">
                 <ThemeLink variant="gameButton">
                   <img
                     sx={{

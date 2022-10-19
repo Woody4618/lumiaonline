@@ -29,7 +29,6 @@ type MonsterResponse = {
 export function Wilderness() {
   const { connection } = useConnection()
   const { publicKey, sendTransaction } = useWallet()
-  const { walletNFTs } = useWalletNFTs()
   const [monsters, setMonsters] = useState<MonsterResponse[]>(null)
 
   // const [characterSubscriptionId, setCharacterSubscriptionId] =
