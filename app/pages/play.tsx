@@ -24,7 +24,7 @@ export default function Play() {
   const { selectedCharacter, characters, setSelectedCharacter, isLoading } =
     useContext(characterContext)
   const { query } = useRouter()
-  const audioRef = useRef<HTMLAudioElement>()
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
 
@@ -436,14 +436,7 @@ export default function Play() {
       ></div>
 
       {/** Audio stuff */}
-      <iframe
-        src="/assets/silence.mp3"
-        allow="autoplay"
-        id="audio"
-        sx={{
-          display: "none",
-        }}
-      ></iframe>
+
       <audio id="player" autoPlay loop ref={audioRef}>
         <source src="/assets/village_loop.wav" type="audio/mp3" />
       </audio>
