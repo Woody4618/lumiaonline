@@ -32,13 +32,6 @@ function App(props: AppProps) {
         <link href="/fonts/fonts.css" rel="stylesheet" />
       </Head>
 
-      {/** Trigger an empty iframe to use audio autoplay later */}
-      <iframe
-        src="/assets/silence.mp3"
-        allow="autoplay"
-        id="audio"
-        style={{ display: "none" }}
-      ></iframe>
       <WalletProvider>
         <CharacterContextProvider>
           <Toaster />
