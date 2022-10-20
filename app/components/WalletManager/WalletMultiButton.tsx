@@ -7,7 +7,7 @@ import {
 } from "@solana/wallet-adapter-react-ui"
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Button } from "theme-ui"
+import { Button, Link as ThemeLink } from "theme-ui"
 
 export const WalletMultiButton = ({ children = null, ...props }) => {
   const { publicKey, wallet, disconnect } = useWallet()
@@ -99,23 +99,31 @@ export const WalletMultiButton = ({ children = null, ...props }) => {
         }`}
         sx={{
           background: "background",
-          "li:hover": {
-            backgroundColor: (theme) => theme.colors.primary + "!important",
-            color: "background",
-            opacity: 0.7,
+          zIndex: 1000,
 
-            a: {
+          "li:hover, .wallet-adapter-dropdown-list-item:not([disabled]):hover":
+            {
+              backgroundColor: (theme) => theme.colors.primary + "!important",
               color: "background",
+              opacity: 0.7,
+
+              a: {
+                color: "background",
+              },
             },
-          },
         }}
         ref={ref}
         role="menu"
       >
         Your Account
-        <li className="wallet-adapter-dropdown-list-item" role="menuitem">
-          <Link href="/characters/new">Create A New Character</Link>
-        </li>
+        <Link href="/characters/new" passHref>
+          <ThemeLink
+            className="wallet-adapter-dropdown-list-item"
+            role="menuitem"
+          >
+            Create A New Character
+          </ThemeLink>
+        </Link>
         Your Wallet
         <li
           onClick={copyAddress}

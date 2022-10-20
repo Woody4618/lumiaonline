@@ -103,7 +103,7 @@ export default function Play() {
       <Flex
         sx={{
           background: "background2",
-          zIndex: 9,
+          zIndex: 10,
           alignSelf: "stretch",
           justifyContent: "center",
           minHeight: "6.4rem",
@@ -214,6 +214,7 @@ export default function Play() {
           },
         }}
       >
+        {/** Waypoints modal */}
         <Flex
           aria-label="menu"
           sx={{
