@@ -103,68 +103,83 @@ export default function Play() {
       <Flex
         sx={{
           background: "background2",
-          padding: ".8rem 0",
-          alignSelf: "stretch",
-          alignItems: "center",
-          justifyContent: "space-evenly",
           zIndex: 9,
+          alignSelf: "stretch",
+          justifyContent: "center",
+          minHeight: "6.4rem",
         }}
       >
         <Flex
           sx={{
             alignItems: "center",
-            gap: ".8rem",
+            padding: ".8rem 0",
+            gap: "4.8rem",
           }}
         >
-          <Link href="/" passHref>
-            <a
-              sx={{
-                alignItems: "center",
-                display: "flex",
-              }}
-            >
-              <ArrowLeftIcon
-                sx={{
-                  width: "2.4rem",
-                  height: "2.4rem",
-                }}
-              />
-            </a>
-          </Link>
           <Flex
             sx={{
               alignItems: "center",
-              gap: "1.6rem",
-              marginRight: ".8rem",
+              gap: ".8rem",
             }}
           >
-            <img
-              src={selectedCharacter.nft.json.image}
+            <Link href="/" passHref>
+              <a
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                }}
+              >
+                <ArrowLeftIcon
+                  sx={{
+                    width: "2.4rem",
+                    height: "2.4rem",
+                  }}
+                />
+              </a>
+            </Link>
+            <Flex
               sx={{
-                maxHeight: "4.8rem",
-              }}
-            />
-            {/* <Text mr="1.6rem">{selectedCharacter.account.name}</Text> */}
-          </Flex>
-          <Heading
-            sx={{
-              display: "none",
-              "@media screen and (min-width: 768px)": {
-                display: "flex",
                 alignItems: "center",
-              },
+                gap: "1.6rem",
+                marginRight: ".8rem",
+              }}
+            >
+              <img
+                src={selectedCharacter.nft.json.image}
+                sx={{
+                  maxHeight: "4.8rem",
+                }}
+              />
+              {/* <Text mr="1.6rem">{selectedCharacter.account.name}</Text> */}
+            </Flex>
+            <Heading
+              sx={{
+                display: "none",
+                "@media screen and (min-width: 768px)": {
+                  display: "flex",
+                  alignItems: "center",
+                },
+              }}
+              variant="heading2"
+            >
+              {publicKey ? `Gm,` : `Gm`}
+              &nbsp;{selectedCharacter && selectedCharacter?.account?.name}.
+              <Text ml="1.6rem" variant="small">
+                {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
+                You're in <b>Teristraz</b>
+              </Text>
+            </Heading>
+          </Flex>
+          <Text
+            sx={{
+              color: "#4bd84b",
             }}
-            variant="heading2"
+            variant="xsmall"
           >
-            {publicKey ? `Gm,` : `Gm`}
-            &nbsp;{selectedCharacter && selectedCharacter?.account?.name}.
-            <Text ml="1.6rem" variant="small">
-              {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
-              You're in <b>Teristraz</b>
-            </Text>
-          </Heading>
+            &#8226;&nbsp;21 players online
+          </Text>
+          <WalletManager />
         </Flex>
-        <WalletManager />
       </Flex>
 
       {/** Mobile status bar */}
@@ -258,7 +273,6 @@ export default function Play() {
                   <img
                     sx={{
                       maxWidth: "2.4rem",
-                      alignSelf: "flex-start",
                     }}
                     src="/assets/icon_bank.png"
                   />
@@ -276,7 +290,6 @@ export default function Play() {
                   <img
                     sx={{
                       maxWidth: "2.4rem",
-                      alignSelf: "flex-start",
                     }}
                     src="/assets/icon_quests.png"
                   />
@@ -294,7 +307,6 @@ export default function Play() {
                   <img
                     sx={{
                       maxWidth: "2.4rem",
-                      alignSelf: "flex-start",
                     }}
                     src="/assets/icon_equipment.png"
                   />
@@ -312,7 +324,6 @@ export default function Play() {
                   <img
                     sx={{
                       maxWidth: "2.4rem",
-                      alignSelf: "flex-start",
                     }}
                     src="/assets/icon_magic.png"
                   />
@@ -331,7 +342,6 @@ export default function Play() {
                   <img
                     sx={{
                       maxWidth: "2.4rem",
-                      alignSelf: "flex-start",
                     }}
                     src="/assets/icon_sailboat.png"
                   />
@@ -349,7 +359,6 @@ export default function Play() {
                   <img
                     sx={{
                       maxWidth: "2.4rem",
-                      alignSelf: "flex-start",
                     }}
                     src="/assets/icon_temple.png"
                   />
@@ -367,7 +376,6 @@ export default function Play() {
                   <img
                     sx={{
                       maxWidth: "2.4rem",
-                      alignSelf: "flex-start",
                     }}
                     src="/assets/icon_wilderness.png"
                   />

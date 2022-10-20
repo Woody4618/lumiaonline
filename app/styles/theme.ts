@@ -157,15 +157,16 @@ const theme: Theme = {
       display: "flex",
 
       /** Start custom styles */
-      padding: "1rem 1.6rem",
+      padding: "0 1.6rem",
       alignSelf: "flex-start",
       justifyContent: "flex-start",
-      minWidth: "19rem",
+      minWidth: "19.2rem",
       background: "url(/assets/long_button_off.png) center no-repeat",
       backgroundSize: "contain",
       alignItems: "center",
       gap: ".8rem",
       fontWeight: "600",
+      minHeight: "4.8rem",
 
       ":hover": {
         background: "url(/assets/long_button_on.png) center no-repeat",

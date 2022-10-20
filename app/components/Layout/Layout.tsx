@@ -47,10 +47,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
               flexDirection: "column",
             }}
           >
-            <Heading variant="heading3">Community</Heading>
+            <Heading mb="1.6rem" variant="heading3">
+              Community
+            </Heading>
             <Flex
               sx={{
                 flexDirection: "column",
+                gap: ".8rem",
               }}
             >
               <Link href="/characters" passHref>
