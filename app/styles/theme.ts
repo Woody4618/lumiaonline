@@ -179,6 +179,7 @@ const theme: Theme = {
 
       "&:-webkit-any-link:hover": {
         textDecoration: "none!important",
+        opacity: 1,
       },
     },
   },

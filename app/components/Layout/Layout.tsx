@@ -5,7 +5,13 @@ import Header from "../Header/Header"
 
 export interface ILayoutProps {}
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({
+  children,
+  type = "default",
+}: {
+  children: React.ReactNode
+  type?: string
+}) {
   return (
     <Flex
       sx={{
@@ -26,7 +32,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             display: "flex",
 
             flexDirection: "column",
-            width: "24rem",
+            minWidth: "26rem",
             padding: "1.6rem 3.2rem",
             listStyle: "none",
             gap: "1.6rem",
@@ -90,7 +96,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             display: "flex",
             flexDirection: "column",
             alignItems: "stretch",
-            maxWidth: "48rem",
+            maxWidth: type === "default" ? "48rem" : "unset",
             margin: "0 auto",
             padding: "0 1.6rem",
 
@@ -105,6 +111,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               /** Workaround to keep it centralized in relation to the mennu */
               // marginLeft: "-16rem",
               paddingTop: "4rem",
+              position: "relative",
             }}
           >
             {children}

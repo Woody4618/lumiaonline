@@ -164,10 +164,9 @@ export default function Play() {
             >
               {publicKey ? `Gm,` : `Gm`}
               &nbsp;{selectedCharacter && selectedCharacter?.account?.name}.
-              <Text ml="1.6rem" variant="small">
-                {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
+              {/* <Text ml="1.6rem" variant="small">
                 You're in <b>Teristraz</b>
-              </Text>
+              </Text> */}
             </Heading>
           </Flex>
           <Text

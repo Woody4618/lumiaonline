@@ -25,8 +25,8 @@ const Header = () => {
           sx={{
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "1.6rem 1.6rem 0",
-            height: "8rem",
+
+            minHeight: "6.4rem",
           }}
         >
           <Link href="/" passHref>
@@ -97,7 +97,7 @@ const Header = () => {
                 borderBottom: "1px solid",
                 borderColor: "background2",
                 padding: "1.6rem",
-                height: "8rem",
+                minHeight: "6.4rem",
                 alignItems: "center",
                 ...(!isMobileMenuActive && { display: "none" }),
               }}
