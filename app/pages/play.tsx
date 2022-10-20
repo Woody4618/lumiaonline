@@ -9,14 +9,12 @@ import {
 
 import WalletConnectButton from "@/components/WalletConnectButton"
 
-import { CreateCharacterForm } from "@/components/CreateCharacterForm"
 import useWalletWrapper from "@/hooks/useWalletWrapper"
 import WalletManager from "@/components/WalletManager/WalletManager"
 import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
-import { useContext } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
-import CharacterSelect from "@/components/Layout/CharacterSelect"
 import { ArrowLeftIcon, BackIcon } from "@/components/icons"
 import WayPoints from "components/Waypoints"
 import { useRouter } from "next/router"
@@ -26,8 +24,17 @@ export default function Play() {
   const { selectedCharacter, characters, setSelectedCharacter, isLoading } =
     useContext(characterContext)
   const { query } = useRouter()
+  const audioRef = useRef<HTMLAudioElement>()
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
+
+  useEffect(() => {
+    if (audioRef.current) {
+      if (audioRef.current.volume !== 0.6) {
+        audioRef.current.volume = 0.6
+      }
+    }
+  }, [audioRef])
 
   if (!isWalletReady || isLoading) {
     return (
@@ -427,6 +434,19 @@ export default function Play() {
           },
         }}
       ></div>
+
+      {/** Audio stuff */}
+      <iframe
+        src="/assets/silence.mp3"
+        allow="autoplay"
+        id="audio"
+        sx={{
+          display: "none",
+        }}
+      ></iframe>
+      <audio id="player" autoPlay loop ref={audioRef}>
+        <source src="/assets/village_loop.wav" type="audio/mp3" />
+      </audio>
     </Flex>
   )
 }
