@@ -13,7 +13,7 @@ import useWalletWrapper from "@/hooks/useWalletWrapper"
 import WalletManager from "@/components/WalletManager/WalletManager"
 import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
-import { useContext, useEffect, useRef } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import { ArrowLeftIcon, BackIcon } from "@/components/icons"
 import WayPoints from "components/Waypoints"
@@ -24,17 +24,39 @@ export default function Play() {
   const { selectedCharacter, characters, setSelectedCharacter, isLoading } =
     useContext(characterContext)
   const { query } = useRouter()
-  const audioRef = useRef<HTMLAudioElement>(null)
+  const backgroundAudioRef = useRef<HTMLAudioElement>(null)
+  const effectsAudioRef = useRef<HTMLAudioElement>(null)
+  const [isModalOpen, setIsModalOpen] = useState(true)
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
 
   useEffect(() => {
-    if (audioRef.current) {
-      if (audioRef.current.volume !== 0.6) {
-        audioRef.current.volume = 0.6
+    if (backgroundAudioRef.current) {
+      if (backgroundAudioRef.current.volume !== 0.4) {
+        backgroundAudioRef.current.volume = 0.4
       }
     }
-  }, [audioRef])
+  }, [backgroundAudioRef])
+
+  useEffect(() => {
+    if (effectsAudioRef.current) {
+      if (effectsAudioRef.current.volume !== 0.2) {
+        effectsAudioRef.current.volume = 0.2
+      }
+    }
+  }, [effectsAudioRef.current])
+
+  const handleModalToggle = () => {
+    setIsModalOpen((prev) => !prev)
+  }
+
+  const handleEffectsAudioPlay = () => {
+    if (effectsAudioRef.current) {
+      effectsAudioRef.current.pause()
+      effectsAudioRef.current.currentTime = 0
+      effectsAudioRef.current.play()
+    }
+  }
 
   if (!isWalletReady || isLoading) {
     return (
@@ -229,7 +251,7 @@ export default function Play() {
         {/** Waypoints modal */}
         <Flex
           sx={{
-            display: "flex",
+            display: isModalOpen ? "flex" : "none",
 
             flexDirection: "column",
             padding: "1.6rem",
@@ -253,7 +275,7 @@ export default function Play() {
           }}
         >
           <Heading variant="heading3">
-            You're in {currentWaypoint} -
+            You're&nbsp;
             <Text
               sx={{
                 display: "inline-flex",
@@ -281,7 +303,10 @@ export default function Play() {
               }}
             >
               <Link passHref href="/play">
-                <ThemeLink variant="gameButton">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -298,7 +323,10 @@ export default function Play() {
                 </ThemeLink>
               </Link>
               <Link passHref href="/play?waypoint=dungeons">
-                <ThemeLink variant="gameButton">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -315,7 +343,10 @@ export default function Play() {
                 </ThemeLink>
               </Link>
               <Link passHref href="/play">
-                <ThemeLink variant="gameButton">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -332,7 +363,10 @@ export default function Play() {
                 </ThemeLink>
               </Link>
               <Link passHref href="/play">
-                <ThemeLink variant="gameButton">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -350,7 +384,10 @@ export default function Play() {
               </Link>
 
               <Link passHref href="/play">
-                <ThemeLink variant="gameButton">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -367,7 +404,10 @@ export default function Play() {
                 </ThemeLink>
               </Link>
               <Link passHref href="/play">
-                <ThemeLink variant="gameButton">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -384,7 +424,10 @@ export default function Play() {
                 </ThemeLink>
               </Link>
               <Link passHref href="/play?waypoint=wilderness">
-                <ThemeLink variant="gameButton">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
                   <img
                     sx={{
                       maxWidth: "2.4rem",
@@ -414,13 +457,21 @@ export default function Play() {
             },
           }}
         >
-          <img src="/assets/teristraz.png" />
+          <img
+            sx={{
+              cursor: "pointer",
+            }}
+            onClick={handleModalToggle}
+            src="/assets/teristraz.png"
+          />
         </Flex>
       </Flex>
 
       {/** Background Blur */}
       <div
+        onClick={handleModalToggle}
         sx={{
+          display: isModalOpen ? "block" : "none",
           "::before": {
             content: "''",
             position: "fixed",
@@ -437,8 +488,12 @@ export default function Play() {
 
       {/** Audio stuff */}
 
-      <audio id="player" autoPlay loop ref={audioRef}>
+      <audio id="player" autoPlay loop ref={backgroundAudioRef}>
         <source src="/assets/village_loop.wav" type="audio/mp3" />
+      </audio>
+
+      <audio id="player" ref={effectsAudioRef}>
+        <source src="/assets/typingsfx_sound.wav" type="audio/mp3" />
       </audio>
     </Flex>
   )
