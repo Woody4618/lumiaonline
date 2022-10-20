@@ -14,6 +14,32 @@ import useWalletWrapper from "@/hooks/useWalletWrapper"
 import Link from "next/link"
 import { Layout } from "@/components/Layout/Layout"
 
+const NewsContentBlock = (props) => {
+  const { children, title, date } = props
+
+  return (
+    <div
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "1.6rem",
+        marginBottom: "4.8rem",
+        borderBottom: "1px solid",
+        borderColor: "secondary",
+        paddingBottom: "1.2rem",
+      }}
+    >
+      <Heading mb="1.6rem" variant="heading3">
+        {title}&nbsp;&nbsp;
+        <Text sx={{ display: "inline-block" }} variant="xsmall">
+          {date}{" "}
+        </Text>
+      </Heading>
+      {children}
+    </div>
+  )
+}
+
 export default function Home() {
   const { publicKey, wallet, autoConnect, isWalletReady } = useWalletWrapper()
 
@@ -29,6 +55,7 @@ export default function Home() {
           alignItems: "stretch",
           maxWidth: "48rem",
           margin: "0 auto",
+          padding: "3.2rem 1.6rem",
 
           "@media (min-width: 64rem)": {
             minWidth: "64rem",
@@ -56,12 +83,11 @@ export default function Home() {
           <ThemeLink
             sx={{
               position: "absolute",
-              top: "5rem",
-              left: "4rem",
+              top: "19.2vw",
               alignSelf: "flex-start",
 
               "@media (min-width: 768px)": {
-                top: "32rem",
+                // top: "32rem",
                 left: "auto",
               },
             }}
@@ -117,31 +143,31 @@ export default function Home() {
         </>
       ) : null} */}
 
-        <Heading variant="heading2">Latest news</Heading>
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris eu
-          auctor felis. Cras augue nibh, bibendum et lorem eget, ultrices ornare
-          elit. Nam pulvinar lacus at eros fermentum, vitae luctus nunc
-          consequat. In ac cursus elit. Nulla elit sem, pharetra eu mattis id,
-          suscipit ut massa. Fusce ornare, velit nec finibus blandit, diam nisl
-          accumsan neque, eu sagittis eros erat quis magna. In bibendum laoreet
-          accumsan. Ut eget euismod velit, eu suscipit lacus. Curabitur vitae
-          vulputate massa. Quisque a congue massa. Quisque suscipit lorem sed
-          ullamcorper consequat.
+        <Heading mb="1.6rem" variant="heading2">
+          Latest news
+        </Heading>
+
+        <NewsContentBlock title="Alpha launch." date="2022-10-20">
+          <Text>
+            Aenean vel nibh accumsan, lobortis arcu a, bibendum metus.
+            Pellentesque eleifend quis lectus sed semper. Cras ante felis,
+            ultricies hendrerit sapien at, interdum ultricies turpis. Phasellus
+            metus diam, pretium vitae efficitur eget, ultricies ac risus. Sed id
+            gravida purus. Phasellus ut elit hendrerit enim posuere convallis
+            nec quis nisl. Nulla vitae vulputate leo. Pellentesque aliquet orci
+            quam. Vivamus vehicula posuere velit at interdum. Curabitur rhoncus
+            varius sem, a posuere risus venenatis in. Aenean et nunc ut nisi
+            accumsan dictum et vel metus. Nam tempus tortor ex, euismod
+            tristique felis pulvinar at. Quisque sagittis neque sit amet quam
+            ultrices lacinia. Duis lacinia porttitor rhoncus. Fusce bibendum ex
+            nisl, sed tempus elit porttitor tincidunt.
+          </Text>
           <br />
-          Aenean vel nibh accumsan, lobortis arcu a, bibendum metus.
-          Pellentesque eleifend quis lectus sed semper. Cras ante felis,
-          ultricies hendrerit sapien at, interdum ultricies turpis. Phasellus
-          metus diam, pretium vitae efficitur eget, ultricies ac risus. Sed id
-          gravida purus. Phasellus ut elit hendrerit enim posuere convallis nec
-          quis nisl. Nulla vitae vulputate leo. Pellentesque aliquet orci quam.
-          Vivamus vehicula posuere velit at interdum. Curabitur rhoncus varius
-          sem, a posuere risus venenatis in. Aenean et nunc ut nisi accumsan
-          dictum et vel metus. Nam tempus tortor ex, euismod tristique felis
-          pulvinar at. Quisque sagittis neque sit amet quam ultrices lacinia.
-          Duis lacinia porttitor rhoncus. Fusce bibendum ex nisl, sed tempus
-          elit porttitor tincidunt.
-        </Text>
+          <Text>
+            Kind Regards, <br />
+            Ellagoris
+          </Text>
+        </NewsContentBlock>
       </Flex>
     </Layout>
   )
