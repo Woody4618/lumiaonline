@@ -56,8 +56,14 @@ export default function Home() {
           <ThemeLink
             sx={{
               position: "absolute",
-              top: "32rem",
+              top: "5rem",
+              left: "4rem",
               alignSelf: "flex-start",
+
+              "@media (min-width: 768px)": {
+                top: "32rem",
+                left: "auto",
+              },
             }}
             variant="gameButton"
           >

@@ -172,6 +172,11 @@ export default function Play() {
           <Text
             sx={{
               color: "#4bd84b",
+              display: "none",
+
+              "@media (min-width: 768px)": {
+                display: "flex",
+              },
             }}
             variant="xsmall"
           >
@@ -216,12 +221,11 @@ export default function Play() {
       >
         {/** Waypoints modal */}
         <Flex
-          aria-label="menu"
           sx={{
             display: "flex",
 
             flexDirection: "column",
-            padding: "1.6rem 4.8rem",
+            padding: "1.6rem",
             listStyle: "none",
             gap: "1.6rem",
             borderRight: "1px solid",
@@ -229,15 +233,17 @@ export default function Play() {
             alignSelf: "flex-start",
 
             position: "absolute",
-            width: "64rem",
             top: "12rem",
             margin: "0 auto",
             flex: 0,
             background: "background",
             boxShadow: "0px 4px 4px rgba(0,0,0,0.25)",
             zIndex: 9,
+
+            "@media (min-width: 768px)": {
+              minWidth: "64rem",
+            },
           }}
-          role="menu"
         >
           <Heading variant="heading3">
             You're in {currentWaypoint} -
@@ -254,7 +260,6 @@ export default function Play() {
             sx={{
               gap: "3.2rem",
               flexDirection: "column",
-              alignItems: "center",
 
               "@media (min-width: 768px)": {
                 flexDirection: "row",

@@ -24,12 +24,17 @@ export function Layout({
       <Flex
         sx={{
           flex: 1,
+          flexDirection: "column",
+
+          "@media (min-width: 768px)": {
+            flexDirection: "row",
+          },
         }}
       >
         <Flex
           aria-label="menu"
           sx={{
-            display: "flex",
+            display: "none",
 
             flexDirection: "column",
             minWidth: "26rem",
@@ -38,58 +43,34 @@ export function Layout({
             gap: "1.6rem",
             borderRight: "1px solid",
             borderColor: "background2",
+
+            "@media (min-width: 768px)": {
+              display: "flex",
+            },
           }}
           role="menu"
         >
-          {/* {publicKey && isWalletReady ? (
-            <CharacterSelect
-              onChange={(event) => setSelectedCharacter(event.value)}
-              name="character"
-              characters={characters}
-            />
-          ) : null} */}
+          <Heading mb="1.6rem" variant="heading3">
+            Community
+          </Heading>
           <Flex
             sx={{
               flexDirection: "column",
+              gap: ".8rem",
             }}
           >
-            <Heading mb="1.6rem" variant="heading3">
-              Community
-            </Heading>
-            <Flex
-              sx={{
-                flexDirection: "column",
-                gap: ".8rem",
-              }}
-            >
-              <Link href="/characters" passHref>
-                <ThemeLink variant="gameButton">Characters</ThemeLink>
-              </Link>
+            <Link href="/characters" passHref>
+              <ThemeLink variant="gameButton">Characters</ThemeLink>
+            </Link>
 
-              <Link href="/battles" passHref>
-                <ThemeLink variant="gameButton">Latest Battles</ThemeLink>
-              </Link>
+            <Link href="/battles" passHref>
+              <ThemeLink variant="gameButton">Latest Battles</ThemeLink>
+            </Link>
 
-              <Link href="/highscores" passHref>
-                <ThemeLink variant="gameButton">Highscores</ThemeLink>
-              </Link>
-            </Flex>
+            <Link href="/highscores" passHref>
+              <ThemeLink variant="gameButton">Highscores</ThemeLink>
+            </Link>
           </Flex>
-          {/* <Flex
-            sx={{
-              flexDirection: "column",
-            }}
-          >
-            <Heading variant="heading3">Play</Heading>
-            <Flex
-              sx={{
-                flexDirection: "column",
-              }}
-            >
-              <Link href="/battles/join">Join Battle</Link>
-              <Link href="/quests">Join Quest</Link>
-            </Flex>
-          </Flex> */}
         </Flex>
         <main
           sx={{
@@ -98,7 +79,7 @@ export function Layout({
             alignItems: "stretch",
             maxWidth: type === "default" ? "48rem" : "unset",
             margin: "0 auto",
-            padding: "0 1.6rem",
+            padding: type === "default" ? "0 1.6rem" : "0",
 
             "@media (min-width: 64rem)": {
               minWidth: "64rem",
@@ -110,7 +91,7 @@ export function Layout({
               flexDirection: "column",
               /** Workaround to keep it centralized in relation to the mennu */
               // marginLeft: "-16rem",
-              paddingTop: "4rem",
+              paddingTop: type === "default" ? "4rem" : "0",
               position: "relative",
             }}
           >
