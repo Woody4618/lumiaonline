@@ -268,7 +268,6 @@ const theme: Theme = {
       a: {
         transition: "all .125s linear",
         color: "text",
-        minWidth: "unset!important",
 
         "&:hover": {
           cursor: "pointer",

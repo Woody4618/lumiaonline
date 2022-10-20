@@ -117,12 +117,9 @@ export const WalletMultiButton = ({ children = null, ...props }) => {
       >
         Your Account
         <Link href="/characters/new" passHref>
-          <ThemeLink
-            className="wallet-adapter-dropdown-list-item"
-            role="menuitem"
-          >
+          <a className="wallet-adapter-dropdown-list-item" role="menuitem">
             Create A New Character
-          </ThemeLink>
+          </a>
         </Link>
         Your Wallet
         <li
