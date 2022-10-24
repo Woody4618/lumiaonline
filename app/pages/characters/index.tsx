@@ -1,9 +1,8 @@
 /** @jsxImportSource theme-ui */
-import { Heading, Text, Label, Input, Button, Flex } from "@theme-ui/components"
+import { Heading, Text, Flex } from "@theme-ui/components"
 
-import Header from "@/components/Header/Header"
 import { useEffect, useState } from "react"
-import { useConnection, useWallet } from "@solana/wallet-adapter-react"
+import { useConnection } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
 import { getCharacters } from "lib/program-utils"
 import { CharacterAccount } from "lib/gen/accounts"
@@ -16,6 +15,36 @@ import {
   SftWithToken,
 } from "@metaplex-foundation/js"
 import { Layout } from "@/components/Layout/Layout"
+
+import { TableColumn } from "react-data-table-component"
+import { DataTable } from "@/components/DataTable/DataTable"
+
+const columns: TableColumn<CharacterResponse>[] = [
+  {
+    name: "NFT",
+    cell: (row) => {
+      return (
+        <img
+          sx={{
+            maxWidth: "6.4rem",
+            borderRadius: ".4rem",
+          }}
+          src={row.nft.json.image}
+        />
+      )
+    },
+  },
+  {
+    name: "Name",
+    selector: (row) => row.account.name.toString(),
+    sortable: true,
+  },
+  {
+    name: "Experience",
+    selector: (row) => row.account.experience.toString(),
+    sortable: true,
+  },
+]
 
 type CharacterResponse = {
   pubkey: web3.PublicKey
@@ -64,39 +93,7 @@ export default function Characters() {
         }}
       >
         {characters ? (
-          characters.map((character) => {
-            return (
-              <Flex
-                sx={{
-                  alignItems: "center",
-                  gap: ".8rem",
-                }}
-                key={character.pubkey.toString()}
-              >
-                <img
-                  sx={{
-                    maxWidth: "6.4rem",
-                    borderRadius: ".4rem",
-                  }}
-                  src={character.nft.json.image}
-                />
-                <Flex
-                  sx={{
-                    flexDirection: "column",
-                  }}
-                >
-                  <Text>{character.account.name}</Text>
-                  <Text>
-                    Experience: {character.account.experience.toNumber()}
-                  </Text>
-                  <Text>
-                    Hitpoints: {character.account.hitpoints.toNumber()}
-                  </Text>
-                  <Text>deaths: {character.account.deaths}</Text>
-                </Flex>
-              </Flex>
-            )
-          })
+          <DataTable columns={columns} data={characters} theme="chainquest" />
         ) : (
           <LoadingIcon />
         )}

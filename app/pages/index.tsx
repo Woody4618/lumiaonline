@@ -147,20 +147,14 @@ export default function Home() {
           Latest news
         </Heading>
 
-        <NewsContentBlock title="Alpha launch." date="2022-10-20">
+        <NewsContentBlock title="Closed Beta launch." date="2022-10-20">
           <Text>
-            Aenean vel nibh accumsan, lobortis arcu a, bibendum metus.
-            Pellentesque eleifend quis lectus sed semper. Cras ante felis,
-            ultricies hendrerit sapien at, interdum ultricies turpis. Phasellus
-            metus diam, pretium vitae efficitur eget, ultricies ac risus. Sed id
-            gravida purus. Phasellus ut elit hendrerit enim posuere convallis
-            nec quis nisl. Nulla vitae vulputate leo. Pellentesque aliquet orci
-            quam. Vivamus vehicula posuere velit at interdum. Curabitur rhoncus
-            varius sem, a posuere risus venenatis in. Aenean et nunc ut nisi
-            accumsan dictum et vel metus. Nam tempus tortor ex, euismod
-            tristique felis pulvinar at. Quisque sagittis neque sit amet quam
-            ultrices lacinia. Duis lacinia porttitor rhoncus. Fusce bibendum ex
-            nisl, sed tempus elit porttitor tincidunt.
+            Dear ChainQuest community, <br />
+            You can now start creating your character
+          </Text>
+          <Text>
+            And train your skills before we open the gates to the world of
+            ChainQuest.
           </Text>
           <br />
           <Text>
