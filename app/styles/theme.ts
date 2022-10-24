@@ -236,6 +236,7 @@ const theme: Theme = {
       minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
+      scrollbarGutter: "stable both-edges",
 
       body: {
         /** Default text styles */

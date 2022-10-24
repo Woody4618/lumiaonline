@@ -142,26 +142,35 @@ export default function Home() {
           </Flex>
         </>
       ) : null} */}
+        <Flex
+          sx={{
+            flexDirection: "column",
+            /** Workaround to keep it centralized in relation to the mennu */
+            marginLeft: "-13rem",
 
-        <Heading mb="1.6rem" variant="heading2">
-          Latest news
-        </Heading>
+            position: "relative",
+          }}
+        >
+          <Heading mb="1.6rem" variant="heading2">
+            Latest news
+          </Heading>
 
-        <NewsContentBlock title="Closed Beta launch." date="2022-10-20">
-          <Text>
-            Dear ChainQuest community, <br />
-            You can now start creating your character
-          </Text>
-          <Text>
-            And train your skills before we open the gates to the world of
-            ChainQuest.
-          </Text>
-          <br />
-          <Text>
-            Kind Regards, <br />
-            Ellagoris
-          </Text>
-        </NewsContentBlock>
+          <NewsContentBlock title="Closed Beta launch." date="2022-10-20">
+            <Text>
+              Dear ChainQuest community, <br />
+              You can now start creating your character
+            </Text>
+            <Text>
+              And train your skills before we open the gates to the world of
+              ChainQuest.
+            </Text>
+            <br />
+            <Text>
+              Kind Regards, <br />
+              Ellagoris
+            </Text>
+          </NewsContentBlock>
+        </Flex>
       </Flex>
     </Layout>
   )
