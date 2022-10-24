@@ -8,7 +8,7 @@ pub mod metadata;
 declare_id!("4dtiCyRiiwTdkWvN5b6aXfgYKvzMjjud9xghnDpr6TUY");
 
 #[program]
-pub mod rpg_program {
+pub mod chainquest {
     use super::*;
 
     #[access_control(CreateCharacter::validate_nft(&ctx))]

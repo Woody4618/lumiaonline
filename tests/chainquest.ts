@@ -11,7 +11,7 @@ import {
   getTokenMetadataAddress,
   TOKEN_METADATA_PROGRAM_ID,
 } from "../app/lib/program-utils"
-import { RpgProgram } from "../target/types/rpg_program"
+import { Chainquest } from "../target/types/chainquest"
 import { quests } from "../app/data/quests"
 import { monsters } from "../app/data/monsters"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
@@ -20,11 +20,11 @@ import { CharacterAccount, MonsterAccount } from "../app/lib/gen/accounts"
 import { getBattleTurns } from "../app/lib/battle"
 import { BattleTurn } from "../app/lib/gen/types"
 
-describe("rpg-program", () => {
+describe("chainquest", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env())
 
-  const program = anchor.workspace.RpgProgram as Program<RpgProgram>
+  const program = anchor.workspace.Chainquest as Program<Chainquest>
 
   const owner = program.provider.publicKey
   const systemProgram = anchor.web3.SystemProgram.programId
@@ -121,7 +121,7 @@ describe("rpg-program", () => {
   describe("validate characters", () => {
     it("Can create a character with a valid NFT", async () => {
       const mint = new anchor.web3.PublicKey(
-        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
       )
 
       const character = getCharacterAddress(
@@ -204,7 +204,7 @@ describe("rpg-program", () => {
       )[0]
 
       const mint = new anchor.web3.PublicKey(
-        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
       )
 
       const character = getCharacterAddress(
@@ -242,7 +242,7 @@ describe("rpg-program", () => {
       )[0]
 
       const mint = new anchor.web3.PublicKey(
-        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
       )
 
       const character = getCharacterAddress(
@@ -302,7 +302,7 @@ describe("rpg-program", () => {
       )[0]
 
       const mint = new anchor.web3.PublicKey(
-        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
       )
 
       const character = getCharacterAddress(
@@ -340,7 +340,7 @@ describe("rpg-program", () => {
       )[0]
 
       const mint = new anchor.web3.PublicKey(
-        "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
+        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
       )
 
       const character = getCharacterAddress(

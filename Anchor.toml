@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-rpg_program = "4dtiCyRiiwTdkWvN5b6aXfgYKvzMjjud9xghnDpr6TUY"
+chainquest = "4dtiCyRiiwTdkWvN5b6aXfgYKvzMjjud9xghnDpr6TUY"
 
 [registry]
 url = "https://api.apr.dev"
@@ -34,17 +34,6 @@ address = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
 address = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 
 ### Cloning NFT-related Accounts from address 3hBWd... on mainnet-beta
-
-## NFT #4 (Froots #4097)
-# Mint address
-[[test.validator.clone]]
-address = "Gg3VDgXUqRecKUhgDaMEhzhVX2ywtLmL8pU9oXZJiUZQ"
-# Associated Token Account address
-[[test.validator.clone]]
-address = "Bwm3HPASeew1gZrYnRb16FfjA5xfRhedxwQzLfec6aCs"
-# Metadata Program Derived address
-[[test.validator.clone]]
-address = "H3TR9fz47jSaNhBcTB2KW7Bf3pqvn4jmTSdUa2qTLTgT"
 
 
 ## NFT #1 (Orizorwyn)
