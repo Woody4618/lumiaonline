@@ -306,6 +306,10 @@ export default function Play() {
                 <ThemeLink
                   variant="gameButton"
                   onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
                 >
                   <img
                     sx={{
@@ -346,6 +350,10 @@ export default function Play() {
                 <ThemeLink
                   variant="gameButton"
                   onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
                 >
                   <img
                     sx={{
@@ -366,6 +374,10 @@ export default function Play() {
                 <ThemeLink
                   variant="gameButton"
                   onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
                 >
                   <img
                     sx={{
@@ -387,6 +399,10 @@ export default function Play() {
                 <ThemeLink
                   variant="gameButton"
                   onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
                 >
                   <img
                     sx={{
@@ -407,6 +423,10 @@ export default function Play() {
                 <ThemeLink
                   variant="gameButton"
                   onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
                 >
                   <img
                     sx={{
@@ -421,6 +441,30 @@ export default function Play() {
                         }}
                       />{" "} */}
                   Temple
+                </ThemeLink>
+              </Link>
+              <Link passHref href="/play">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_train.png"
+                  />
+                  {/* <WildernessIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "} */}
+                  Trainer
                 </ThemeLink>
               </Link>
               <Link passHref href="/play?waypoint=wilderness">

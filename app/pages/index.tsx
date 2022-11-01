@@ -145,10 +145,13 @@ export default function Home() {
         <Flex
           sx={{
             flexDirection: "column",
-            /** Workaround to keep it centralized in relation to the mennu */
-            marginLeft: "-13rem",
 
             position: "relative",
+
+            "@media (min-width: 768px)": {
+              /** Workaround to keep it centralized in relation to the mennu */
+              marginLeft: "-13rem",
+            },
           }}
         >
           <Heading mb="1.6rem" variant="heading2">
