@@ -34,12 +34,15 @@ pub mod chainquest {
         Ok(())
     }
 
-    pub fn create_monster(ctx: Context<CreateMonster>, config: MonsterConfig) -> Result<()> {
-        let monster = MonsterAccount {
+    pub fn create_monster_type(
+        ctx: Context<CreateMonsterType>,
+        config: MonsterConfig
+    ) -> Result<()> {
+        let monster_type = MonsterTypeAccount {
             config,
         };
 
-        ctx.accounts.monster.set_inner(monster);
+        ctx.accounts.monster_type.set_inner(monster_type);
 
         Ok(())
     }
@@ -76,7 +79,7 @@ pub mod chainquest {
 
         if last_turn.character_hitpoints <= 0 {
             // ctx.accounts.character.deaths.push(Death {
-            //     monster_uuid: ctx.accounts.monster.config.uuid.clone(),
+            //     monster_uuid: ctx.accounts.monster_type.config.uuid.clone(),
             //     timestamp: ctx.accounts.clock.unix_timestamp,
             // });
 
@@ -85,7 +88,7 @@ pub mod chainquest {
 
         let battle = BattleAccount {
             battle_turns,
-            participants: vec![ctx.accounts.character.key(), ctx.accounts.monster.key()],
+            participants: vec![ctx.accounts.character.key(), ctx.accounts.monster_type.key()],
         };
 
         ctx.accounts.battle.set_inner(battle);
@@ -104,15 +107,15 @@ pub struct BattleTurn {
 
 #[derive(Accounts)]
 #[instruction(config: MonsterConfig)]
-pub struct CreateMonster<'info> {
+pub struct CreateMonsterType<'info> {
     #[account(
         init,
-        seeds = [b"monster".as_ref(), config.uuid.as_ref()],
+        seeds = [b"monster_type".as_ref(), config.uuid.as_ref()],
         bump,
         payer = signer,
-        space = 8 + size_of::<MonsterAccount>()
+        space = 8 + size_of::<MonsterTypeAccount>()
     )]
-    pub monster: Account<'info, MonsterAccount>,
+    pub monster_type: Account<'info, MonsterTypeAccount>,
 
     #[account(mut)]
     pub signer: Signer<'info>,
@@ -149,7 +152,7 @@ pub struct JoinBattle<'info> {
     constraint = character.owner.key() == owner.key())]
     pub character: Account<'info, CharacterAccount>,
     #[account(mut)]
-    pub monster: Account<'info, MonsterAccount>,
+    pub monster_type: Account<'info, MonsterTypeAccount>,
     #[account(mut)]
     pub owner: Signer<'info>,
     clock: Sysvar<'info, Clock>,
@@ -157,7 +160,7 @@ pub struct JoinBattle<'info> {
 }
 
 #[account]
-pub struct MonsterAccount {
+pub struct MonsterTypeAccount {
     config: MonsterConfig,
 }
 

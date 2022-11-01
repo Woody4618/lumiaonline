@@ -4,31 +4,29 @@ import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface MonsterAccountFields {
+export interface MonsterTypeAccountFields {
   config: types.MonsterConfigFields
 }
 
-export interface MonsterAccountJSON {
+export interface MonsterTypeAccountJSON {
   config: types.MonsterConfigJSON
 }
 
-export class MonsterAccount {
+export class MonsterTypeAccount {
   readonly config: types.MonsterConfig
 
-  static readonly discriminator = Buffer.from([
-    234, 56, 114, 123, 205, 233, 210, 142,
-  ])
+  static readonly discriminator = Buffer.from([124, 151, 222, 83, 50, 9, 6, 7])
 
   static readonly layout = borsh.struct([types.MonsterConfig.layout("config")])
 
-  constructor(fields: MonsterAccountFields) {
+  constructor(fields: MonsterTypeAccountFields) {
     this.config = new types.MonsterConfig({ ...fields.config })
   }
 
   static async fetch(
     c: Connection,
     address: PublicKey
-  ): Promise<MonsterAccount | null> {
+  ): Promise<MonsterTypeAccount | null> {
     const info = await c.getAccountInfo(address)
 
     if (info === null) {
@@ -44,7 +42,7 @@ export class MonsterAccount {
   static async fetchMultiple(
     c: Connection,
     addresses: PublicKey[]
-  ): Promise<Array<MonsterAccount | null>> {
+  ): Promise<Array<MonsterTypeAccount | null>> {
     const infos = await c.getMultipleAccountsInfo(addresses)
 
     return infos.map((info) => {
@@ -59,26 +57,26 @@ export class MonsterAccount {
     })
   }
 
-  static decode(data: Buffer): MonsterAccount {
-    if (!data.slice(0, 8).equals(MonsterAccount.discriminator)) {
+  static decode(data: Buffer): MonsterTypeAccount {
+    if (!data.slice(0, 8).equals(MonsterTypeAccount.discriminator)) {
       throw new Error("invalid account discriminator")
     }
 
-    const dec = MonsterAccount.layout.decode(data.slice(8))
+    const dec = MonsterTypeAccount.layout.decode(data.slice(8))
 
-    return new MonsterAccount({
+    return new MonsterTypeAccount({
       config: types.MonsterConfig.fromDecoded(dec.config),
     })
   }
 
-  toJSON(): MonsterAccountJSON {
+  toJSON(): MonsterTypeAccountJSON {
     return {
       config: this.config.toJSON(),
     }
   }
 
-  static fromJSON(obj: MonsterAccountJSON): MonsterAccount {
-    return new MonsterAccount({
+  static fromJSON(obj: MonsterTypeAccountJSON): MonsterTypeAccount {
+    return new MonsterTypeAccount({
       config: types.MonsterConfig.fromJSON(obj.config),
     })
   }

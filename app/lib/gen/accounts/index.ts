@@ -1,7 +1,10 @@
 export { BattleAccount } from "./BattleAccount"
 export type { BattleAccountFields, BattleAccountJSON } from "./BattleAccount"
-export { MonsterAccount } from "./MonsterAccount"
-export type { MonsterAccountFields, MonsterAccountJSON } from "./MonsterAccount"
+export { MonsterTypeAccount } from "./MonsterTypeAccount"
+export type {
+  MonsterTypeAccountFields,
+  MonsterTypeAccountJSON,
+} from "./MonsterTypeAccount"
 export { QuestAccount } from "./QuestAccount"
 export type { QuestAccountFields, QuestAccountJSON } from "./QuestAccount"
 export { CharacterAccount } from "./CharacterAccount"

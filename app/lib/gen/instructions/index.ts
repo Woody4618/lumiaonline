@@ -5,8 +5,11 @@ export type {
 } from "./createCharacter"
 export { createQuest } from "./createQuest"
 export type { CreateQuestArgs, CreateQuestAccounts } from "./createQuest"
-export { createMonster } from "./createMonster"
-export type { CreateMonsterArgs, CreateMonsterAccounts } from "./createMonster"
+export { createMonsterType } from "./createMonsterType"
+export type {
+  CreateMonsterTypeArgs,
+  CreateMonsterTypeAccounts,
+} from "./createMonsterType"
 export { joinQuest } from "./joinQuest"
 export type { JoinQuestAccounts } from "./joinQuest"
 export { claimQuest } from "./claimQuest"

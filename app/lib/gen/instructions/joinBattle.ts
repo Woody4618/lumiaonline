@@ -11,7 +11,7 @@ export interface JoinBattleArgs {
 export interface JoinBattleAccounts {
   battle: PublicKey
   character: PublicKey
-  monster: PublicKey
+  monsterType: PublicKey
   owner: PublicKey
   clock: PublicKey
   systemProgram: PublicKey
@@ -25,7 +25,7 @@ export function joinBattle(args: JoinBattleArgs, accounts: JoinBattleAccounts) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.battle, isSigner: true, isWritable: true },
     { pubkey: accounts.character, isSigner: false, isWritable: true },
-    { pubkey: accounts.monster, isSigner: false, isWritable: true },
+    { pubkey: accounts.monsterType, isSigner: false, isWritable: true },
     { pubkey: accounts.owner, isSigner: true, isWritable: true },
     { pubkey: accounts.clock, isSigner: false, isWritable: false },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },

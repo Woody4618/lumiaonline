@@ -1,5 +1,5 @@
 import { getRandomValues } from "crypto"
-import { CharacterAccount, MonsterAccount } from "./gen/accounts"
+import { CharacterAccount, MonsterTypeAccount } from "./gen/accounts"
 import { BN, web3 } from "@project-serum/anchor"
 import { Connection } from "@solana/web3.js"
 
@@ -17,7 +17,7 @@ export const getBattleTurns = async (
   monster: web3.PublicKey
 ) => {
   const characterAccount = await CharacterAccount.fetch(connection, character)
-  const monsterAccount = await MonsterAccount.fetch(connection, monster)
+  const monsterAccount = await MonsterTypeAccount.fetch(connection, monster)
   /**
    * Static level because there isn't any level attribute.
    * This is basically a base damage calculation.

@@ -2,7 +2,11 @@ import * as anchor from "@project-serum/anchor"
 import { Program } from "@project-serum/anchor"
 import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
 import { expect } from "chai"
-import { createCharacter, joinBattle } from "../app/lib/gen/instructions"
+import {
+  createCharacter,
+  createMonsterType,
+  joinBattle,
+} from "../app/lib/gen/instructions"
 import { createQuest } from "../app/lib/gen/instructions/createQuest"
 import { joinQuest } from "../app/lib/gen/instructions/joinQuest"
 import { PROGRAM_ID } from "../app/lib/gen/programId"
@@ -15,8 +19,7 @@ import { Chainquest } from "../target/types/chainquest"
 import { quests } from "../app/data/quests"
 import { monsters } from "../app/data/monsters"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
-import { createMonster } from "../app/lib/gen/instructions/createMonster"
-import { CharacterAccount, MonsterAccount } from "../app/lib/gen/accounts"
+import { CharacterAccount, MonsterTypeAccount } from "../app/lib/gen/accounts"
 import { getBattleTurns } from "../app/lib/battle"
 import { BattleTurn } from "../app/lib/gen/types"
 
@@ -76,12 +79,12 @@ describe("chainquest", () => {
       const ixs = monsters.map((monsterConfig, index) => {
         const uuid = monsterConfig.name
 
-        const monster = anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("monster"), Buffer.from(uuid)],
+        const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("monster_type"), Buffer.from(uuid)],
           PROGRAM_ID
         )[0]
 
-        const ix = createMonster(
+        const ix = createMonsterType(
           {
             config: {
               uuid,
@@ -90,7 +93,7 @@ describe("chainquest", () => {
             },
           },
           {
-            monster,
+            monsterType,
             signer: program.provider.publicKey,
             systemProgram,
           }
@@ -104,11 +107,11 @@ describe("chainquest", () => {
       /** Validate if the account has been created */
       const monsterToValidate = monsters[0]
       const monsterAddress = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("monster"), Buffer.from(monsterToValidate.name)],
+        [Buffer.from("monster_type"), Buffer.from(monsterToValidate.name)],
         PROGRAM_ID
       )[0]
 
-      const monsterAcc = await program.account.monsterAccount.fetch(
+      const monsterAcc = await program.account.monsterTypeAccount.fetch(
         monsterAddress
       )
 
@@ -237,7 +240,7 @@ describe("chainquest", () => {
       const uuid = monsters[0].name
 
       const monster = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("monster"), Buffer.from(uuid)],
+        [Buffer.from("monster_type"), Buffer.from(uuid)],
         PROGRAM_ID
       )[0]
 
@@ -265,7 +268,7 @@ describe("chainquest", () => {
         {
           battle: battle.publicKey,
           owner,
-          monster,
+          monsterType: monster,
           character,
           clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
           systemProgram: anchor.web3.SystemProgram.programId,

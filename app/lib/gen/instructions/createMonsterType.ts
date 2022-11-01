@@ -4,28 +4,28 @@ import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface CreateMonsterArgs {
+export interface CreateMonsterTypeArgs {
   config: types.MonsterConfigFields
 }
 
-export interface CreateMonsterAccounts {
-  monster: PublicKey
+export interface CreateMonsterTypeAccounts {
+  monsterType: PublicKey
   signer: PublicKey
   systemProgram: PublicKey
 }
 
 export const layout = borsh.struct([types.MonsterConfig.layout("config")])
 
-export function createMonster(
-  args: CreateMonsterArgs,
-  accounts: CreateMonsterAccounts
+export function createMonsterType(
+  args: CreateMonsterTypeArgs,
+  accounts: CreateMonsterTypeAccounts
 ) {
   const keys: Array<AccountMeta> = [
-    { pubkey: accounts.monster, isSigner: false, isWritable: true },
+    { pubkey: accounts.monsterType, isSigner: false, isWritable: true },
     { pubkey: accounts.signer, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]
-  const identifier = Buffer.from([191, 236, 127, 56, 10, 211, 227, 139])
+  const identifier = Buffer.from([210, 117, 218, 106, 172, 133, 65, 86])
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
