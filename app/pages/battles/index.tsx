@@ -9,7 +9,7 @@ import { getBattles, getCharacters } from "lib/program-utils"
 import {
   BattleAccount,
   CharacterAccount,
-  MonsterAccount,
+  MonsterTypeAccount,
 } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { Metaplex } from "@metaplex-foundation/js"
@@ -19,7 +19,7 @@ type BattleWithParticipants = {
   account: BattleAccount & {
     participants: {
       character: CharacterAccount
-      monster: MonsterAccount
+      monster: MonsterTypeAccount
     }
   }
   pubkey: web3.PublicKey
@@ -41,7 +41,7 @@ export default function Battles() {
               battle.account.participants[0]
             )
 
-            const monster = await MonsterAccount.fetch(
+            const monster = await MonsterTypeAccount.fetch(
               connection,
               battle.account.participants[1]
             )

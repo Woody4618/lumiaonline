@@ -8,7 +8,7 @@ import {
 import {
   BattleAccount,
   CharacterAccount,
-  MonsterAccount,
+  MonsterTypeAccount,
   QuestAccount,
 } from "./gen/accounts"
 import { PROGRAM_ID } from "./gen/programId"
@@ -61,7 +61,7 @@ export const getMonsters = async (
   // owner: PublicKey,
 ) => {
   const filters = [
-    accountFilter(MonsterAccount.discriminator),
+    accountFilter(MonsterTypeAccount.discriminator),
     // memcmp(10, owner.toBase58()),
   ]
 
@@ -70,7 +70,7 @@ export const getMonsters = async (
   return Promise.all(
     accounts.map(async ({ pubkey, account }) => ({
       pubkey,
-      account: MonsterAccount.decode(account.data),
+      account: MonsterTypeAccount.decode(account.data),
     }))
   )
 }

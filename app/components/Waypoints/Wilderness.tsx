@@ -10,7 +10,7 @@ import {
   getMonsters,
   getParsedIx,
 } from "lib/program-utils"
-import { CharacterAccount, MonsterAccount } from "lib/gen/accounts"
+import { CharacterAccount, MonsterTypeAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
 import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
@@ -23,7 +23,7 @@ import { Layout } from "@/components/Layout/Layout"
 
 type MonsterResponse = {
   pubkey: web3.PublicKey
-  account: MonsterAccount
+  account: MonsterTypeAccount
 }
 
 export function Wilderness() {
