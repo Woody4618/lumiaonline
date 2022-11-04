@@ -15,7 +15,7 @@ import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { useContext, useEffect, useRef, useState } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
-import { ArrowLeftIcon, BackIcon } from "@/components/icons"
+import { ArrowLeftIcon, BackIcon, WildernessIcon } from "@/components/icons"
 import WayPoints from "components/Waypoints"
 import { useRouter } from "next/router"
 
@@ -458,13 +458,21 @@ export default function Play() {
                     }}
                     src="/assets/icon_train.png"
                   />
-                  {/* <WildernessIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
                   Trainer
+                </ThemeLink>
+              </Link>
+              <Link passHref href="/play?waypoint=monsters">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
+                  {/* <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_wilderness.png"
+                  /> */}
+                  Monsters
                 </ThemeLink>
               </Link>
               <Link passHref href="/play?waypoint=wilderness">
@@ -478,12 +486,6 @@ export default function Play() {
                     }}
                     src="/assets/icon_wilderness.png"
                   />
-                  {/* <WildernessIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
                   Wilderness
                 </ThemeLink>
               </Link>

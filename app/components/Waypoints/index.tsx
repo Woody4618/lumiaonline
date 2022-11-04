@@ -1,7 +1,9 @@
-import { Wilderness } from "./Wilderness"
+import { Monsters } from "./Monsters"
 import { Dungeons } from "./Dungeons"
+import { Wilderness } from "./Wilderness"
 
 export default {
-  Wilderness,
+  Monsters,
   Dungeons,
+  Wilderness,
 }

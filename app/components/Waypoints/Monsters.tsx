@@ -24,7 +24,7 @@ type MonsterResponse = {
   account: MonsterTypeAccount
 }
 
-export function Wilderness() {
+export function Monsters() {
   const { connection } = useConnection()
   const { publicKey, sendTransaction } = useWallet()
   const [monsters, setMonsters] = useState<MonsterResponse[]>(null)
@@ -130,7 +130,7 @@ export function Wilderness() {
       }}
     >
       <Heading mb=".8rem" variant="heading1">
-        Wilderness
+        Monsters in Monsters:
       </Heading>
 
       <Text my="3.2rem"></Text>
@@ -138,7 +138,62 @@ export function Wilderness() {
         sx={{
           gap: "1.6rem",
         }}
-      ></Flex>
+      >
+        {monsters ? (
+          monsters.map((monster) => {
+            const monsterData = monstersData.find(
+              (monsterData) => monsterData.name === monster.account.config.uuid
+            )
+
+            return (
+              <Flex
+                sx={{
+                  alignItems: "center",
+                  flexDirection: "column",
+                  gap: ".8rem",
+                  borderTop: "1px solid",
+                  borderBottom: "1px solid",
+                  borderColor: "primary",
+                  padding: ".8rem 0",
+                }}
+                key={monster.pubkey.toString()}
+              >
+                <Heading variant="heading2">{monsterData.name}</Heading>
+                <img
+                  sx={{
+                    maxWidth: "8rem",
+                    borderRadius: ".4rem",
+                  }}
+                  src={monsterData.image}
+                />
+
+                <Flex
+                  sx={{
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  {/* <Text>
+                      Hitpoints: {monster.account.config.hitpoints.toNumber()}
+                    </Text> */}
+                </Flex>
+                <form sx={{}} onSubmit={handleJoinFormSubmit}>
+                  <input
+                    type="hidden"
+                    name="uuid"
+                    value={monster.account.config.uuid.toString()}
+                  />
+                  <Button type="submit" mt="1.6rem">
+                    Battle
+                  </Button>
+                </form>
+              </Flex>
+            )
+          })
+        ) : (
+          <LoadingIcon />
+        )}
+      </Flex>
     </Flex>
   )
 }
