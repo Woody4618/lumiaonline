@@ -31,7 +31,7 @@ export function Layout({
           },
         }}
       >
-        <Flex
+        {/* <Flex
           aria-label="menu"
           sx={{
             display: "none",
@@ -71,7 +71,7 @@ export function Layout({
               <ThemeLink variant="gameButton">Highscores</ThemeLink>
             </Link>
           </Flex>
-        </Flex>
+        </Flex> */}
         <main
           sx={{
             display: "flex",

@@ -47,7 +47,8 @@ export default function Home() {
 
   return (
     <Layout type="full">
-      <img src="https://inkarnate-api-as-production.s3.amazonaws.com/yczpt837wblc6jmq9uvodf3x95e0" />
+      {/* <img src="https://inkarnate-api-as-production.s3.amazonaws.com/yczpt837wblc6jmq9uvodf3x95e0" /> */}
+      <img src="/assets/background-main.png" />
       <Flex
         sx={{
           display: "flex",
@@ -93,7 +94,7 @@ export default function Home() {
             }}
             variant="gameButton"
           >
-            Enter ChainQuest
+            Enter Lumia
           </ThemeLink>
         </Link>
 
@@ -160,12 +161,12 @@ export default function Home() {
 
           <NewsContentBlock title="Closed Beta launch." date="2022-10-20">
             <Text>
-              Dear ChainQuest community, <br />
+              Dear Lumia community, <br />
               You can now start creating your character
             </Text>
             <Text>
               And train your skills before we open the gates to the world of
-              ChainQuest.
+              Lumia.
             </Text>
             <br />
             <Text>

@@ -370,6 +370,20 @@ export default function Play() {
                   Equipment Shop
                 </ThemeLink>
               </Link>
+              <Link passHref href="/play?waypoint=wilderness">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_wilderness.png"
+                  />
+                  Hunts
+                </ThemeLink>
+              </Link>
               <Link passHref href="/play">
                 <ThemeLink
                   variant="gameButton"
@@ -473,20 +487,6 @@ export default function Play() {
                     src="/assets/icon_wilderness.png"
                   /> */}
                   Monsters
-                </ThemeLink>
-              </Link>
-              <Link passHref href="/play?waypoint=wilderness">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_wilderness.png"
-                  />
-                  Wilderness
                 </ThemeLink>
               </Link>
             </Flex>

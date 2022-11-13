@@ -1,6 +1,12 @@
 /** @jsxImportSource theme-ui */
 import Link from "next/link"
-import { Button, Container, Flex, Text } from "@theme-ui/components"
+import {
+  Button,
+  Container,
+  Flex,
+  Text,
+  Link as ThemeLink,
+} from "@theme-ui/components"
 
 import WalletManager from "@/components/WalletManager/WalletManager"
 import { useState } from "react"
@@ -33,7 +39,7 @@ const Header = () => {
             <Flex as="a" sx={{ alignItems: "center", flexDirection: "column" }}>
               <Flex sx={{ alignItems: "center" }}>
                 <Text as="h1" variant="heading" ml=".4rem">
-                  Chainquest
+                  Lumia
                 </Text>
               </Flex>
             </Flex>
@@ -112,7 +118,7 @@ const Header = () => {
               </Button>
             </Flex>
 
-            {/* <Flex
+            <Flex
               sx={{
                 alignItems: "center",
                 justifyContent: "center",
@@ -131,7 +137,7 @@ const Header = () => {
                   },
                 }}
               >
-                Characters
+                Community
               </Button>
               <Flex
                 sx={{
@@ -160,14 +166,19 @@ const Header = () => {
                   },
                 }}
               >
-                <a rel="noopener noreferrer" target="_blank" tabIndex={1}>
-                  Create a character
-                </a>
-                <a rel="noopener noreferrer" target="_blank" tabIndex={1}>
-                  List characters
-                </a>
+                <Link href="/characters" passHref>
+                  <ThemeLink variant="gameButton">Characters</ThemeLink>
+                </Link>
+
+                <Link href="/battles" passHref>
+                  <ThemeLink variant="gameButton">Latest Battles</ThemeLink>
+                </Link>
+
+                <Link href="/highscores" passHref>
+                  <ThemeLink variant="gameButton">Highscores</ThemeLink>
+                </Link>
               </Flex>
-            </Flex> */}
+            </Flex>
 
             {/* {isWalletReady && publicKey ? <WalletManager /> : null} */}
             <WalletManager />

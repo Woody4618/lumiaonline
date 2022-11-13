@@ -136,9 +136,30 @@ export function Wilderness() {
       <Text my="3.2rem"></Text>
       <Flex
         sx={{
-          gap: "1.6rem",
+          flexDirection: "column",
         }}
-      ></Flex>
+      >
+        <Text>Rotworm Cave</Text>
+        <Text>Distance: 520m</Text>
+        <Text>Creatures: 5 Rotworm</Text>
+        <Text>Recommended lvl: 9</Text>
+        <Flex>
+          <Button>Start Solo</Button>
+          <Button>Join Party</Button>
+        </Flex>
+      </Flex>
+
+      <Flex
+        sx={{
+          flexDirection: "column",
+          marginTop: "1.6rem",
+        }}
+      >
+        <Text>Elven Fortress</Text>
+        <Text>Distance: 1320m</Text>
+        <Text>Creatures: 7 Elf, 3 Elf Arcanist</Text>
+        <Text>Recommended lvl: 15</Text>
+      </Flex>
     </Flex>
   )
 }
