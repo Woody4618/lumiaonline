@@ -24,6 +24,7 @@ const Header = () => {
         background: (theme) => theme.colors?.backgroundGradient,
         borderBottom: "1px solid",
         borderColor: "background2",
+        padding: "1.6rem",
       }}
     >
       <Container>
@@ -31,16 +32,21 @@ const Header = () => {
           sx={{
             alignItems: "center",
             justifyContent: "space-between",
-
-            minHeight: "6.4rem",
           }}
         >
           <Link href="/" passHref>
             <Flex as="a" sx={{ alignItems: "center", flexDirection: "column" }}>
               <Flex sx={{ alignItems: "center" }}>
-                <Text as="h1" variant="heading" ml=".4rem">
+                <img
+                  src="/lumia2.png"
+                  sx={{
+                    maxWidth: "4.8rem",
+                    marginLeft: "2.4rem",
+                  }}
+                />
+                {/* <Text as="h1" variant="heading" ml=".4rem">
                   Lumia
-                </Text>
+                </Text> */}
               </Flex>
             </Flex>
           </Link>
