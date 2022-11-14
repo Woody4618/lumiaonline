@@ -36,9 +36,9 @@ const Header = () => {
         >
           <Link href="/" passHref>
             <Flex as="a" sx={{ alignItems: "center", flexDirection: "column" }}>
-              <Flex sx={{ alignItems: "center" }}>
+              <Flex sx={{ alignItems: "center", minHeight: "4.8rem" }}>
                 <img
-                  src="/lumia2.png"
+                  src="/lumia2small.png"
                   sx={{
                     maxWidth: "4.8rem",
                     marginLeft: "2.4rem",
@@ -128,7 +128,6 @@ const Header = () => {
               sx={{
                 alignItems: "center",
                 justifyContent: "center",
-                alignSelf: "stretch",
                 position: "relative",
               }}
             >
@@ -153,7 +152,7 @@ const Header = () => {
                   flexDirection: "column",
                   alignItems: "flex-start",
                   padding: "2.4rem 1.2rem",
-                  top: 40,
+                  top: 20,
                   right: 0,
                   backgroundColor: "background",
                   transition: "all .125s linear",
@@ -173,15 +172,15 @@ const Header = () => {
                 }}
               >
                 <Link href="/characters" passHref>
-                  <ThemeLink variant="gameButton">Characters</ThemeLink>
+                  <ThemeLink>Characters</ThemeLink>
                 </Link>
 
                 <Link href="/battles" passHref>
-                  <ThemeLink variant="gameButton">Latest Battles</ThemeLink>
+                  <ThemeLink>Latest Battles</ThemeLink>
                 </Link>
 
                 <Link href="/highscores" passHref>
-                  <ThemeLink variant="gameButton">Highscores</ThemeLink>
+                  <ThemeLink>Highscores</ThemeLink>
                 </Link>
               </Flex>
             </Flex>

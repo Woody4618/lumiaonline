@@ -30,7 +30,7 @@ function App(props: AppProps) {
         {/** Load font styles directly on the document to prevent flashes */}
         <title>Lumia Online</title>
         <link href="/fonts/fonts.css" rel="stylesheet" />
-        <link rel="icon" href="/lumia2.png" />
+        <link rel="icon" href="/lumia2.ico" />
       </Head>
 
       <WalletProvider>
