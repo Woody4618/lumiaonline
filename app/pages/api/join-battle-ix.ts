@@ -30,7 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const ix = joinBattle(
       { battleTurns },
       {
-        monster: monsterAddress,
+        monsterType: monsterAddress,
         character: characterAddress,
         clock: web3.SYSVAR_CLOCK_PUBKEY,
         battle: battle.publicKey,
