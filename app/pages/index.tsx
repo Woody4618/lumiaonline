@@ -48,7 +48,14 @@ export default function Home() {
   return (
     <Layout type="full">
       {/* <img src="https://inkarnate-api-as-production.s3.amazonaws.com/yczpt837wblc6jmq9uvodf3x95e0" /> */}
-      <img src="/assets/background-main.png" />
+
+      <Flex
+        sx={{
+          minHeight: "28vw",
+        }}
+      >
+        <img src="/assets/background-main.png" />
+      </Flex>
       <Flex
         sx={{
           display: "flex",
