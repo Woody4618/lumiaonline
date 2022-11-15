@@ -52,9 +52,23 @@ export default function Home() {
       <Flex
         sx={{
           minHeight: "28vw",
+          position: "relative",
         }}
       >
         <img src="/assets/background-main.png" />
+        <Link href="/play" passHref>
+          <ThemeLink
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "calc(50% - 192px)",
+              alignSelf: "flex-start",
+            }}
+            variant="gameButton"
+          >
+            Enter Lumia
+          </ThemeLink>
+        </Link>
       </Flex>
       <Flex
         sx={{
@@ -86,24 +100,6 @@ export default function Home() {
             </Text>
           </Heading>
         )} */}
-
-        <Link href="/play" passHref>
-          <ThemeLink
-            sx={{
-              position: "absolute",
-              top: "19.2vw",
-              alignSelf: "flex-start",
-
-              "@media (min-width: 768px)": {
-                // top: "32rem",
-                left: "auto",
-              },
-            }}
-            variant="gameButton"
-          >
-            Enter Lumia
-          </ThemeLink>
-        </Link>
 
         {/** User onboarding */}
         {/* {isWalletReady && !publicKey ? (
