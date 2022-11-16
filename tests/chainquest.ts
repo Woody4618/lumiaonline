@@ -5,6 +5,7 @@ import { expect } from "chai"
 import {
   createCharacter,
   createMonsterType,
+  createSpawnInstance,
   joinBattle,
 } from "../app/lib/gen/instructions"
 import { createQuest } from "../app/lib/gen/instructions/createQuest"
@@ -18,6 +19,7 @@ import {
 import { Chainquest } from "../target/types/chainquest"
 import { quests } from "../app/data/quests"
 import { monsters } from "../app/data/monsters"
+import { spawns } from "../app/data/spawns"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
 import { CharacterAccount, MonsterTypeAccount } from "../app/lib/gen/accounts"
 import { getBattleTurns } from "../app/lib/battle"
@@ -117,6 +119,59 @@ describe("chainquest", () => {
 
       expect(monsterAcc.config.hitpoints.toNumber()).to.eq(
         monsterToValidate.hitpoints
+      )
+    })
+
+    it("Can create spawn instances", async () => {
+      const ixs = spawns.map((spawnConfig, index) => {
+        const { monsterName, spawntime, town } = spawnConfig
+
+        const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("monster_type"), Buffer.from(monsterName)],
+          PROGRAM_ID
+        )[0]
+
+        const spawnInstance = anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("spawn_instance"), Buffer.from(monsterName)],
+          PROGRAM_ID
+        )[0]
+
+        const ix = createSpawnInstance(
+          {
+            config: {
+              monsterName,
+              spawntime: new anchor.BN(spawntime),
+            },
+          },
+          {
+            spawnInstance,
+            monsterType,
+            signer: program.provider.publicKey,
+            systemProgram,
+          }
+        )
+        return ix
+      })
+
+      const tx = new anchor.web3.Transaction().add(...ixs)
+      await program.provider.sendAndConfirm(tx)
+
+      /** Validate if the account has been created */
+      const spawnToValidate = spawns[0]
+      const spawnAddress = anchor.web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("spawn_instance"),
+          Buffer.from(spawnToValidate.monsterName),
+        ],
+        PROGRAM_ID
+      )[0]
+
+      const spawnAcc = await program.account.spawnInstanceAccount.fetch(
+        spawnAddress
+      )
+
+      expect(spawnAcc.config.spawntime.toNumber()).to.eq(
+        spawnToValidate.spawntime
       )
     })
   })
@@ -378,6 +433,68 @@ describe("chainquest", () => {
         await program.provider.sendAndConfirm(tx)
         throw new Error("Could claim a quest before the duration")
       } catch (e) {}
+    })
+  })
+
+  describe("validate spawns", () => {
+    it("Can terminate a spawn instance", async () => {
+      const uuid = monsters[0].name
+
+      const monster = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("monster_type"), Buffer.from(uuid)],
+        PROGRAM_ID
+      )[0]
+
+      const mint = new anchor.web3.PublicKey(
+        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
+      )
+
+      const character = getCharacterAddress(
+        program.provider.publicKey,
+        mint,
+        program.programId
+      )
+
+      const battleTurns = await getBattleTurns(
+        program.provider.connection,
+        character,
+        monster
+      )
+
+      const battle = anchor.web3.Keypair.generate()
+      const ix = joinBattle(
+        {
+          battleTurns,
+        },
+        {
+          battle: battle.publicKey,
+          owner,
+          monsterType: monster,
+          character,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        }
+      )
+
+      const tx = new anchor.web3.Transaction().add(ix)
+
+      await program.provider.sendAndConfirm(tx, [battle])
+
+      const battleAcc: {
+        battleTurns: BattleTurn[]
+      } = await program.account.battleAccount.fetch(battle.publicKey)
+
+      /** Expect character to die or win  */
+      const lastTurn = battleAcc.battleTurns[battleAcc.battleTurns.length - 1]
+      const characterAcc = await program.account.characterAccount.fetch(
+        character
+      )
+
+      if (lastTurn.characterHitpoints.toNumber() <= 0) {
+        expect(characterAcc.deaths).to.be.eq(1)
+      } else {
+        expect(characterAcc.deaths).to.be.eq(0)
+      }
     })
   })
 })

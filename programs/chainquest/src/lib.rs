@@ -47,6 +47,19 @@ pub mod chainquest {
         Ok(())
     }
 
+    pub fn create_spawn_instance(
+        ctx: Context<CreateSpawnInstance>,
+        config: SpawnInstanceConfig
+    ) -> Result<()> {
+        let spawn_instance = SpawnInstanceAccount {
+            config,
+        };
+
+        ctx.accounts.spawn_instance.set_inner(spawn_instance);
+
+        Ok(())
+    }
+
     pub fn join_quest(ctx: Context<JoinQuest>) -> Result<()> {
         ctx.accounts.character.quest_state = Some(QuestState {
             quest_uuid: ctx.accounts.quest.config.uuid.clone(),
@@ -106,6 +119,32 @@ pub struct BattleTurn {
 }
 
 #[derive(Accounts)]
+#[instruction(config: SpawnInstanceConfig)]
+pub struct CreateSpawnInstance<'info> {
+    #[account(
+        init,
+        seeds = [b"spawn_instance".as_ref(), config.monster_name.as_ref()],
+        bump,
+        payer = signer,
+        space = 8 + size_of::<SpawnInstanceAccount>()
+    )]
+    pub spawn_instance: Account<'info, SpawnInstanceAccount>,
+
+    #[account(seeds = [b"monster_type".as_ref(), config.monster_name.as_ref()], bump)]
+    pub monster_type: Account<'info, MonsterTypeAccount>,
+
+    #[account(mut)]
+    pub signer: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub struct SpawnInstanceConfig {
+    pub monster_name: String,
+    pub spawntime: u64,
+}
+
+#[derive(Accounts)]
 #[instruction(config: MonsterConfig)]
 pub struct CreateMonsterType<'info> {
     #[account(
@@ -157,6 +196,11 @@ pub struct JoinBattle<'info> {
     pub owner: Signer<'info>,
     clock: Sysvar<'info, Clock>,
     pub system_program: Program<'info, System>,
+}
+
+#[account]
+pub struct SpawnInstanceAccount {
+    config: SpawnInstanceConfig,
 }
 
 #[account]
