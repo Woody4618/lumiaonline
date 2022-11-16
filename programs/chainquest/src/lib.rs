@@ -5,7 +5,7 @@ use anchor_spl::token::{ Mint, TokenAccount };
 use metadata::{ TokenMetadata, MetadataAccount };
 pub mod metadata;
 
-declare_id!("4dtiCyRiiwTdkWvN5b6aXfgYKvzMjjud9xghnDpr6TUY");
+declare_id!("D6o7C1xgcgvDRRnNp8KFUNQ1Ki1pMrVGVqbuh9YF9vGb");
 
 #[program]
 pub mod chainquest {
@@ -53,9 +53,31 @@ pub mod chainquest {
     ) -> Result<()> {
         let spawn_instance = SpawnInstanceAccount {
             config,
+            // defines the last time the monster was killed. this is used to determine if the monster can join a battle or not
+            last_killed: None,
         };
 
         ctx.accounts.spawn_instance.set_inner(spawn_instance);
+
+        Ok(())
+    }
+
+    pub fn kill_spawn(ctx: Context<KillSpawn>) -> Result<()> {
+        if ctx.accounts.spawn_instance.last_killed.is_none() {
+            ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
+            msg!("Spawn killed");
+            // ctx.accounts.character.experience += ctx.accounts.monster_type.config.experience
+        } else {
+            let required_timestamp =
+                ctx.accounts.spawn_instance.last_killed.as_ref().unwrap() +
+                ctx.accounts.spawn_instance.config.spawntime;
+
+            require_gte!(
+                ctx.accounts.clock.unix_timestamp,
+                required_timestamp,
+                QuestError::InvalidTimestamp
+            );
+        }
 
         Ok(())
     }
@@ -136,12 +158,13 @@ pub struct CreateSpawnInstance<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
     pub system_program: Program<'info, System>,
+    pub clock: Sysvar<'info, Clock>,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
 pub struct SpawnInstanceConfig {
     pub monster_name: String,
-    pub spawntime: u64,
+    pub spawntime: i64,
 }
 
 #[derive(Accounts)]
@@ -166,6 +189,20 @@ pub struct MonsterConfig {
     pub uuid: String,
     pub hitpoints: u64,
     pub melee_skill: u8,
+}
+
+#[derive(Accounts)]
+pub struct KillSpawn<'info> {
+    #[account(mut)]
+    pub monster_type: Account<'info, MonsterTypeAccount>,
+
+    #[account(mut, seeds = [b"spawn_instance".as_ref(), monster_type.config.uuid.as_ref()], bump)]
+    pub spawn_instance: Account<'info, SpawnInstanceAccount>,
+
+    #[account(mut)]
+    pub owner: Signer<'info>,
+    clock: Sysvar<'info, Clock>,
+    pub system_program: Program<'info, System>,
 }
 
 #[account]
@@ -201,6 +238,7 @@ pub struct JoinBattle<'info> {
 #[account]
 pub struct SpawnInstanceAccount {
     config: SpawnInstanceConfig,
+    last_killed: Option<i64>,
 }
 
 #[account]

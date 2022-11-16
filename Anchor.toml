@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-chainquest = "4dtiCyRiiwTdkWvN5b6aXfgYKvzMjjud9xghnDpr6TUY"
+chainquest = "D6o7C1xgcgvDRRnNp8KFUNQ1Ki1pMrVGVqbuh9YF9vGb"
 
 [registry]
 url = "https://api.apr.dev"

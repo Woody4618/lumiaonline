@@ -7,6 +7,7 @@ import {
   createMonsterType,
   createSpawnInstance,
   joinBattle,
+  killSpawn,
 } from "../app/lib/gen/instructions"
 import { createQuest } from "../app/lib/gen/instructions/createQuest"
 import { joinQuest } from "../app/lib/gen/instructions/joinQuest"
@@ -148,6 +149,7 @@ describe("chainquest", () => {
             monsterType,
             signer: program.provider.publicKey,
             systemProgram,
+            clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
           }
         )
         return ix
@@ -438,63 +440,34 @@ describe("chainquest", () => {
 
   describe("validate spawns", () => {
     it("Can terminate a spawn instance", async () => {
-      const uuid = monsters[0].name
+      const { monsterName, spawntime, town } = spawns[0]
 
-      const monster = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("monster_type"), Buffer.from(uuid)],
+      const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("monster_type"), Buffer.from(monsterName)],
         PROGRAM_ID
       )[0]
 
-      const mint = new anchor.web3.PublicKey(
-        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
-      )
+      const spawnInstance = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("spawn_instance"), Buffer.from(monsterName)],
+        PROGRAM_ID
+      )[0]
 
-      const character = getCharacterAddress(
-        program.provider.publicKey,
-        mint,
-        program.programId
-      )
-
-      const battleTurns = await getBattleTurns(
-        program.provider.connection,
-        character,
-        monster
-      )
-
-      const battle = anchor.web3.Keypair.generate()
-      const ix = joinBattle(
-        {
-          battleTurns,
-        },
-        {
-          battle: battle.publicKey,
-          owner,
-          monsterType: monster,
-          character,
-          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-          systemProgram: anchor.web3.SystemProgram.programId,
-        }
-      )
+      const ix = killSpawn({
+        spawnInstance,
+        monsterType,
+        owner: program.provider.publicKey,
+        systemProgram,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+      })
 
       const tx = new anchor.web3.Transaction().add(ix)
+      await program.provider.sendAndConfirm(tx)
 
-      await program.provider.sendAndConfirm(tx, [battle])
-
-      const battleAcc: {
-        battleTurns: BattleTurn[]
-      } = await program.account.battleAccount.fetch(battle.publicKey)
-
-      /** Expect character to die or win  */
-      const lastTurn = battleAcc.battleTurns[battleAcc.battleTurns.length - 1]
-      const characterAcc = await program.account.characterAccount.fetch(
-        character
+      const spawnAcc = await program.account.spawnInstanceAccount.fetch(
+        spawnInstance
       )
 
-      if (lastTurn.characterHitpoints.toNumber() <= 0) {
-        expect(characterAcc.deaths).to.be.eq(1)
-      } else {
-        expect(characterAcc.deaths).to.be.eq(0)
-      }
+      expect(spawnAcc.lastKilled).to.not.be.null
     })
   })
 })
