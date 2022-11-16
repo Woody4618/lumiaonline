@@ -3,7 +3,11 @@ use std::{ mem::size_of };
 use anchor_lang::{ prelude::* };
 use anchor_spl::token::{ Mint, TokenAccount };
 use metadata::{ TokenMetadata, MetadataAccount };
+
 pub mod metadata;
+pub mod state;
+
+use state::*;
 
 declare_id!("D6o7C1xgcgvDRRnNp8KFUNQ1Ki1pMrVGVqbuh9YF9vGb");
 
@@ -134,14 +138,6 @@ pub mod chainquest {
     }
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct BattleTurn {
-    character_damage: u64,
-    monster_damage: u64,
-    character_hitpoints: i64,
-    monster_hitpoints: i64,
-}
-
 #[derive(Accounts)]
 #[instruction(config: SpawnInstanceConfig)]
 pub struct CreateSpawnInstance<'info> {
@@ -163,12 +159,6 @@ pub struct CreateSpawnInstance<'info> {
     pub clock: Sysvar<'info, Clock>,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct SpawnInstanceConfig {
-    pub monster_name: String,
-    pub spawntime: i64,
-}
-
 #[derive(Accounts)]
 #[instruction(config: MonsterConfig)]
 pub struct CreateMonsterType<'info> {
@@ -186,13 +176,6 @@ pub struct CreateMonsterType<'info> {
     pub system_program: Program<'info, System>,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct MonsterConfig {
-    pub uuid: String,
-    pub hitpoints: u64,
-    pub melee_skill: u8,
-}
-
 #[derive(Accounts)]
 pub struct KillSpawn<'info> {
     #[account(mut)]
@@ -205,12 +188,6 @@ pub struct KillSpawn<'info> {
     pub owner: Signer<'info>,
     clock: Sysvar<'info, Clock>,
     pub system_program: Program<'info, System>,
-}
-
-#[account]
-pub struct BattleAccount {
-    battle_turns: Vec<BattleTurn>,
-    participants: Vec<Pubkey>,
 }
 
 #[derive(Accounts)]
@@ -237,18 +214,6 @@ pub struct JoinBattle<'info> {
     pub system_program: Program<'info, System>,
 }
 
-#[account]
-pub struct SpawnInstanceAccount {
-    config: SpawnInstanceConfig,
-    // defines the last time the monster was killed. this is used to determine if the monster can join a battle or not
-    last_killed: Option<i64>,
-}
-
-#[account]
-pub struct MonsterTypeAccount {
-    config: MonsterConfig,
-}
-
 #[derive(Accounts)]
 pub struct ClaimQuest<'info> {
     #[account(
@@ -262,12 +227,6 @@ pub struct ClaimQuest<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
     pub clock: Sysvar<'info, Clock>,
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct QuestState {
-    started_at: i64,
-    quest_uuid: String,
 }
 
 #[derive(Accounts)]
@@ -285,18 +244,6 @@ pub struct JoinQuest<'info> {
     pub clock: Sysvar<'info, Clock>,
 }
 
-#[account]
-pub struct QuestAccount {
-    pub config: QuestConfig,
-}
-
-#[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
-pub struct QuestConfig {
-    pub duration: i64,
-    pub reward_exp: u64,
-    pub uuid: String,
-}
-
 #[derive(Accounts)]
 #[instruction(config: QuestConfig)]
 pub struct CreateQuest<'info> {
@@ -312,47 +259,6 @@ pub struct CreateQuest<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
     pub system_program: Program<'info, System>,
-}
-
-#[derive(Clone, AnchorSerialize, AnchorDeserialize)]
-pub struct Death {
-    monster_uuid: String,
-    timestamp: i64,
-}
-
-#[account]
-#[derive(Default)]
-pub struct CharacterAccount {
-    pub owner: Pubkey,
-    pub nft_mint: Pubkey,
-    pub name: String,
-    pub experience: u64,
-    pub hitpoints: u64,
-    // pub deaths: Vec<Death>,
-    pub deaths: u8,
-    pub quest_state: Option<QuestState>,
-    pub melee_skill: u8,
-}
-
-const NAME_MAX_LENGTH: usize = 16;
-
-impl CharacterAccount {
-    pub fn new(owner: Pubkey, nft_mint: Pubkey, name: &str) -> Result<Self> {
-        require!(name.len() <= NAME_MAX_LENGTH, CharacterError::MaxNameLengthExceeded);
-
-        let account = CharacterAccount {
-            name: name.to_string(),
-            experience: 0,
-            owner,
-            nft_mint,
-            deaths: 0,
-            hitpoints: 4,
-            quest_state: None,
-            melee_skill: 10,
-        };
-
-        Ok(account)
-    }
 }
 
 pub const CHARACTER_PREFIX: &str = "character";
