@@ -53,7 +53,6 @@ pub mod chainquest {
     ) -> Result<()> {
         let spawn_instance = SpawnInstanceAccount {
             config,
-            // defines the last time the monster was killed. this is used to determine if the monster can join a battle or not
             last_killed: None,
         };
 
@@ -238,6 +237,7 @@ pub struct JoinBattle<'info> {
 #[account]
 pub struct SpawnInstanceAccount {
     config: SpawnInstanceConfig,
+    // defines the last time the monster was killed. this is used to determine if the monster can join a battle or not
     last_killed: Option<i64>,
 }
 

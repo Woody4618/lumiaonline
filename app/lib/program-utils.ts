@@ -10,6 +10,7 @@ import {
   CharacterAccount,
   MonsterTypeAccount,
   QuestAccount,
+  SpawnInstanceAccount,
 } from "./gen/accounts"
 import { PROGRAM_ID } from "./gen/programId"
 
@@ -52,6 +53,25 @@ export const getQuests = async (
     accounts.map(async ({ pubkey, account }) => ({
       pubkey,
       account: QuestAccount.decode(account.data),
+    }))
+  )
+}
+
+export const getSpawnInstances = async (
+  connection: Connection
+  // owner: PublicKey,
+) => {
+  const filters = [
+    accountFilter(SpawnInstanceAccount.discriminator),
+    // memcmp(10, owner.toBase58()),
+  ]
+
+  const accounts = await fetchAccounts(connection, filters)
+
+  return Promise.all(
+    accounts.map(async ({ pubkey, account }) => ({
+      pubkey,
+      account: SpawnInstanceAccount.decode(account.data),
     }))
   )
 }
