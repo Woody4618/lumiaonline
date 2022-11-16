@@ -15,6 +15,8 @@ export type {
   CreateSpawnInstanceArgs,
   CreateSpawnInstanceAccounts,
 } from "./createSpawnInstance"
+export { killSpawn } from "./killSpawn"
+export type { KillSpawnAccounts } from "./killSpawn"
 export { joinQuest } from "./joinQuest"
 export type { JoinQuestAccounts } from "./joinQuest"
 export { claimQuest } from "./claimQuest"

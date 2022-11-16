@@ -13,6 +13,7 @@ export interface CreateSpawnInstanceAccounts {
   monsterType: PublicKey
   signer: PublicKey
   systemProgram: PublicKey
+  clock: PublicKey
 }
 
 export const layout = borsh.struct([types.SpawnInstanceConfig.layout("config")])
@@ -26,6 +27,7 @@ export function createSpawnInstance(
     { pubkey: accounts.monsterType, isSigner: false, isWritable: false },
     { pubkey: accounts.signer, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
+    { pubkey: accounts.clock, isSigner: false, isWritable: false },
   ]
   const identifier = Buffer.from([125, 25, 12, 138, 60, 117, 98, 143])
   const buffer = Buffer.alloc(1000)

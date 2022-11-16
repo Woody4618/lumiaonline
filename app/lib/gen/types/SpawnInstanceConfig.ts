@@ -24,7 +24,7 @@ export class SpawnInstanceConfig {
 
   static layout(property?: string) {
     return borsh.struct(
-      [borsh.str("monsterName"), borsh.u64("spawntime")],
+      [borsh.str("monsterName"), borsh.i64("spawntime")],
       property
     )
   }
