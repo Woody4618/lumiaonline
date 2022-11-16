@@ -75,7 +75,7 @@ pub mod chainquest {
             require_gte!(
                 ctx.accounts.clock.unix_timestamp,
                 required_timestamp,
-                QuestError::InvalidTimestamp
+                SpawnInstanceError::InvalidTimestamp
             );
         }
 
@@ -422,6 +422,12 @@ pub enum CharacterError {
 
 #[error_code]
 pub enum QuestError {
-    #[msg("The character haven't been on this quest long enough.")]
+    #[msg("The character hasn't been on this quest long enough.")]
+    InvalidTimestamp,
+}
+
+#[error_code]
+pub enum SpawnInstanceError {
+    #[msg("The monster hasn't spawned yet.")]
     InvalidTimestamp,
 }

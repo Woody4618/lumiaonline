@@ -439,7 +439,7 @@ describe("chainquest", () => {
   })
 
   describe("validate spawns", () => {
-    it("Can terminate a spawn instance", async () => {
+    it("Can kill a spawn instance once", async () => {
       const { monsterName, spawntime, town } = spawns[0]
 
       const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
@@ -468,6 +468,13 @@ describe("chainquest", () => {
       )
 
       expect(spawnAcc.lastKilled).to.not.be.null
+
+      /** Try to kill the same spawn again */
+      try {
+        await program.provider.sendAndConfirm(tx)
+
+        throw new Error("Could terminate a spawn instance before the spawntime")
+      } catch (e) {}
     })
   })
 })
