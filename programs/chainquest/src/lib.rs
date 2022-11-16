@@ -64,7 +64,7 @@ pub mod chainquest {
     pub fn kill_spawn(ctx: Context<KillSpawn>) -> Result<()> {
         if ctx.accounts.spawn_instance.last_killed.is_none() {
             ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
-            msg!("Spawn killed");
+            msg!("Spawn killed for the first time");
             // ctx.accounts.character.experience += ctx.accounts.monster_type.config.experience
         } else {
             let required_timestamp =
@@ -76,6 +76,9 @@ pub mod chainquest {
                 required_timestamp,
                 SpawnInstanceError::InvalidTimestamp
             );
+
+            ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
+            msg!("Spawn killed after spawntime");
         }
 
         Ok(())
