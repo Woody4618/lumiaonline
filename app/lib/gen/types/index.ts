@@ -2,6 +2,11 @@ import * as QuestError from "./QuestError"
 
 export { BattleTurn } from "./BattleTurn"
 export type { BattleTurnFields, BattleTurnJSON } from "./BattleTurn"
+export { SpawnInstanceConfig } from "./SpawnInstanceConfig"
+export type {
+  SpawnInstanceConfigFields,
+  SpawnInstanceConfigJSON,
+} from "./SpawnInstanceConfig"
 export { MonsterConfig } from "./MonsterConfig"
 export type { MonsterConfigFields, MonsterConfigJSON } from "./MonsterConfig"
 export { QuestState } from "./QuestState"

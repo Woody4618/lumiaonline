@@ -10,6 +10,11 @@ export type {
   CreateMonsterTypeArgs,
   CreateMonsterTypeAccounts,
 } from "./createMonsterType"
+export { createSpawnInstance } from "./createSpawnInstance"
+export type {
+  CreateSpawnInstanceArgs,
+  CreateSpawnInstanceAccounts,
+} from "./createSpawnInstance"
 export { joinQuest } from "./joinQuest"
 export type { JoinQuestAccounts } from "./joinQuest"
 export { claimQuest } from "./claimQuest"
