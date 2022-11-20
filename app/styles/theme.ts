@@ -34,8 +34,8 @@ const theme: Theme = {
     //     text: "rgb(24, 19, 19)",
     //     primary: "rgb(247, 183, 125)",
     //     primaryGradient: getGradient("rgb(247, 183, 125)"),
-    //     heading: "#1E1E24",
     //     background2: "#1E1E24",
+    //     heading: "#1E1E24",
     //     backgroundGradient: getGradient("rgb(226, 217, 211)"),
     //   },
     // },
@@ -101,33 +101,7 @@ const theme: Theme = {
         opacity: 0.3,
       },
     },
-    special: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "heading",
-      transform: "perspective(1px) translateZ(0)",
-      position: "relative",
-      background: "linear-gradient(45deg, rgb(247, 183, 125), grey)",
-      borderRadius: ".4rem",
-      boxShadow: "0 0 5px 2px #00000054",
-      fontSize: "1.6rem",
-      padding: "1.2rem 3.2rem",
-      textTransform: "capitalize",
-      fontWeight: 500,
-      textAlign: "center",
-      transition: "all .125s linear",
 
-      "&:not(:disabled):hover": {
-        background: "linear-gradient(225deg, rgb(247, 183, 125), grey)",
-        cursor: "pointer",
-      },
-
-      "&:disabled": {
-        cursor: "not-allowed",
-        opacity: 0.3,
-      },
-    },
     resetted: {
       display: "flex",
       background: "none" /*essential*/,
