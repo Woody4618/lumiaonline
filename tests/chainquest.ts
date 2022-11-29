@@ -5,7 +5,9 @@ import { expect } from "chai"
 import {
   createCharacter,
   createMonsterType,
+  createSpawnInstance,
   joinBattle,
+  killSpawn,
 } from "../app/lib/gen/instructions"
 import { createQuest } from "../app/lib/gen/instructions/createQuest"
 import { joinQuest } from "../app/lib/gen/instructions/joinQuest"
@@ -18,6 +20,7 @@ import {
 import { Chainquest } from "../target/types/chainquest"
 import { quests } from "../app/data/quests"
 import { monsters } from "../app/data/monsters"
+import { spawns } from "../app/data/spawns"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
 import { CharacterAccount, MonsterTypeAccount } from "../app/lib/gen/accounts"
 import { getBattleTurns } from "../app/lib/battle"
@@ -117,6 +120,60 @@ describe("chainquest", () => {
 
       expect(monsterAcc.config.hitpoints.toNumber()).to.eq(
         monsterToValidate.hitpoints
+      )
+    })
+
+    it("Can create spawn instances", async () => {
+      const ixs = spawns.map((spawnConfig, index) => {
+        const { monsterName, spawntime, town } = spawnConfig
+
+        const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("monster_type"), Buffer.from(monsterName)],
+          PROGRAM_ID
+        )[0]
+
+        const spawnInstance = anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("spawn_instance"), Buffer.from(monsterName)],
+          PROGRAM_ID
+        )[0]
+
+        const ix = createSpawnInstance(
+          {
+            config: {
+              monsterName,
+              spawntime: new anchor.BN(spawntime),
+            },
+          },
+          {
+            spawnInstance,
+            monsterType,
+            signer: program.provider.publicKey,
+            systemProgram,
+            clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          }
+        )
+        return ix
+      })
+
+      const tx = new anchor.web3.Transaction().add(...ixs)
+      await program.provider.sendAndConfirm(tx)
+
+      /** Validate if the account has been created */
+      const spawnToValidate = spawns[0]
+      const spawnAddress = anchor.web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("spawn_instance"),
+          Buffer.from(spawnToValidate.monsterName),
+        ],
+        PROGRAM_ID
+      )[0]
+
+      const spawnAcc = await program.account.spawnInstanceAccount.fetch(
+        spawnAddress
+      )
+
+      expect(spawnAcc.config.spawntime.toNumber()).to.eq(
+        spawnToValidate.spawntime
       )
     })
   })
@@ -377,6 +434,46 @@ describe("chainquest", () => {
         const tx = new anchor.web3.Transaction().add(ix2)
         await program.provider.sendAndConfirm(tx)
         throw new Error("Could claim a quest before the duration")
+      } catch (e) {}
+    })
+  })
+
+  describe("validate spawns", () => {
+    it("Can kill a spawn instance once", async () => {
+      const { monsterName, spawntime, town } = spawns[0]
+
+      const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("monster_type"), Buffer.from(monsterName)],
+        PROGRAM_ID
+      )[0]
+
+      const spawnInstance = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("spawn_instance"), Buffer.from(monsterName)],
+        PROGRAM_ID
+      )[0]
+
+      const ix = killSpawn({
+        spawnInstance,
+        monsterType,
+        owner: program.provider.publicKey,
+        systemProgram,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+      })
+
+      const tx = new anchor.web3.Transaction().add(ix)
+      await program.provider.sendAndConfirm(tx)
+
+      const spawnAcc = await program.account.spawnInstanceAccount.fetch(
+        spawnInstance
+      )
+
+      expect(spawnAcc.lastKilled).to.not.be.null
+
+      /** Try to kill the same spawn again */
+      try {
+        await program.provider.sendAndConfirm(tx)
+
+        throw new Error("Could terminate a spawn instance before the spawntime")
       } catch (e) {}
     })
   })

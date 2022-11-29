@@ -433,6 +433,20 @@ export default function Play() {
                   Sailboat
                 </ThemeLink>
               </Link>
+              <Link passHref href="/play?waypoint=spawns">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_wilderness.png"
+                  />
+                  Spawns
+                </ThemeLink>
+              </Link>
               <Link passHref href="/play">
                 <ThemeLink
                   variant="gameButton"

@@ -2,14 +2,14 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-chainquest = "4dtiCyRiiwTdkWvN5b6aXfgYKvzMjjud9xghnDpr6TUY"
+chainquest = "D6o7C1xgcgvDRRnNp8KFUNQ1Ki1pMrVGVqbuh9YF9vGb"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "localnet"
-wallet = "/Users/ellagoris/.config/solana/mainnet_ms.json"
+wallet = "~/.config/solana/mainnet_ms.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

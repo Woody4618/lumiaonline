@@ -13,6 +13,7 @@ import { CreateCharacterForm } from "@/components/CreateCharacterForm"
 import useWalletWrapper from "@/hooks/useWalletWrapper"
 import Link from "next/link"
 import { Layout } from "@/components/Layout/Layout"
+import { ButtonSpecial } from "@/components/ButtonSpecial"
 
 const NewsContentBlock = (props) => {
   const { children, title, date } = props
@@ -57,17 +58,18 @@ export default function Home() {
       >
         <img src="/assets/background-main.png" />
         <Link href="/play" passHref>
-          <ThemeLink
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "calc(50% - 192px)",
-              alignSelf: "flex-start",
-            }}
-            variant="gameButton"
-          >
-            Enter Lumia
-          </ThemeLink>
+          <a>
+            <ButtonSpecial
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "calc(50% - 192px)",
+                alignSelf: "flex-start",
+              }}
+            >
+              Enter Lumia
+            </ButtonSpecial>
+          </a>
         </Link>
       </Flex>
       <Flex

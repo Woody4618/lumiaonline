@@ -1,5 +1,126 @@
 /** @jsxImportSource theme-ui */
 
+export function BorderDetail({ className = "" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      sx={{
+        width: "4.2rem",
+      }}
+      fill="none"
+      viewBox="0 0 32 21"
+      className={className}
+    >
+      <path
+        fill="url(#paint0_linear_950_769)"
+        d="M16.306 4.406C13.062 3.838 12.605.81 15.654.09c2.124-.501 4.226 1.224 2.848 2.338-.99.8-2.324.935-3.145.317-.616-.464-.114-1.41.78-1.472.82-.058.848.703.035.907l-.22.055.16.138c1.112.966 2.726-.253 1.686-1.274-1.298-1.275-3.36-.811-3.376.76-.018 1.608 2.168 2.626 4.453 2.073 1.39-.336 2.147-.779 3.91-2.287 1.09-.933 1.837-1.253 3.364-1.44 1.388-.169 3.724.347 5.159 1.14.873.482.562.625-.389.18-2.086-.979-4.44-1.162-6.18-.483-.599.234-1.175.585-2.21 1.346-2.321 1.707-4.314 2.354-6.223 2.02z"
+      ></path>
+      <path
+        fill="url(#paint1_linear_950_769)"
+        d="M0 .681C0 .604.457.363.767.275c.34-.095 12.81-.144 12.888-.05.05.058-.312.27-.671.392l-.307.105H6.338C2.485.722 0 .706 0 .682z"
+      ></path>
+      <path
+        fill="url(#paint2_linear_950_769)"
+        d="M19.534.637c-.298-.112-.529-.295-.482-.383.041-.08 4.604-.108 4.671-.029.05.058-.312.27-.672.392-.432.148-3.135.163-3.517.02z"
+      ></path>
+      <path
+        fill="url(#paint3_linear_950_769)"
+        d="M23.537 5.238c-.633-1.689.945-3.814 3.123-4.205 1.147-.206 3.572.269 4.602.9.49.302.31.328-.479.073-2.594-.84-5.21-.527-6.066.727-.894 1.307-.736 2.513.47 3.597 2.593 2.331 7.245.624 5.486-2.013-1.07-1.605-4.285-1.395-3.545.23.084.187.092.189.359.121.711-.181 1.56.548 1.117.96-.653.607-2.268-.296-2.268-1.268 0-1.688 2.982-2.152 4.638-.722 1.3 1.122 1.058 2.434-.628 3.414-2.604 1.512-5.889.637-6.809-1.814z"
+      ></path>
+      <path
+        fill="url(#paint4_linear_950_769)"
+        d="M5.525 1.665C1.19 1.647.01 1.631.154 1.59c.312-.09 11.006-.08 11.478.01.852.161 1.82.95 1.338 1.09-.458.132-.485.126-.67-.15a1.974 1.974 0 00-.929-.748l-.29-.105-5.556-.022z"
+      ></path>
+      <path
+        fill="url(#paint5_linear_950_769)"
+        d="M31.124 7.5l.2-.04c.212-.045.456-.024.582.05.15.085.108 13.387-.041 13.445a.85.85 0 01-.605-.023l-.136-.07V7.5z"
+      ></path>
+      <path
+        fill="url(#paint6_linear_950_769)"
+        d="M29.056 8.546c-.175-.128-.3-.245-.281-.26.288-.21 1.06.434 1.324 1.106.186.473.248 11.41.065 11.507-.28.15-.268.38-.268-5.427 0-6.536.03-6.288-.84-6.926z"
+      ></path>
+      <defs>
+        <linearGradient
+          id="paint0_linear_950_769"
+          x1="16"
+          x2="16"
+          y1="0.13"
+          y2="21.13"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#EDE8A2"></stop>
+          <stop offset="1" stopColor="#998663"></stop>
+        </linearGradient>
+        <linearGradient
+          id="paint1_linear_950_769"
+          x1="16"
+          x2="16"
+          y1="0.13"
+          y2="21.13"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#EDE8A2"></stop>
+          <stop offset="1" stopColor="#998663"></stop>
+        </linearGradient>
+        <linearGradient
+          id="paint2_linear_950_769"
+          x1="16"
+          x2="16"
+          y1="0.13"
+          y2="21.13"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#EDE8A2"></stop>
+          <stop offset="1" stopColor="#998663"></stop>
+        </linearGradient>
+        <linearGradient
+          id="paint3_linear_950_769"
+          x1="16"
+          x2="16"
+          y1="0.13"
+          y2="21.13"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#EDE8A2"></stop>
+          <stop offset="1" stopColor="#998663"></stop>
+        </linearGradient>
+        <linearGradient
+          id="paint4_linear_950_769"
+          x1="16"
+          x2="16"
+          y1="0.13"
+          y2="21.13"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#EDE8A2"></stop>
+          <stop offset="1" stopColor="#998663"></stop>
+        </linearGradient>
+        <linearGradient
+          id="paint5_linear_950_769"
+          x1="16"
+          x2="16"
+          y1="0.13"
+          y2="21.13"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#EDE8A2"></stop>
+          <stop offset="1" stopColor="#998663"></stop>
+        </linearGradient>
+        <linearGradient
+          id="paint6_linear_950_769"
+          x1="16"
+          x2="16"
+          y1="0.13"
+          y2="21.13"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#EDE8A2"></stop>
+          <stop offset="1" stopColor="#998663"></stop>
+        </linearGradient>
+      </defs>
+    </svg>
+  )
+}
 export function BackIcon({ className = "" }) {
   return (
     <svg
