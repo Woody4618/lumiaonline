@@ -4,27 +4,27 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import * as borsh from "@project-serum/borsh"
 
 export interface DeathFields {
-  monsterUuid: string
+  monsterId: string
   timestamp: BN
 }
 
 export interface DeathJSON {
-  monsterUuid: string
+  monsterId: string
   timestamp: string
 }
 
 export class Death {
-  readonly monsterUuid: string
+  readonly monsterId: string
   readonly timestamp: BN
 
   constructor(fields: DeathFields) {
-    this.monsterUuid = fields.monsterUuid
+    this.monsterId = fields.monsterId
     this.timestamp = fields.timestamp
   }
 
   static layout(property?: string) {
     return borsh.struct(
-      [borsh.str("monsterUuid"), borsh.i64("timestamp")],
+      [borsh.str("monsterId"), borsh.i64("timestamp")],
       property
     )
   }
@@ -32,28 +32,28 @@ export class Death {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromDecoded(obj: any) {
     return new Death({
-      monsterUuid: obj.monsterUuid,
+      monsterId: obj.monsterId,
       timestamp: obj.timestamp,
     })
   }
 
   static toEncodable(fields: DeathFields) {
     return {
-      monsterUuid: fields.monsterUuid,
+      monsterId: fields.monsterId,
       timestamp: fields.timestamp,
     }
   }
 
   toJSON(): DeathJSON {
     return {
-      monsterUuid: this.monsterUuid,
+      monsterId: this.monsterId,
       timestamp: this.timestamp.toString(),
     }
   }
 
   static fromJSON(obj: DeathJSON): Death {
     return new Death({
-      monsterUuid: obj.monsterUuid,
+      monsterId: obj.monsterId,
       timestamp: new BN(obj.timestamp),
     })
   }

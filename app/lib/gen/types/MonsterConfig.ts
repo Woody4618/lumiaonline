@@ -4,31 +4,31 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import * as borsh from "@project-serum/borsh"
 
 export interface MonsterConfigFields {
-  uuid: string
+  id: string
   hitpoints: BN
   meleeSkill: number
 }
 
 export interface MonsterConfigJSON {
-  uuid: string
+  id: string
   hitpoints: string
   meleeSkill: number
 }
 
 export class MonsterConfig {
-  readonly uuid: string
+  readonly id: string
   readonly hitpoints: BN
   readonly meleeSkill: number
 
   constructor(fields: MonsterConfigFields) {
-    this.uuid = fields.uuid
+    this.id = fields.id
     this.hitpoints = fields.hitpoints
     this.meleeSkill = fields.meleeSkill
   }
 
   static layout(property?: string) {
     return borsh.struct(
-      [borsh.str("uuid"), borsh.u64("hitpoints"), borsh.u8("meleeSkill")],
+      [borsh.str("id"), borsh.u64("hitpoints"), borsh.u8("meleeSkill")],
       property
     )
   }
@@ -36,7 +36,7 @@ export class MonsterConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromDecoded(obj: any) {
     return new MonsterConfig({
-      uuid: obj.uuid,
+      id: obj.id,
       hitpoints: obj.hitpoints,
       meleeSkill: obj.meleeSkill,
     })
@@ -44,7 +44,7 @@ export class MonsterConfig {
 
   static toEncodable(fields: MonsterConfigFields) {
     return {
-      uuid: fields.uuid,
+      id: fields.id,
       hitpoints: fields.hitpoints,
       meleeSkill: fields.meleeSkill,
     }
@@ -52,7 +52,7 @@ export class MonsterConfig {
 
   toJSON(): MonsterConfigJSON {
     return {
-      uuid: this.uuid,
+      id: this.id,
       hitpoints: this.hitpoints.toString(),
       meleeSkill: this.meleeSkill,
     }
@@ -60,7 +60,7 @@ export class MonsterConfig {
 
   static fromJSON(obj: MonsterConfigJSON): MonsterConfig {
     return new MonsterConfig({
-      uuid: obj.uuid,
+      id: obj.id,
       hitpoints: new BN(obj.hitpoints),
       meleeSkill: obj.meleeSkill,
     })

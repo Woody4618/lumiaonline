@@ -10,7 +10,7 @@ import {
   CharacterAccount,
   MonsterTypeAccount,
   QuestAccount,
-  SpawnInstanceAccount,
+  SpawnTypeAccount,
 } from "./gen/accounts"
 import { PROGRAM_ID } from "./gen/programId"
 
@@ -62,7 +62,7 @@ export const getSpawnInstances = async (
   // owner: PublicKey,
 ) => {
   const filters = [
-    accountFilter(SpawnInstanceAccount.discriminator),
+    accountFilter(SpawnTypeAccount.discriminator),
     // memcmp(10, owner.toBase58()),
   ]
 
@@ -71,7 +71,7 @@ export const getSpawnInstances = async (
   return Promise.all(
     accounts.map(async ({ pubkey, account }) => ({
       pubkey,
-      account: SpawnInstanceAccount.decode(account.data),
+      account: SpawnTypeAccount.decode(account.data),
     }))
   )
 }
