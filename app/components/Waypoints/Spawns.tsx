@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
 import { getCharacterAddress, getSpawnInstances } from "lib/program-utils"
-import { MonsterTypeAccount, SpawnTypeAccount } from "lib/gen/accounts"
+import { MonsterTypeAccount, MonsterSpawnAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { useContext } from "react"
@@ -15,7 +15,7 @@ import { PublicKey } from "@solana/web3.js"
 
 type SpawnInstanceResponse = {
   pubkey: web3.PublicKey
-  account: SpawnTypeAccount
+  account: MonsterSpawnAccount
 }
 
 export function Spawns() {

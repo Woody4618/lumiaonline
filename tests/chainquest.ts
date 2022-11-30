@@ -157,7 +157,7 @@ describe("chainquest", () => {
         PROGRAM_ID
       )[0]
 
-      const spawnAcc = await program.account.spawnTypeAccount.fetch(
+      const spawnAcc = await program.account.monsterSpawnAccount.fetch(
         spawnAddress
       )
 
@@ -323,6 +323,7 @@ describe("chainquest", () => {
 
       await program.provider.sendAndConfirm(tx, [battle])
 
+      // @ts-ignore
       const battleAcc: BattleAccountJSON & {
         battleTurns: BattleTurn[]
       } = await program.account.battleAccount.fetch(battle.publicKey)
@@ -450,7 +451,7 @@ describe("chainquest", () => {
       const tx = new anchor.web3.Transaction().add(ix)
       await program.provider.sendAndConfirm(tx)
 
-      const spawnAcc = await program.account.spawnTypeAccount.fetch(
+      const spawnAcc = await program.account.monsterSpawnAccount.fetch(
         spawnInstance
       )
 
