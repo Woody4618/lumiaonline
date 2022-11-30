@@ -52,11 +52,13 @@ pub mod chainquest {
     }
 
     pub fn create_spawn_instance(
-        ctx: Context<CreateSpawnInstance>,
-        config: SpawnInstanceConfig
+        ctx: Context<CreateSpawnType>,
+        monster_id: String,
+        spawntime: i64
     ) -> Result<()> {
-        let spawn_instance = SpawnInstanceAccount {
-            config,
+        let spawn_instance = SpawnTypeAccount {
+            monster_id,
+            spawntime,
             last_killed: None,
         };
 
@@ -73,12 +75,12 @@ pub mod chainquest {
         } else {
             let required_timestamp =
                 ctx.accounts.spawn_instance.last_killed.as_ref().unwrap() +
-                ctx.accounts.spawn_instance.config.spawntime;
+                ctx.accounts.spawn_instance.spawntime;
 
             require_gte!(
                 ctx.accounts.clock.unix_timestamp,
                 required_timestamp,
-                SpawnInstanceError::InvalidTimestamp
+                SpawnTypeError::InvalidTimestamp
             );
 
             ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
@@ -89,8 +91,8 @@ pub mod chainquest {
     }
 
     pub fn join_quest(ctx: Context<JoinQuest>) -> Result<()> {
-        ctx.accounts.character.quest_state = Some(QuestState {
-            quest_uuid: ctx.accounts.quest.config.uuid.clone(),
+        ctx.accounts.character.quest_state = Some(CharacterQuestState {
+            quest_id: ctx.accounts.quest.config.id.clone(),
             started_at: ctx.accounts.clock.unix_timestamp,
         });
 
@@ -120,7 +122,7 @@ pub mod chainquest {
 
         if last_turn.character_hitpoints <= 0 {
             // ctx.accounts.character.deaths.push(Death {
-            //     monster_uuid: ctx.accounts.monster_type.config.uuid.clone(),
+            //     monster_id: ctx.accounts.monster_type.config.id.clone(),
             //     timestamp: ctx.accounts.clock.unix_timestamp,
             // });
 
@@ -139,55 +141,24 @@ pub mod chainquest {
 }
 
 #[derive(Accounts)]
-#[instruction(config: SpawnInstanceConfig)]
-pub struct CreateSpawnInstance<'info> {
+#[instruction(monster_id: String,spawntime: i64,)]
+pub struct CreateSpawnType<'info> {
     #[account(
         init,
-        seeds = [b"spawn_instance".as_ref(), config.monster_name.as_ref()],
+        seeds = [b"spawn_instance".as_ref(), monster_id.as_ref()],
         bump,
         payer = signer,
-        space = 8 + size_of::<SpawnInstanceAccount>()
+        space = 8 + size_of::<SpawnTypeAccount>()
     )]
-    pub spawn_instance: Account<'info, SpawnInstanceAccount>,
+    pub spawn_instance: Account<'info, SpawnTypeAccount>,
 
-    #[account(seeds = [b"monster_type".as_ref(), config.monster_name.as_ref()], bump)]
+    #[account(seeds = [b"monster_type".as_ref(), monster_id.as_ref()], bump)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
 
     #[account(mut)]
     pub signer: Signer<'info>,
     pub system_program: Program<'info, System>,
     pub clock: Sysvar<'info, Clock>,
-}
-
-#[derive(Accounts)]
-#[instruction(config: MonsterConfig)]
-pub struct CreateMonsterType<'info> {
-    #[account(
-        init,
-        seeds = [b"monster_type".as_ref(), config.uuid.as_ref()],
-        bump,
-        payer = signer,
-        space = 8 + size_of::<MonsterTypeAccount>()
-    )]
-    pub monster_type: Account<'info, MonsterTypeAccount>,
-
-    #[account(mut)]
-    pub signer: Signer<'info>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct KillSpawn<'info> {
-    #[account(mut)]
-    pub monster_type: Account<'info, MonsterTypeAccount>,
-
-    #[account(mut, seeds = [b"spawn_instance".as_ref(), monster_type.config.uuid.as_ref()], bump)]
-    pub spawn_instance: Account<'info, SpawnInstanceAccount>,
-
-    #[account(mut)]
-    pub owner: Signer<'info>,
-    clock: Sysvar<'info, Clock>,
-    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
@@ -208,6 +179,37 @@ pub struct JoinBattle<'info> {
     pub character: Account<'info, CharacterAccount>,
     #[account(mut)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
+    #[account(mut)]
+    pub owner: Signer<'info>,
+    clock: Sysvar<'info, Clock>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(config: MonsterConfig)]
+pub struct CreateMonsterType<'info> {
+    #[account(
+        init,
+        seeds = [b"monster_type".as_ref(), config.id.as_ref()],
+        bump,
+        payer = signer,
+        space = 8 + size_of::<MonsterTypeAccount>()
+    )]
+    pub monster_type: Account<'info, MonsterTypeAccount>,
+
+    #[account(mut)]
+    pub signer: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct KillSpawn<'info> {
+    #[account(mut)]
+    pub monster_type: Account<'info, MonsterTypeAccount>,
+
+    #[account(mut, seeds = [b"spawn_instance".as_ref(), monster_type.config.id.as_ref()], bump)]
+    pub spawn_instance: Account<'info, SpawnTypeAccount>,
+
     #[account(mut)]
     pub owner: Signer<'info>,
     clock: Sysvar<'info, Clock>,
@@ -249,7 +251,7 @@ pub struct JoinQuest<'info> {
 pub struct CreateQuest<'info> {
     #[account(
         init,
-        seeds = [b"quest".as_ref(), config.uuid.as_ref()],
+        seeds = [b"quest".as_ref(), config.id.as_ref()],
         bump,
         payer = signer,
         space = 8 + size_of::<QuestAccount>()
@@ -336,7 +338,7 @@ pub enum QuestError {
 }
 
 #[error_code]
-pub enum SpawnInstanceError {
+pub enum SpawnTypeError {
     #[msg("The monster hasn't spawned yet.")]
     InvalidTimestamp,
 }

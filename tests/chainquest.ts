@@ -38,9 +38,9 @@ describe("chainquest", () => {
   describe("initialize", () => {
     it("Can create quests", async () => {
       const ixs = quests.map((questConfig) => {
-        const uuid = questConfig.uuid
+        const id = questConfig.id
         const quest = anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("quest"), Buffer.from(uuid)],
+          [Buffer.from("quest"), Buffer.from(id)],
           PROGRAM_ID
         )[0]
 
@@ -49,7 +49,7 @@ describe("chainquest", () => {
             config: {
               duration: new anchor.BN(questConfig.duration),
               rewardExp: new anchor.BN(questConfig.reward),
-              uuid,
+              id,
             },
           },
           {
@@ -67,7 +67,7 @@ describe("chainquest", () => {
       /** Validate if the account has been created */
       const questToValidate = quests[0]
       const questAddress = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("quest"), Buffer.from(questToValidate.uuid)],
+        [Buffer.from("quest"), Buffer.from(questToValidate.id)],
         PROGRAM_ID
       )[0]
 
@@ -80,17 +80,17 @@ describe("chainquest", () => {
 
     it("Can create monsters", async () => {
       const ixs = monsters.map((monsterConfig, index) => {
-        const uuid = monsterConfig.name
+        const id = monsterConfig.name
 
         const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("monster_type"), Buffer.from(uuid)],
+          [Buffer.from("monster_type"), Buffer.from(id)],
           PROGRAM_ID
         )[0]
 
         const ix = createMonsterType(
           {
             config: {
-              uuid,
+              id,
               hitpoints: new anchor.BN(monsterConfig.hitpoints),
               meleeSkill: monsterConfig.meleeSkill,
             },
@@ -139,10 +139,8 @@ describe("chainquest", () => {
 
         const ix = createSpawnInstance(
           {
-            config: {
-              monsterName,
-              spawntime: new anchor.BN(spawntime),
-            },
+            monsterId: monsterName,
+            spawntime: new anchor.BN(spawntime),
           },
           {
             spawnInstance,
@@ -168,13 +166,11 @@ describe("chainquest", () => {
         PROGRAM_ID
       )[0]
 
-      const spawnAcc = await program.account.spawnInstanceAccount.fetch(
+      const spawnAcc = await program.account.spawnTypeAccount.fetch(
         spawnAddress
       )
 
-      expect(spawnAcc.config.spawntime.toNumber()).to.eq(
-        spawnToValidate.spawntime
-      )
+      expect(spawnAcc.spawntime.toNumber()).to.eq(spawnToValidate.spawntime)
     })
   })
 
@@ -256,10 +252,10 @@ describe("chainquest", () => {
 
   describe("validate quests", () => {
     it("Can join a quest", async () => {
-      const uuid = quests[0].uuid
+      const id = quests[0].id
 
       const quest = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("quest"), Buffer.from(uuid)],
+        [Buffer.from("quest"), Buffer.from(id)],
         PROGRAM_ID
       )[0]
 
@@ -290,14 +286,14 @@ describe("chainquest", () => {
         character
       )
 
-      expect(characterAcc.questState.questUuid).to.eq(questAcc.config.uuid)
+      expect(characterAcc.questState.questId).to.eq(questAcc.config.id)
     })
 
     it("Can join a battle with a monster til death", async () => {
-      const uuid = monsters[0].name
+      const id = monsters[0].name
 
       const monster = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("monster_type"), Buffer.from(uuid)],
+        [Buffer.from("monster_type"), Buffer.from(id)],
         PROGRAM_ID
       )[0]
 
@@ -354,10 +350,10 @@ describe("chainquest", () => {
     })
 
     it("Can claim a quest", async () => {
-      const uuid = quests[0].uuid
+      const id = quests[0].id
 
       const quest = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("quest"), Buffer.from(uuid)],
+        [Buffer.from("quest"), Buffer.from(id)],
         PROGRAM_ID
       )[0]
 
@@ -392,10 +388,10 @@ describe("chainquest", () => {
     })
 
     it("Cannot claim a quest before the duration", async () => {
-      const uuid = quests[1].uuid
+      const id = quests[1].id
 
       const quest = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("quest"), Buffer.from(uuid)],
+        [Buffer.from("quest"), Buffer.from(id)],
         PROGRAM_ID
       )[0]
 
@@ -463,7 +459,7 @@ describe("chainquest", () => {
       const tx = new anchor.web3.Transaction().add(ix)
       await program.provider.sendAndConfirm(tx)
 
-      const spawnAcc = await program.account.spawnInstanceAccount.fetch(
+      const spawnAcc = await program.account.spawnTypeAccount.fetch(
         spawnInstance
       )
 

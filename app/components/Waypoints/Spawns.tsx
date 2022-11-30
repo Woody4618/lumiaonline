@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
 import { getCharacterAddress, getSpawnInstances } from "lib/program-utils"
-import { SpawnInstanceAccount } from "lib/gen/accounts"
+import { SpawnTypeAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { useContext } from "react"
@@ -14,7 +14,7 @@ import { killSpawn } from "lib/gen/instructions"
 
 type SpawnInstanceResponse = {
   pubkey: web3.PublicKey
-  account: SpawnInstanceAccount
+  account: SpawnTypeAccount
 }
 
 export function Spawns() {
@@ -87,22 +87,23 @@ export function Spawns() {
         }}
       >
         {spawnInstance ? (
-          spawnInstance.map(({ account: { config, lastKilled }, pubkey }) => {
-            return (
-              <Flex
-                sx={{
-                  alignItems: "center",
-                  flexDirection: "column",
-                  gap: ".8rem",
-                  borderTop: "1px solid",
-                  borderBottom: "1px solid",
-                  borderColor: "primary",
-                  padding: ".8rem 0",
-                }}
-                key={pubkey.toString()}
-              >
-                <Heading variant="heading2">{config.monsterName}</Heading>
-                {/* <img
+          spawnInstance.map(
+            ({ account: { lastKilled, monsterId, spawntime }, pubkey }) => {
+              return (
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    flexDirection: "column",
+                    gap: ".8rem",
+                    borderTop: "1px solid",
+                    borderBottom: "1px solid",
+                    borderColor: "primary",
+                    padding: ".8rem 0",
+                  }}
+                  key={pubkey.toString()}
+                >
+                  <Heading variant="heading2">{monsterId}</Heading>
+                  {/* <img
                   sx={{
                     maxWidth: "8rem",
                     borderRadius: ".4rem",
@@ -110,29 +111,30 @@ export function Spawns() {
                   src={spawnData.image}
                 /> */}
 
-                <Flex
-                  sx={{
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  {/* <Text>
+                  <Flex
+                    sx={{
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    {/* <Text>
                       Hitpoints: {monster.account.config.hitpoints.toNumber()}
                     </Text> */}
+                  </Flex>
+                  <form sx={{}} onSubmit={handleJoinFormSubmit}>
+                    <input
+                      type="hidden"
+                      name="monster_name"
+                      value={monsterId}
+                    />
+                    <Button type="submit" mt="1.6rem">
+                      Kill
+                    </Button>
+                  </form>
                 </Flex>
-                <form sx={{}} onSubmit={handleJoinFormSubmit}>
-                  <input
-                    type="hidden"
-                    name="monster_name"
-                    value={config.monsterName}
-                  />
-                  <Button type="submit" mt="1.6rem">
-                    Kill
-                  </Button>
-                </form>
-              </Flex>
-            )
-          })
+              )
+            }
+          )
         ) : (
           <LoadingIcon />
         )}

@@ -65,7 +65,7 @@ export function Monsters() {
     e.preventDefault()
 
     const data = new FormData(e.currentTarget)
-    const monsterUuid = data.get("uuid").toString()
+    const monsterUuid = data.get("id").toString()
     if (!selectedCharacter) throw new Error("Select a character first")
     const nftMint = selectedCharacter.nft.mint.address
 
@@ -130,7 +130,7 @@ export function Monsters() {
       }}
     >
       <Heading mb=".8rem" variant="heading1">
-        Monsters in Monsters:
+        Monsters in Teristraz:
       </Heading>
 
       <Text my="3.2rem"></Text>
@@ -142,7 +142,7 @@ export function Monsters() {
         {monsters ? (
           monsters.map((monster) => {
             const monsterData = monstersData.find(
-              (monsterData) => monsterData.name === monster.account.config.uuid
+              (monsterData) => monsterData.name === monster.account.config.id
             )
 
             return (
@@ -180,8 +180,8 @@ export function Monsters() {
                 <form sx={{}} onSubmit={handleJoinFormSubmit}>
                   <input
                     type="hidden"
-                    name="uuid"
-                    value={monster.account.config.uuid.toString()}
+                    name="id"
+                    value={monster.account.config.id.toString()}
                   />
                   <Button type="submit" mt="1.6rem">
                     Battle

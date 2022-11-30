@@ -95,8 +95,8 @@ export default function Battles() {
                 key={battle.pubkey.toString()}
               >
                 {characterDied
-                  ? `${character.name} died by a ${monster.config.uuid}`
-                  : `${character.name} killed a ${monster.config.uuid}`}
+                  ? `${character.name} died by a ${monster.config.id}`
+                  : `${character.name} killed a ${monster.config.id}`}
               </Flex>
             )
           })

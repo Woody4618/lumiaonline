@@ -65,7 +65,7 @@ export function Wilderness() {
     e.preventDefault()
 
     const data = new FormData(e.currentTarget)
-    const monsterUuid = data.get("uuid").toString()
+    const monsterUuid = data.get("id").toString()
     if (!selectedCharacter) throw new Error("Select a character first")
     const nftMint = selectedCharacter.nft.mint.address
 
