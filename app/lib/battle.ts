@@ -32,10 +32,10 @@ export const getBattleTurns = async (
   const characterMaxDamage = 0.085 * characterSkill + characterLvl / 5
   const monsterMinDamage = characterLvl / 5
   const monsterMaxDamage =
-    0.085 * (monsterAccount.config.meleeSkill + 20) + characterLvl / 5
+    0.085 * (monsterAccount.meleeSkill + 20) + characterLvl / 5
 
   let characterHitpoints = characterAccount.hitpoints
-  let monsterHitpoints = monsterAccount.config.hitpoints
+  let monsterHitpoints = monsterAccount.hitpoints
 
   const battleTurns: {
     characterDamage: BN

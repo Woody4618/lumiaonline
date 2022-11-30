@@ -28,9 +28,16 @@ pub mod chainquest {
         Ok(())
     }
 
-    pub fn create_quest(ctx: Context<CreateQuest>, config: QuestConfig) -> Result<()> {
+    pub fn create_quest(
+        ctx: Context<CreateQuest>,
+        duration: i64,
+        reward_exp: u64,
+        id: String
+    ) -> Result<()> {
         let quest = QuestAccount {
-            config,
+            duration,
+            reward_exp,
+            id,
         };
 
         ctx.accounts.quest.set_inner(quest);
@@ -40,10 +47,14 @@ pub mod chainquest {
 
     pub fn create_monster_type(
         ctx: Context<CreateMonsterType>,
-        config: MonsterConfig
+        name: String,
+        hitpoints: u64,
+        melee_skill: u8
     ) -> Result<()> {
         let monster_type = MonsterTypeAccount {
-            config,
+            name,
+            hitpoints,
+            melee_skill,
         };
 
         ctx.accounts.monster_type.set_inner(monster_type);
@@ -51,76 +62,38 @@ pub mod chainquest {
         Ok(())
     }
 
-    pub fn create_spawn_instance(
-        ctx: Context<CreateSpawnInstance>,
-        config: SpawnInstanceConfig
-    ) -> Result<()> {
-        let spawn_instance = SpawnInstanceAccount {
-            config,
+    pub fn create_monster_spawn(ctx: Context<CreateMonsterSpawn>, spawntime: i64) -> Result<()> {
+        let monster_spawn = MonsterSpawnAccount {
+            monster_type: ctx.accounts.monster_type.key(),
+            spawntime,
             last_killed: None,
         };
 
-        ctx.accounts.spawn_instance.set_inner(spawn_instance);
+        ctx.accounts.monster_spawn.set_inner(monster_spawn);
 
         Ok(())
     }
 
-    pub fn kill_spawn(ctx: Context<KillSpawn>) -> Result<()> {
-        if ctx.accounts.spawn_instance.last_killed.is_none() {
-            ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
-            msg!("Spawn killed for the first time");
-            // ctx.accounts.character.experience += ctx.accounts.monster_type.config.experience
-        } else {
+    // battle between a character and a monster spawn
+    pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
+        // if there is last_killed, then validate the timestamp
+        if ctx.accounts.monster_spawn.last_killed.is_some() {
             let required_timestamp =
-                ctx.accounts.spawn_instance.last_killed.as_ref().unwrap() +
-                ctx.accounts.spawn_instance.config.spawntime;
+                ctx.accounts.monster_spawn.last_killed.as_ref().unwrap() +
+                ctx.accounts.monster_spawn.spawntime;
 
             require_gte!(
                 ctx.accounts.clock.unix_timestamp,
                 required_timestamp,
-                SpawnInstanceError::InvalidTimestamp
+                SpawnTypeError::InvalidTimestamp
             );
-
-            ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
-            msg!("Spawn killed after spawntime");
         }
 
-        Ok(())
-    }
-
-    pub fn join_quest(ctx: Context<JoinQuest>) -> Result<()> {
-        ctx.accounts.character.quest_state = Some(QuestState {
-            quest_uuid: ctx.accounts.quest.config.uuid.clone(),
-            started_at: ctx.accounts.clock.unix_timestamp,
-        });
-
-        Ok(())
-    }
-
-    pub fn claim_quest(ctx: Context<ClaimQuest>) -> Result<()> {
-        let required_timestamp =
-            ctx.accounts.character.quest_state.as_ref().unwrap().started_at +
-            ctx.accounts.quest.config.duration;
-
-        require_gte!(
-            ctx.accounts.clock.unix_timestamp,
-            required_timestamp,
-            QuestError::InvalidTimestamp
-        );
-
-        ctx.accounts.character.experience += ctx.accounts.quest.config.reward_exp;
-
-        ctx.accounts.character.quest_state = None;
-
-        Ok(())
-    }
-
-    pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
         let last_turn = battle_turns.last().unwrap();
 
         if last_turn.character_hitpoints <= 0 {
             // ctx.accounts.character.deaths.push(Death {
-            //     monster_uuid: ctx.accounts.monster_type.config.uuid.clone(),
+            //     monster_id: ctx.accounts.monster_type.id.clone(),
             //     timestamp: ctx.accounts.clock.unix_timestamp,
             // });
 
@@ -134,23 +107,52 @@ pub mod chainquest {
 
         ctx.accounts.battle.set_inner(battle);
 
+        ctx.accounts.monster_spawn.last_killed = Some(ctx.accounts.clock.unix_timestamp);
+
+        Ok(())
+    }
+
+    pub fn join_quest(ctx: Context<JoinQuest>) -> Result<()> {
+        ctx.accounts.character.quest_state = Some(CharacterQuestState {
+            quest_id: ctx.accounts.quest.id.clone(),
+            started_at: ctx.accounts.clock.unix_timestamp,
+        });
+
+        Ok(())
+    }
+
+    pub fn claim_quest(ctx: Context<ClaimQuest>) -> Result<()> {
+        let required_timestamp =
+            ctx.accounts.character.quest_state.as_ref().unwrap().started_at +
+            ctx.accounts.quest.duration;
+
+        require_gte!(
+            ctx.accounts.clock.unix_timestamp,
+            required_timestamp,
+            QuestError::InvalidTimestamp
+        );
+
+        ctx.accounts.character.experience += ctx.accounts.quest.reward_exp;
+
+        ctx.accounts.character.quest_state = None;
+
         Ok(())
     }
 }
 
 #[derive(Accounts)]
-#[instruction(config: SpawnInstanceConfig)]
-pub struct CreateSpawnInstance<'info> {
+#[instruction(spawntime: i64)]
+pub struct CreateMonsterSpawn<'info> {
     #[account(
         init,
-        seeds = [b"spawn_instance".as_ref(), config.monster_name.as_ref()],
+        seeds = [b"monster_spawn".as_ref(), monster_type.name.as_ref()],
         bump,
         payer = signer,
-        space = 8 + size_of::<SpawnInstanceAccount>()
+        space = 8 + size_of::<MonsterSpawnAccount>()
     )]
-    pub spawn_instance: Account<'info, SpawnInstanceAccount>,
+    pub monster_spawn: Account<'info, MonsterSpawnAccount>,
 
-    #[account(seeds = [b"monster_type".as_ref(), config.monster_name.as_ref()], bump)]
+    #[account(mut)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
 
     #[account(mut)]
@@ -160,11 +162,11 @@ pub struct CreateSpawnInstance<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(config: MonsterConfig)]
+#[instruction(name: String)]
 pub struct CreateMonsterType<'info> {
     #[account(
         init,
-        seeds = [b"monster_type".as_ref(), config.uuid.as_ref()],
+        seeds = [b"monster_type".as_ref(), name.as_ref()],
         bump,
         payer = signer,
         space = 8 + size_of::<MonsterTypeAccount>()
@@ -177,22 +179,14 @@ pub struct CreateMonsterType<'info> {
 }
 
 #[derive(Accounts)]
-pub struct KillSpawn<'info> {
+#[instruction(battle_turns: Vec<BattleTurn>)]
+pub struct JoinBattle<'info> {
     #[account(mut)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
 
-    #[account(mut, seeds = [b"spawn_instance".as_ref(), monster_type.config.uuid.as_ref()], bump)]
-    pub spawn_instance: Account<'info, SpawnInstanceAccount>,
+    #[account(mut, seeds = [b"monster_spawn".as_ref(), monster_type.name.as_ref()], bump)]
+    pub monster_spawn: Account<'info, MonsterSpawnAccount>,
 
-    #[account(mut)]
-    pub owner: Signer<'info>,
-    clock: Sysvar<'info, Clock>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-#[instruction(battle_turns: Vec<BattleTurn>)]
-pub struct JoinBattle<'info> {
     #[account(
         init,
         payer = owner,
@@ -206,8 +200,7 @@ pub struct JoinBattle<'info> {
     #[account(mut,
     constraint = character.owner.key() == owner.key())]
     pub character: Account<'info, CharacterAccount>,
-    #[account(mut)]
-    pub monster_type: Account<'info, MonsterTypeAccount>,
+
     #[account(mut)]
     pub owner: Signer<'info>,
     clock: Sysvar<'info, Clock>,
@@ -245,11 +238,13 @@ pub struct JoinQuest<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(config: QuestConfig)]
+#[instruction(duration: i64,
+    reward_exp: u64,
+    id: String)]
 pub struct CreateQuest<'info> {
     #[account(
         init,
-        seeds = [b"quest".as_ref(), config.uuid.as_ref()],
+        seeds = [b"quest".as_ref(), id.as_ref()],
         bump,
         payer = signer,
         space = 8 + size_of::<QuestAccount>()
@@ -336,7 +331,7 @@ pub enum QuestError {
 }
 
 #[error_code]
-pub enum SpawnInstanceError {
+pub enum SpawnTypeError {
     #[msg("The monster hasn't spawned yet.")]
     InvalidTimestamp,
 }

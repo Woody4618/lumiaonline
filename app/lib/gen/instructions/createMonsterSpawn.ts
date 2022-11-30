@@ -4,36 +4,36 @@ import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface CreateSpawnInstanceArgs {
-  config: types.SpawnInstanceConfigFields
+export interface CreateMonsterSpawnArgs {
+  spawntime: BN
 }
 
-export interface CreateSpawnInstanceAccounts {
-  spawnInstance: PublicKey
+export interface CreateMonsterSpawnAccounts {
+  monsterSpawn: PublicKey
   monsterType: PublicKey
   signer: PublicKey
   systemProgram: PublicKey
   clock: PublicKey
 }
 
-export const layout = borsh.struct([types.SpawnInstanceConfig.layout("config")])
+export const layout = borsh.struct([borsh.i64("spawntime")])
 
-export function createSpawnInstance(
-  args: CreateSpawnInstanceArgs,
-  accounts: CreateSpawnInstanceAccounts
+export function createMonsterSpawn(
+  args: CreateMonsterSpawnArgs,
+  accounts: CreateMonsterSpawnAccounts
 ) {
   const keys: Array<AccountMeta> = [
-    { pubkey: accounts.spawnInstance, isSigner: false, isWritable: true },
-    { pubkey: accounts.monsterType, isSigner: false, isWritable: false },
+    { pubkey: accounts.monsterSpawn, isSigner: false, isWritable: true },
+    { pubkey: accounts.monsterType, isSigner: false, isWritable: true },
     { pubkey: accounts.signer, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
     { pubkey: accounts.clock, isSigner: false, isWritable: false },
   ]
-  const identifier = Buffer.from([125, 25, 12, 138, 60, 117, 98, 143])
+  const identifier = Buffer.from([1, 149, 111, 168, 187, 114, 238, 139])
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
-      config: types.SpawnInstanceConfig.toEncodable(args.config),
+      spawntime: args.spawntime,
     },
     buffer
   )

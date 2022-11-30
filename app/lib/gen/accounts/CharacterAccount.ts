@@ -11,7 +11,7 @@ export interface CharacterAccountFields {
   experience: BN
   hitpoints: BN
   deaths: number
-  questState: types.QuestStateFields | null
+  questState: types.CharacterQuestStateFields | null
   meleeSkill: number
 }
 
@@ -22,7 +22,7 @@ export interface CharacterAccountJSON {
   experience: string
   hitpoints: string
   deaths: number
-  questState: types.QuestStateJSON | null
+  questState: types.CharacterQuestStateJSON | null
   meleeSkill: number
 }
 
@@ -33,7 +33,7 @@ export class CharacterAccount {
   readonly experience: BN
   readonly hitpoints: BN
   readonly deaths: number
-  readonly questState: types.QuestState | null
+  readonly questState: types.CharacterQuestState | null
   readonly meleeSkill: number
 
   static readonly discriminator = Buffer.from([
@@ -47,7 +47,7 @@ export class CharacterAccount {
     borsh.u64("experience"),
     borsh.u64("hitpoints"),
     borsh.u8("deaths"),
-    borsh.option(types.QuestState.layout(), "questState"),
+    borsh.option(types.CharacterQuestState.layout(), "questState"),
     borsh.u8("meleeSkill"),
   ])
 
@@ -59,7 +59,8 @@ export class CharacterAccount {
     this.hitpoints = fields.hitpoints
     this.deaths = fields.deaths
     this.questState =
-      (fields.questState && new types.QuestState({ ...fields.questState })) ||
+      (fields.questState &&
+        new types.CharacterQuestState({ ...fields.questState })) ||
       null
     this.meleeSkill = fields.meleeSkill
   }
@@ -113,7 +114,8 @@ export class CharacterAccount {
       hitpoints: dec.hitpoints,
       deaths: dec.deaths,
       questState:
-        (dec.questState && types.QuestState.fromDecoded(dec.questState)) ||
+        (dec.questState &&
+          types.CharacterQuestState.fromDecoded(dec.questState)) ||
         null,
       meleeSkill: dec.meleeSkill,
     })
@@ -141,7 +143,9 @@ export class CharacterAccount {
       hitpoints: new BN(obj.hitpoints),
       deaths: obj.deaths,
       questState:
-        (obj.questState && types.QuestState.fromJSON(obj.questState)) || null,
+        (obj.questState &&
+          types.CharacterQuestState.fromJSON(obj.questState)) ||
+        null,
       meleeSkill: obj.meleeSkill,
     })
   }

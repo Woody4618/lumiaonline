@@ -5,7 +5,9 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface CreateQuestArgs {
-  config: types.QuestConfigFields
+  duration: BN
+  rewardExp: BN
+  id: string
 }
 
 export interface CreateQuestAccounts {
@@ -14,7 +16,11 @@ export interface CreateQuestAccounts {
   systemProgram: PublicKey
 }
 
-export const layout = borsh.struct([types.QuestConfig.layout("config")])
+export const layout = borsh.struct([
+  borsh.i64("duration"),
+  borsh.u64("rewardExp"),
+  borsh.str("id"),
+])
 
 export function createQuest(
   args: CreateQuestArgs,
@@ -29,7 +35,9 @@ export function createQuest(
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
-      config: types.QuestConfig.toEncodable(args.config),
+      duration: args.duration,
+      rewardExp: args.rewardExp,
+      id: args.id,
     },
     buffer
   )

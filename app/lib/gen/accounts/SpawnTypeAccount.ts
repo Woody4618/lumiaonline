@@ -4,38 +4,43 @@ import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface SpawnInstanceAccountFields {
-  config: types.SpawnInstanceConfigFields
+export interface SpawnTypeAccountFields {
+  monsterType: PublicKey
+  spawntime: BN
   lastKilled: BN | null
 }
 
-export interface SpawnInstanceAccountJSON {
-  config: types.SpawnInstanceConfigJSON
+export interface SpawnTypeAccountJSON {
+  monsterType: string
+  spawntime: string
   lastKilled: string | null
 }
 
-export class SpawnInstanceAccount {
-  readonly config: types.SpawnInstanceConfig
+export class MonsterSpawnAccount {
+  readonly monsterType: PublicKey
+  readonly spawntime: BN
   readonly lastKilled: BN | null
 
   static readonly discriminator = Buffer.from([
-    153, 244, 216, 251, 187, 82, 158, 70,
+    90, 81, 143, 40, 109, 242, 236, 135,
   ])
 
   static readonly layout = borsh.struct([
-    types.SpawnInstanceConfig.layout("config"),
+    borsh.publicKey("monsterType"),
+    borsh.i64("spawntime"),
     borsh.option(borsh.i64(), "lastKilled"),
   ])
 
-  constructor(fields: SpawnInstanceAccountFields) {
-    this.config = new types.SpawnInstanceConfig({ ...fields.config })
+  constructor(fields: SpawnTypeAccountFields) {
+    this.monsterType = fields.monsterType
+    this.spawntime = fields.spawntime
     this.lastKilled = fields.lastKilled
   }
 
   static async fetch(
     c: Connection,
     address: PublicKey
-  ): Promise<SpawnInstanceAccount | null> {
+  ): Promise<MonsterSpawnAccount | null> {
     const info = await c.getAccountInfo(address)
 
     if (info === null) {
@@ -51,7 +56,7 @@ export class SpawnInstanceAccount {
   static async fetchMultiple(
     c: Connection,
     addresses: PublicKey[]
-  ): Promise<Array<SpawnInstanceAccount | null>> {
+  ): Promise<Array<MonsterSpawnAccount | null>> {
     const infos = await c.getMultipleAccountsInfo(addresses)
 
     return infos.map((info) => {
@@ -66,29 +71,32 @@ export class SpawnInstanceAccount {
     })
   }
 
-  static decode(data: Buffer): SpawnInstanceAccount {
-    if (!data.slice(0, 8).equals(SpawnInstanceAccount.discriminator)) {
+  static decode(data: Buffer): MonsterSpawnAccount {
+    if (!data.slice(0, 8).equals(MonsterSpawnAccount.discriminator)) {
       throw new Error("invalid account discriminator")
     }
 
-    const dec = SpawnInstanceAccount.layout.decode(data.slice(8))
+    const dec = MonsterSpawnAccount.layout.decode(data.slice(8))
 
-    return new SpawnInstanceAccount({
-      config: types.SpawnInstanceConfig.fromDecoded(dec.config),
+    return new MonsterSpawnAccount({
+      monsterType: dec.monsterType,
+      spawntime: dec.spawntime,
       lastKilled: dec.lastKilled,
     })
   }
 
-  toJSON(): SpawnInstanceAccountJSON {
+  toJSON(): SpawnTypeAccountJSON {
     return {
-      config: this.config.toJSON(),
+      monsterType: this.monsterType.toString(),
+      spawntime: this.spawntime.toString(),
       lastKilled: (this.lastKilled && this.lastKilled.toString()) || null,
     }
   }
 
-  static fromJSON(obj: SpawnInstanceAccountJSON): SpawnInstanceAccount {
-    return new SpawnInstanceAccount({
-      config: types.SpawnInstanceConfig.fromJSON(obj.config),
+  static fromJSON(obj: SpawnTypeAccountJSON): MonsterSpawnAccount {
+    return new MonsterSpawnAccount({
+      monsterType: new PublicKey(obj.monsterType),
+      spawntime: new BN(obj.spawntime),
       lastKilled: (obj.lastKilled && new BN(obj.lastKilled)) || null,
     })
   }

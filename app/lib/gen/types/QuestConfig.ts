@@ -6,29 +6,29 @@ import * as borsh from "@project-serum/borsh"
 export interface QuestConfigFields {
   duration: BN
   rewardExp: BN
-  uuid: string
+  id: string
 }
 
 export interface QuestConfigJSON {
   duration: string
   rewardExp: string
-  uuid: string
+  id: string
 }
 
 export class QuestConfig {
   readonly duration: BN
   readonly rewardExp: BN
-  readonly uuid: string
+  readonly id: string
 
   constructor(fields: QuestConfigFields) {
     this.duration = fields.duration
     this.rewardExp = fields.rewardExp
-    this.uuid = fields.uuid
+    this.id = fields.id
   }
 
   static layout(property?: string) {
     return borsh.struct(
-      [borsh.i64("duration"), borsh.u64("rewardExp"), borsh.str("uuid")],
+      [borsh.i64("duration"), borsh.u64("rewardExp"), borsh.str("id")],
       property
     )
   }
@@ -38,7 +38,7 @@ export class QuestConfig {
     return new QuestConfig({
       duration: obj.duration,
       rewardExp: obj.rewardExp,
-      uuid: obj.uuid,
+      id: obj.id,
     })
   }
 
@@ -46,7 +46,7 @@ export class QuestConfig {
     return {
       duration: fields.duration,
       rewardExp: fields.rewardExp,
-      uuid: fields.uuid,
+      id: fields.id,
     }
   }
 
@@ -54,7 +54,7 @@ export class QuestConfig {
     return {
       duration: this.duration.toString(),
       rewardExp: this.rewardExp.toString(),
-      uuid: this.uuid,
+      id: this.id,
     }
   }
 
@@ -62,7 +62,7 @@ export class QuestConfig {
     return new QuestConfig({
       duration: new BN(obj.duration),
       rewardExp: new BN(obj.rewardExp),
-      uuid: obj.uuid,
+      id: obj.id,
     })
   }
 

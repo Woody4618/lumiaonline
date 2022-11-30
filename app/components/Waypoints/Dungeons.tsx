@@ -49,10 +49,10 @@ export function Dungeons() {
 
     const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
 
-    const uuid = data.get("uuid").toString()
+    const id = data.get("id").toString()
 
     const quest = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("quest"), Buffer.from(uuid)],
+      [Buffer.from("quest"), Buffer.from(id)],
       PROGRAM_ID
     )[0]
 
@@ -94,7 +94,7 @@ export function Dungeons() {
         {quests ? (
           quests.map((quest) => {
             const questData = questsData.find(
-              (questData) => questData.uuid === quest.account.config.uuid
+              (questData) => questData.id === quest.account.id
             )
             return (
               <Flex
@@ -131,18 +131,14 @@ export function Dungeons() {
                     margin: "3.2rem 0",
                   }}
                 >
-                  <Text>
-                    Reward Exp: +{quest.account.config.rewardExp.toNumber()}
-                  </Text>
-                  <Text>
-                    Duration: {quest.account.config.duration.toNumber()}s
-                  </Text>
+                  <Text>Reward Exp: +{quest.account.rewardExp.toNumber()}</Text>
+                  <Text>Duration: {quest.account.duration.toNumber()}s</Text>
                 </Flex>
                 <form sx={{}} onSubmit={handleJoinFormSubmit}>
                   <input
                     type="hidden"
-                    name="uuid"
-                    value={quest.account.config.uuid.toString()}
+                    name="id"
+                    value={quest.account.id.toString()}
                   />
                   <Button type="submit" mt="1.6rem">
                     Join

@@ -5,7 +5,9 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface CreateMonsterTypeArgs {
-  config: types.MonsterConfigFields
+  name: string
+  hitpoints: BN
+  meleeSkill: number
 }
 
 export interface CreateMonsterTypeAccounts {
@@ -14,7 +16,11 @@ export interface CreateMonsterTypeAccounts {
   systemProgram: PublicKey
 }
 
-export const layout = borsh.struct([types.MonsterConfig.layout("config")])
+export const layout = borsh.struct([
+  borsh.str("name"),
+  borsh.u64("hitpoints"),
+  borsh.u8("meleeSkill"),
+])
 
 export function createMonsterType(
   args: CreateMonsterTypeArgs,
@@ -29,7 +35,9 @@ export function createMonsterType(
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
-      config: types.MonsterConfig.toEncodable(args.config),
+      name: args.name,
+      hitpoints: args.hitpoints,
+      meleeSkill: args.meleeSkill,
     },
     buffer
   )

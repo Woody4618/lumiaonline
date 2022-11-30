@@ -1,6 +1,6 @@
 export const quests = [
   {
-    uuid: "0",
+    id: "0",
     name: "The Rubber Sword",
     description:
       "Hey you goofball - do you need a job? Take this totally impractical rubber sword, ok? Take it to Skull Island. Shouldn't be a problem for a hotshot like yourself. Any questions?",
@@ -10,7 +10,7 @@ export const quests = [
     reward: 50,
   },
   {
-    uuid: "1",
+    id: "1",
     name: "The Rubber Sword",
     description:
       "Hey you goofball - do you need a job? Take this totally impractical rubber sword, ok? Take it to Skull Island. Shouldn't be a problem for a hotshot like yourself. Any questions?",

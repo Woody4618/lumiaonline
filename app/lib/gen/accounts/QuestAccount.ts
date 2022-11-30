@@ -5,24 +5,36 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface QuestAccountFields {
-  config: types.QuestConfigFields
+  duration: BN
+  rewardExp: BN
+  id: string
 }
 
 export interface QuestAccountJSON {
-  config: types.QuestConfigJSON
+  duration: string
+  rewardExp: string
+  id: string
 }
 
 export class QuestAccount {
-  readonly config: types.QuestConfig
+  readonly duration: BN
+  readonly rewardExp: BN
+  readonly id: string
 
   static readonly discriminator = Buffer.from([
     150, 179, 23, 90, 199, 60, 121, 92,
   ])
 
-  static readonly layout = borsh.struct([types.QuestConfig.layout("config")])
+  static readonly layout = borsh.struct([
+    borsh.i64("duration"),
+    borsh.u64("rewardExp"),
+    borsh.str("id"),
+  ])
 
   constructor(fields: QuestAccountFields) {
-    this.config = new types.QuestConfig({ ...fields.config })
+    this.duration = fields.duration
+    this.rewardExp = fields.rewardExp
+    this.id = fields.id
   }
 
   static async fetch(
@@ -67,19 +79,25 @@ export class QuestAccount {
     const dec = QuestAccount.layout.decode(data.slice(8))
 
     return new QuestAccount({
-      config: types.QuestConfig.fromDecoded(dec.config),
+      duration: dec.duration,
+      rewardExp: dec.rewardExp,
+      id: dec.id,
     })
   }
 
   toJSON(): QuestAccountJSON {
     return {
-      config: this.config.toJSON(),
+      duration: this.duration.toString(),
+      rewardExp: this.rewardExp.toString(),
+      id: this.id,
     }
   }
 
   static fromJSON(obj: QuestAccountJSON): QuestAccount {
     return new QuestAccount({
-      config: types.QuestConfig.fromJSON(obj.config),
+      duration: new BN(obj.duration),
+      rewardExp: new BN(obj.rewardExp),
+      id: obj.id,
     })
   }
 }

@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+// Contains information about a single battle turn between a character and a monster
 pub struct BattleTurn {
     character_damage: u64,
     monster_damage: u64,
@@ -8,58 +9,46 @@ pub struct BattleTurn {
     monster_hitpoints: i64,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct SpawnInstanceConfig {
-    pub monster_name: String,
-    pub spawntime: i64,
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct MonsterConfig {
-    pub uuid: String,
-    pub hitpoints: u64,
-    pub melee_skill: u8,
-}
-
 #[account]
+// Holds information about a battle between a character and a monster
 pub struct BattleAccount {
     pub battle_turns: Vec<BattleTurn>,
     pub participants: Vec<Pubkey>,
 }
 
 #[account]
-pub struct SpawnInstanceAccount {
-    pub config: SpawnInstanceConfig,
+// Monster Spawn is an account used in battles that is spawning a Monster Type in a certain time interval
+pub struct MonsterSpawnAccount {
+    pub monster_type: Pubkey,
+    pub spawntime: i64,
     // defines the last time the monster was killed. this is used to determine if the monster can join a battle or not
     pub last_killed: Option<i64>,
 }
 
 #[account]
+// Monster Type is a type of monster that can be spawned. It holds all information about a monster
 pub struct MonsterTypeAccount {
-    pub config: MonsterConfig,
+    pub name: String,
+    pub hitpoints: u64,
+    pub melee_skill: u8,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct QuestState {
+pub struct CharacterQuestState {
     pub started_at: i64,
-    pub quest_uuid: String,
+    pub quest_id: String,
 }
 
 #[account]
 pub struct QuestAccount {
-    pub config: QuestConfig,
-}
-
-#[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
-pub struct QuestConfig {
     pub duration: i64,
     pub reward_exp: u64,
-    pub uuid: String,
+    pub id: String,
 }
 
 #[derive(Clone, AnchorSerialize, AnchorDeserialize)]
 pub struct Death {
-    monster_uuid: String,
+    monster_id: String,
     timestamp: i64,
 }
 
@@ -73,7 +62,7 @@ pub struct CharacterAccount {
     pub hitpoints: u64,
     // pub deaths: Vec<Death>,
     pub deaths: u8,
-    pub quest_state: Option<QuestState>,
+    pub quest_state: Option<CharacterQuestState>,
     pub melee_skill: u8,
 }
 

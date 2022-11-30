@@ -2,8 +2,9 @@
 
 Monorepo for Lumia website & game
 
-`app`: NextJS frontend app
-`programs`: Anchor programs
+`app/`: NextJS frontend app
+
+`programs/`: Anchor programs
 
 ## dev requisites
 
@@ -19,6 +20,7 @@ Install Anchor - https://www.anchor-lang.com/docs/installation
 - Put the anchor config on the Anchor.toml file
 - Configure your wallet on Anchor.toml `wallet`
 
+- Replace the mint addresses used in `tests/` to your NFT mint address from anchor-localnet-nfts.
 - Run `anchor test --detach` on the root folder
 - Run `yarn dev` on the app/ folder
 - Navigate to localhost
