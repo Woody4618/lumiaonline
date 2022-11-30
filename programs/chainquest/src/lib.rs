@@ -28,9 +28,16 @@ pub mod chainquest {
         Ok(())
     }
 
-    pub fn create_quest(ctx: Context<CreateQuest>, config: QuestConfig) -> Result<()> {
+    pub fn create_quest(
+        ctx: Context<CreateQuest>,
+        duration: i64,
+        reward_exp: u64,
+        id: String
+    ) -> Result<()> {
         let quest = QuestAccount {
-            config,
+            duration,
+            reward_exp,
+            id,
         };
 
         ctx.accounts.quest.set_inner(quest);
@@ -40,10 +47,14 @@ pub mod chainquest {
 
     pub fn create_monster_type(
         ctx: Context<CreateMonsterType>,
-        config: MonsterConfig
+        name: String,
+        hitpoints: u64,
+        melee_skill: u8
     ) -> Result<()> {
         let monster_type = MonsterTypeAccount {
-            config,
+            name,
+            hitpoints,
+            melee_skill,
         };
 
         ctx.accounts.monster_type.set_inner(monster_type);
@@ -71,7 +82,7 @@ pub mod chainquest {
         if ctx.accounts.spawn_instance.last_killed.is_none() {
             ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
             msg!("Spawn killed for the first time");
-            // ctx.accounts.character.experience += ctx.accounts.monster_type.config.experience
+            // ctx.accounts.character.experience += ctx.accounts.monster_type.experience
         } else {
             let required_timestamp =
                 ctx.accounts.spawn_instance.last_killed.as_ref().unwrap() +
@@ -92,7 +103,7 @@ pub mod chainquest {
 
     pub fn join_quest(ctx: Context<JoinQuest>) -> Result<()> {
         ctx.accounts.character.quest_state = Some(CharacterQuestState {
-            quest_id: ctx.accounts.quest.config.id.clone(),
+            quest_id: ctx.accounts.quest.id.clone(),
             started_at: ctx.accounts.clock.unix_timestamp,
         });
 
@@ -102,7 +113,7 @@ pub mod chainquest {
     pub fn claim_quest(ctx: Context<ClaimQuest>) -> Result<()> {
         let required_timestamp =
             ctx.accounts.character.quest_state.as_ref().unwrap().started_at +
-            ctx.accounts.quest.config.duration;
+            ctx.accounts.quest.duration;
 
         require_gte!(
             ctx.accounts.clock.unix_timestamp,
@@ -110,7 +121,7 @@ pub mod chainquest {
             QuestError::InvalidTimestamp
         );
 
-        ctx.accounts.character.experience += ctx.accounts.quest.config.reward_exp;
+        ctx.accounts.character.experience += ctx.accounts.quest.reward_exp;
 
         ctx.accounts.character.quest_state = None;
 
@@ -122,7 +133,7 @@ pub mod chainquest {
 
         if last_turn.character_hitpoints <= 0 {
             // ctx.accounts.character.deaths.push(Death {
-            //     monster_id: ctx.accounts.monster_type.config.id.clone(),
+            //     monster_id: ctx.accounts.monster_type.id.clone(),
             //     timestamp: ctx.accounts.clock.unix_timestamp,
             // });
 
@@ -186,11 +197,11 @@ pub struct JoinBattle<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(config: MonsterConfig)]
+#[instruction(name: String)]
 pub struct CreateMonsterType<'info> {
     #[account(
         init,
-        seeds = [b"monster_type".as_ref(), config.id.as_ref()],
+        seeds = [b"monster_type".as_ref(), name.as_ref()],
         bump,
         payer = signer,
         space = 8 + size_of::<MonsterTypeAccount>()
@@ -207,7 +218,7 @@ pub struct KillSpawn<'info> {
     #[account(mut)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
 
-    #[account(mut, seeds = [b"spawn_instance".as_ref(), monster_type.config.id.as_ref()], bump)]
+    #[account(mut, seeds = [b"spawn_instance".as_ref(), monster_type.name.as_ref()], bump)]
     pub spawn_instance: Account<'info, SpawnTypeAccount>,
 
     #[account(mut)]
@@ -247,11 +258,13 @@ pub struct JoinQuest<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(config: QuestConfig)]
+#[instruction(duration: i64,
+    reward_exp: u64,
+    id: String)]
 pub struct CreateQuest<'info> {
     #[account(
         init,
-        seeds = [b"quest".as_ref(), config.id.as_ref()],
+        seeds = [b"quest".as_ref(), id.as_ref()],
         bump,
         payer = signer,
         space = 8 + size_of::<QuestAccount>()

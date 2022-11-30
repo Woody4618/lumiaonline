@@ -9,13 +9,6 @@ pub struct BattleTurn {
     monster_hitpoints: i64,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct MonsterConfig {
-    pub id: String,
-    pub hitpoints: u64,
-    pub melee_skill: u8,
-}
-
 #[account]
 // Holds information about a battle between a character and a monster
 pub struct BattleAccount {
@@ -35,7 +28,9 @@ pub struct SpawnTypeAccount {
 #[account]
 // Monster Type is a type of monster that can be spawned
 pub struct MonsterTypeAccount {
-    pub config: MonsterConfig,
+    pub name: String,
+    pub hitpoints: u64,
+    pub melee_skill: u8,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
@@ -46,11 +41,6 @@ pub struct CharacterQuestState {
 
 #[account]
 pub struct QuestAccount {
-    pub config: QuestConfig,
-}
-
-#[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
-pub struct QuestConfig {
     pub duration: i64,
     pub reward_exp: u64,
     pub id: String,

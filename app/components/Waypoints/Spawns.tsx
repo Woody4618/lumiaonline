@@ -118,7 +118,7 @@ export function Spawns() {
                     }}
                   >
                     {/* <Text>
-                      Hitpoints: {monster.account.config.hitpoints.toNumber()}
+                      Hitpoints: {monster.account.hitpoints.toNumber()}
                     </Text> */}
                   </Flex>
                   <form sx={{}} onSubmit={handleJoinFormSubmit}>

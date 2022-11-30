@@ -22,7 +22,7 @@ import { quests } from "../app/data/quests"
 import { monsters } from "../app/data/monsters"
 import { spawns } from "../app/data/spawns"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
-import { CharacterAccount, MonsterTypeAccount } from "../app/lib/gen/accounts"
+import { BattleAccountJSON } from "../app/lib/gen/accounts"
 import { getBattleTurns } from "../app/lib/battle"
 import { BattleTurn } from "../app/lib/gen/types"
 
@@ -46,11 +46,9 @@ describe("chainquest", () => {
 
         const ix = createQuest(
           {
-            config: {
-              duration: new anchor.BN(questConfig.duration),
-              rewardExp: new anchor.BN(questConfig.reward),
-              id,
-            },
+            duration: new anchor.BN(questConfig.duration),
+            rewardExp: new anchor.BN(questConfig.reward),
+            id,
           },
           {
             quest,
@@ -73,27 +71,23 @@ describe("chainquest", () => {
 
       const questAcc = await program.account.questAccount.fetch(questAddress)
 
-      expect(questAcc.config.duration.toNumber()).to.eq(
-        questToValidate.duration
-      )
+      expect(questAcc.duration.toNumber()).to.eq(questToValidate.duration)
     })
 
     it("Can create monsters", async () => {
       const ixs = monsters.map((monsterConfig, index) => {
-        const id = monsterConfig.name
+        const { name } = monsterConfig
 
         const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("monster_type"), Buffer.from(id)],
+          [Buffer.from("monster_type"), Buffer.from(name)],
           PROGRAM_ID
         )[0]
 
         const ix = createMonsterType(
           {
-            config: {
-              id,
-              hitpoints: new anchor.BN(monsterConfig.hitpoints),
-              meleeSkill: monsterConfig.meleeSkill,
-            },
+            name,
+            hitpoints: new anchor.BN(monsterConfig.hitpoints),
+            meleeSkill: monsterConfig.meleeSkill,
           },
           {
             monsterType,
@@ -118,9 +112,7 @@ describe("chainquest", () => {
         monsterAddress
       )
 
-      expect(monsterAcc.config.hitpoints.toNumber()).to.eq(
-        monsterToValidate.hitpoints
-      )
+      expect(monsterAcc.hitpoints.toNumber()).to.eq(monsterToValidate.hitpoints)
     })
 
     it("Can create spawn instances", async () => {
@@ -286,7 +278,7 @@ describe("chainquest", () => {
         character
       )
 
-      expect(characterAcc.questState.questId).to.eq(questAcc.config.id)
+      expect(characterAcc.questState.questId).to.eq(questAcc.id)
     })
 
     it("Can join a battle with a monster til death", async () => {
@@ -332,7 +324,7 @@ describe("chainquest", () => {
 
       await program.provider.sendAndConfirm(tx, [battle])
 
-      const battleAcc: {
+      const battleAcc: BattleAccountJSON & {
         battleTurns: BattleTurn[]
       } = await program.account.battleAccount.fetch(battle.publicKey)
 
@@ -383,7 +375,7 @@ describe("chainquest", () => {
       const characterAcc = await program.account.characterAccount.fetch(
         character
       )
-      expect(characterAcc.experience.cmp(questAcc.config.rewardExp)).to.eq(0)
+      expect(characterAcc.experience.cmp(questAcc.rewardExp)).to.eq(0)
       expect(characterAcc.questState).to.be.null
     })
 

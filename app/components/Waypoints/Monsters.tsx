@@ -142,7 +142,7 @@ export function Monsters() {
         {monsters ? (
           monsters.map((monster) => {
             const monsterData = monstersData.find(
-              (monsterData) => monsterData.name === monster.account.config.id
+              (monsterData) => monsterData.name === monster.account.name
             )
 
             return (
@@ -174,14 +174,14 @@ export function Monsters() {
                   }}
                 >
                   {/* <Text>
-                      Hitpoints: {monster.account.config.hitpoints.toNumber()}
+                      Hitpoints: {monster.account.hitpoints.toNumber()}
                     </Text> */}
                 </Flex>
                 <form sx={{}} onSubmit={handleJoinFormSubmit}>
                   <input
                     type="hidden"
                     name="id"
-                    value={monster.account.config.id.toString()}
+                    value={monster.account.name.toString()}
                   />
                   <Button type="submit" mt="1.6rem">
                     Battle

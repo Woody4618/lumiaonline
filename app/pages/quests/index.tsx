@@ -91,7 +91,7 @@ export default function Quests() {
         {quests ? (
           quests.map((quest) => {
             const questData = questsData.find(
-              (questData) => questData.id === quest.account.config.id
+              (questData) => questData.id === quest.account.id
             )
             return (
               <Flex
@@ -128,18 +128,14 @@ export default function Quests() {
                     margin: "3.2rem 0",
                   }}
                 >
-                  <Text>
-                    Reward Exp: +{quest.account.config.rewardExp.toNumber()}
-                  </Text>
-                  <Text>
-                    Duration: {quest.account.config.duration.toNumber()}s
-                  </Text>
+                  <Text>Reward Exp: +{quest.account.rewardExp.toNumber()}</Text>
+                  <Text>Duration: {quest.account.duration.toNumber()}s</Text>
                 </Flex>
                 <form sx={{}} onSubmit={handleJoinFormSubmit}>
                   <input
                     type="hidden"
                     name="id"
-                    value={quest.account.config.id.toString()}
+                    value={quest.account.id.toString()}
                   />
                   <Button type="submit" mt="1.6rem">
                     Join
