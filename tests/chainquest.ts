@@ -7,7 +7,6 @@ import {
   createMonsterType,
   createMonsterSpawn,
   joinBattle,
-  killSpawn,
 } from "../app/lib/gen/instructions"
 import { createQuest } from "../app/lib/gen/instructions/createQuest"
 import { joinQuest } from "../app/lib/gen/instructions/joinQuest"
@@ -280,67 +279,6 @@ describe("chainquest", () => {
       expect(characterAcc.questState.questId).to.eq(questAcc.id)
     })
 
-    it("Can join a battle with a monster til death", async () => {
-      const id = monsters[0].name
-
-      const monster = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("monster_type"), Buffer.from(id)],
-        PROGRAM_ID
-      )[0]
-
-      const mint = new anchor.web3.PublicKey(
-        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
-      )
-
-      const character = getCharacterAddress(
-        program.provider.publicKey,
-        mint,
-        program.programId
-      )
-
-      const battleTurns = await getBattleTurns(
-        program.provider.connection,
-        character,
-        monster
-      )
-
-      const battle = anchor.web3.Keypair.generate()
-      const ix = joinBattle(
-        {
-          battleTurns,
-        },
-        {
-          battle: battle.publicKey,
-          owner,
-          monsterType: monster,
-          character,
-          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-          systemProgram: anchor.web3.SystemProgram.programId,
-        }
-      )
-
-      const tx = new anchor.web3.Transaction().add(ix)
-
-      await program.provider.sendAndConfirm(tx, [battle])
-
-      // @ts-ignore
-      const battleAcc: BattleAccountJSON & {
-        battleTurns: BattleTurn[]
-      } = await program.account.battleAccount.fetch(battle.publicKey)
-
-      /** Expect character to die or win  */
-      const lastTurn = battleAcc.battleTurns[battleAcc.battleTurns.length - 1]
-      const characterAcc = await program.account.characterAccount.fetch(
-        character
-      )
-
-      if (lastTurn.characterHitpoints.toNumber() <= 0) {
-        expect(characterAcc.deaths).to.be.eq(1)
-      } else {
-        expect(characterAcc.deaths).to.be.eq(0)
-      }
-    })
-
     it("Can claim a quest", async () => {
       const id = quests[0].id
 
@@ -427,7 +365,7 @@ describe("chainquest", () => {
   })
 
   describe("validate spawns", () => {
-    it("Can kill a spawn instance once", async () => {
+    it("Can battle a monster spawn til death", async () => {
       const { monsterName, spawntime, town } = spawns[0]
 
       const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
@@ -440,22 +378,64 @@ describe("chainquest", () => {
         PROGRAM_ID
       )[0]
 
-      const ix = killSpawn({
-        monsterSpawn,
-        monsterType,
-        owner: program.provider.publicKey,
-        systemProgram,
-        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-      })
+      const mint = new anchor.web3.PublicKey(
+        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
+      )
+
+      const character = getCharacterAddress(
+        program.provider.publicKey,
+        mint,
+        program.programId
+      )
+
+      const battleTurns = await getBattleTurns(
+        program.provider.connection,
+        character,
+        monsterType
+      )
+
+      const battle = anchor.web3.Keypair.generate()
+
+      const ix = joinBattle(
+        {
+          battleTurns,
+        },
+        {
+          battle: battle.publicKey,
+          character: character,
+          monsterSpawn,
+          monsterType,
+          owner: program.provider.publicKey,
+          systemProgram,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        }
+      )
 
       const tx = new anchor.web3.Transaction().add(ix)
-      await program.provider.sendAndConfirm(tx)
+      await program.provider.sendAndConfirm(tx, [battle])
 
       const spawnAcc = await program.account.monsterSpawnAccount.fetch(
         monsterSpawn
       )
 
       expect(spawnAcc.lastKilled).to.not.be.null
+
+      // @ts-ignore
+      const battleAcc: BattleAccountJSON & {
+        battleTurns: BattleTurn[]
+      } = await program.account.battleAccount.fetch(battle.publicKey)
+
+      /** Expect character to die or win  */
+      const lastTurn = battleAcc.battleTurns[battleAcc.battleTurns.length - 1]
+      const characterAcc = await program.account.characterAccount.fetch(
+        character
+      )
+
+      if (lastTurn.characterHitpoints.toNumber() <= 0) {
+        expect(characterAcc.deaths).to.be.eq(1)
+      } else {
+        expect(characterAcc.deaths).to.be.eq(0)
+      }
 
       /** Try to kill the same spawn again */
       try {

@@ -1,6 +1,8 @@
 import { web3 } from "@project-serum/anchor"
 import { getBattleTurns } from "lib/battle"
+import { MonsterTypeAccount } from "lib/gen/accounts"
 import { joinBattle } from "lib/gen/instructions"
+import { PROGRAM_ID } from "lib/gen/programId"
 import { NextApiRequest, NextApiResponse } from "next"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -20,6 +22,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const monsterAddress = new web3.PublicKey(monster)
     const ownerAddress = new web3.PublicKey(owner)
 
+    const monsterAccount = await MonsterTypeAccount.fetch(
+      connection,
+      monsterAddress
+    )
+
+    const monsterType = web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("monster_type"), Buffer.from(monsterAccount.name)],
+      PROGRAM_ID
+    )[0]
+
+    const monsterSpawn = web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("monster_spawn"), Buffer.from(monsterAccount.name)],
+      PROGRAM_ID
+    )[0]
+
     const battleTurns = await getBattleTurns(
       connection,
       characterAddress,
@@ -27,15 +44,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     )
 
     const battle = web3.Keypair.generate()
+
     const ix = joinBattle(
-      { battleTurns },
       {
-        monsterType: monsterAddress,
-        character: characterAddress,
-        clock: web3.SYSVAR_CLOCK_PUBKEY,
+        battleTurns,
+      },
+      {
         battle: battle.publicKey,
+        character: characterAddress,
+        monsterSpawn,
+        monsterType,
         owner: ownerAddress,
         systemProgram: web3.SystemProgram.programId,
+        clock: web3.SYSVAR_CLOCK_PUBKEY,
       }
     )
 

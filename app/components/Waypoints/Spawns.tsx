@@ -4,13 +4,12 @@ import { Heading, Text, Button, Flex } from "@theme-ui/components"
 import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
-import { getCharacterAddress, getSpawnInstances } from "lib/program-utils"
+import { getSpawnInstances } from "lib/program-utils"
 import { MonsterTypeAccount, MonsterSpawnAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
-import { killSpawn } from "lib/gen/instructions"
 import { PublicKey } from "@solana/web3.js"
 
 type SpawnInstanceResponse = {
@@ -49,23 +48,6 @@ export function Spawns() {
       [Buffer.from("monster_spawn"), Buffer.from(monster.name)],
       PROGRAM_ID
     )[0]
-
-    const ix = killSpawn({
-      monsterSpawn,
-      monsterType: monsterTypeKey,
-      owner: publicKey,
-      systemProgram: web3.SystemProgram.programId,
-      clock: web3.SYSVAR_CLOCK_PUBKEY,
-    })
-
-    const latest = await connection.getLatestBlockhash()
-    const tx = new web3.Transaction()
-
-    tx.recentBlockhash = latest.blockhash
-    tx.add(ix)
-
-    const txid = await sendTransaction(tx, connection)
-    console.log(txid)
   }
 
   return (

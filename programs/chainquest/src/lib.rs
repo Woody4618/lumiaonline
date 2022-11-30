@@ -74,12 +74,10 @@ pub mod chainquest {
         Ok(())
     }
 
-    pub fn kill_spawn(ctx: Context<KillSpawn>) -> Result<()> {
-        if ctx.accounts.monster_spawn.last_killed.is_none() {
-            ctx.accounts.monster_spawn.last_killed = Some(ctx.accounts.clock.unix_timestamp);
-            msg!("Spawn killed for the first time");
-            // ctx.accounts.character.experience += ctx.accounts.monster_type.experience
-        } else {
+    // battle between a character and a monster spawn
+    pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
+        // if there is last_killed, then validate the timestamp
+        if ctx.accounts.monster_spawn.last_killed.is_some() {
             let required_timestamp =
                 ctx.accounts.monster_spawn.last_killed.as_ref().unwrap() +
                 ctx.accounts.monster_spawn.spawntime;
@@ -89,10 +87,27 @@ pub mod chainquest {
                 required_timestamp,
                 SpawnTypeError::InvalidTimestamp
             );
-
-            ctx.accounts.monster_spawn.last_killed = Some(ctx.accounts.clock.unix_timestamp);
-            msg!("Spawn killed after spawntime");
         }
+
+        let last_turn = battle_turns.last().unwrap();
+
+        if last_turn.character_hitpoints <= 0 {
+            // ctx.accounts.character.deaths.push(Death {
+            //     monster_id: ctx.accounts.monster_type.id.clone(),
+            //     timestamp: ctx.accounts.clock.unix_timestamp,
+            // });
+
+            ctx.accounts.character.deaths += 1;
+        }
+
+        let battle = BattleAccount {
+            battle_turns,
+            participants: vec![ctx.accounts.character.key(), ctx.accounts.monster_type.key()],
+        };
+
+        ctx.accounts.battle.set_inner(battle);
+
+        ctx.accounts.monster_spawn.last_killed = Some(ctx.accounts.clock.unix_timestamp);
 
         Ok(())
     }
@@ -123,28 +138,6 @@ pub mod chainquest {
 
         Ok(())
     }
-
-    pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
-        let last_turn = battle_turns.last().unwrap();
-
-        if last_turn.character_hitpoints <= 0 {
-            // ctx.accounts.character.deaths.push(Death {
-            //     monster_id: ctx.accounts.monster_type.id.clone(),
-            //     timestamp: ctx.accounts.clock.unix_timestamp,
-            // });
-
-            ctx.accounts.character.deaths += 1;
-        }
-
-        let battle = BattleAccount {
-            battle_turns,
-            participants: vec![ctx.accounts.character.key(), ctx.accounts.monster_type.key()],
-        };
-
-        ctx.accounts.battle.set_inner(battle);
-
-        Ok(())
-    }
 }
 
 #[derive(Accounts)]
@@ -169,30 +162,6 @@ pub struct CreateMonsterSpawn<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(battle_turns: Vec<BattleTurn>)]
-pub struct JoinBattle<'info> {
-    #[account(
-        init,
-        payer = owner,
-        space = 8 +
-        size_of::<BattleAccount>() +
-        size_of::<BattleTurn>() * battle_turns.len() +
-        // space for two participants
-        16 * 2
-    )]
-    pub battle: Account<'info, BattleAccount>,
-    #[account(mut,
-    constraint = character.owner.key() == owner.key())]
-    pub character: Account<'info, CharacterAccount>,
-    #[account(mut)]
-    pub monster_type: Account<'info, MonsterTypeAccount>,
-    #[account(mut)]
-    pub owner: Signer<'info>,
-    clock: Sysvar<'info, Clock>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
 #[instruction(name: String)]
 pub struct CreateMonsterType<'info> {
     #[account(
@@ -210,12 +179,27 @@ pub struct CreateMonsterType<'info> {
 }
 
 #[derive(Accounts)]
-pub struct KillSpawn<'info> {
+#[instruction(battle_turns: Vec<BattleTurn>)]
+pub struct JoinBattle<'info> {
     #[account(mut)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
 
     #[account(mut, seeds = [b"monster_spawn".as_ref(), monster_type.name.as_ref()], bump)]
     pub monster_spawn: Account<'info, MonsterSpawnAccount>,
+
+    #[account(
+        init,
+        payer = owner,
+        space = 8 +
+        size_of::<BattleAccount>() +
+        size_of::<BattleTurn>() * battle_turns.len() +
+        // space for two participants
+        16 * 2
+    )]
+    pub battle: Account<'info, BattleAccount>,
+    #[account(mut,
+    constraint = character.owner.key() == owner.key())]
+    pub character: Account<'info, CharacterAccount>,
 
     #[account(mut)]
     pub owner: Signer<'info>,
