@@ -1,13 +1,13 @@
 /** @jsxImportSource theme-ui */
 import { Heading, Text, Button, Flex } from "@theme-ui/components"
 
+import toast from "react-hot-toast"
 import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
-import { getSpawnInstances } from "lib/program-utils"
-import { MonsterTypeAccount, MonsterSpawnAccount } from "lib/gen/accounts"
+import { getMonsterSpawns } from "lib/program-utils"
+import { MonsterSpawnAccount, CharacterAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
-import { PROGRAM_ID } from "lib/gen/programId"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import { PublicKey } from "@solana/web3.js"
@@ -20,7 +20,7 @@ type SpawnInstanceResponse = {
 export function Spawns() {
   const { connection } = useConnection()
   const { publicKey, sendTransaction } = useWallet()
-  const [monsterSpawn, setSpawnInstance] =
+  const [monsterSpawns, setSpawnInstance] =
     useState<SpawnInstanceResponse[]>(null)
 
   const { selectedCharacter } = useContext(characterContext)
@@ -28,9 +28,9 @@ export function Spawns() {
   useEffect(() => {
     ;(async () => {
       if (connection) {
-        const monsterSpawn = await getSpawnInstances(connection)
+        const monsterSpawns = await getMonsterSpawns(connection)
 
-        setSpawnInstance(monsterSpawn)
+        setSpawnInstance(monsterSpawns)
       }
     })()
   }, [connection])
@@ -40,14 +40,58 @@ export function Spawns() {
 
     const data = new FormData(e.currentTarget)
     const monsterTypeKey = new PublicKey(data.get("monster_type").toString())
+
     if (!selectedCharacter) throw new Error("Select a character first")
 
-    const monster = await MonsterTypeAccount.fetch(connection, monsterTypeKey)
+    const characterAddress = selectedCharacter.pubkey.toString()
 
-    const monsterSpawn = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("monster_spawn"), Buffer.from(monster.name)],
-      PROGRAM_ID
-    )[0]
+    const rawTx = await (
+      await fetch(
+        `/api/join-battle-ix?${new URLSearchParams({
+          characterAddress,
+          monsterAddress: monsterTypeKey.toString(),
+          owner: publicKey.toString(),
+        })}`,
+        {
+          method: "GET",
+        }
+      )
+    ).json()
+
+    const tx = web3.Transaction.from(rawTx.data)
+
+    const loadingToast = toast.loading("Awaiting approval...")
+    const txid = await sendTransaction(tx, connection)
+
+    toast.loading("Confirming transaction...", {
+      id: loadingToast,
+    })
+
+    const characterPubKey = new PublicKey(characterAddress)
+    const previousCharacterAccount = CharacterAccount.decode(
+      (await connection.getAccountInfo(characterPubKey)).data
+    )
+
+    const latest = await connection.getLatestBlockhash("confirmed")
+    await connection.confirmTransaction({
+      blockhash: latest.blockhash,
+      lastValidBlockHeight: latest.lastValidBlockHeight,
+      signature: txid,
+    })
+
+    const newCharacterAcc = CharacterAccount.decode(
+      (await connection.getAccountInfo(characterPubKey)).data
+    )
+
+    if (newCharacterAcc.deaths > previousCharacterAccount.deaths) {
+      toast.error("died ", {
+        id: loadingToast,
+      })
+    } else {
+      toast.success("won", {
+        id: loadingToast,
+      })
+    }
   }
 
   return (
@@ -66,8 +110,8 @@ export function Spawns() {
           gap: "1.6rem",
         }}
       >
-        {monsterSpawn ? (
-          monsterSpawn.map(
+        {monsterSpawns ? (
+          monsterSpawns.map(
             ({ account: { lastKilled, monsterType, spawntime }, pubkey }) => {
               return (
                 <Flex
@@ -82,7 +126,9 @@ export function Spawns() {
                   }}
                   key={pubkey.toString()}
                 >
-                  <Heading variant="heading2">{monsterType.toString()}</Heading>
+                  <Heading variant="heading2">
+                    {monsterType.toString().slice(0, 6)}
+                  </Heading>
                   {/* <img
                   sx={{
                     maxWidth: "8rem",

@@ -57,7 +57,7 @@ export const getQuests = async (
   )
 }
 
-export const getSpawnInstances = async (
+export const getMonsterSpawns = async (
   connection: Connection
   // owner: PublicKey,
 ) => {

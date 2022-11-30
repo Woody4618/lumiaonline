@@ -16,31 +16,26 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const connection = new web3.Connection(endpoint, "confirmed")
 
-    const { character, monster, owner } = req.query
+    const { characterAddress, monsterAddress, owner } = req.query
 
-    const characterAddress = new web3.PublicKey(character)
-    const monsterAddress = new web3.PublicKey(monster)
+    const characterPubKey = new web3.PublicKey(characterAddress)
+    const monsterPubKey = new web3.PublicKey(monsterAddress)
     const ownerAddress = new web3.PublicKey(owner)
 
-    const monsterAccount = await MonsterTypeAccount.fetch(
+    const monsterTypeAccount = await MonsterTypeAccount.fetch(
       connection,
-      monsterAddress
+      monsterPubKey
     )
 
-    const monsterType = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("monster_type"), Buffer.from(monsterAccount.name)],
-      PROGRAM_ID
-    )[0]
-
     const monsterSpawn = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("monster_spawn"), Buffer.from(monsterAccount.name)],
+      [Buffer.from("monster_spawn"), Buffer.from(monsterTypeAccount.name)],
       PROGRAM_ID
     )[0]
 
     const battleTurns = await getBattleTurns(
       connection,
-      characterAddress,
-      monsterAddress
+      characterPubKey,
+      monsterPubKey
     )
 
     const battle = web3.Keypair.generate()
@@ -51,9 +46,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
       {
         battle: battle.publicKey,
-        character: characterAddress,
+        character: characterPubKey,
         monsterSpawn,
-        monsterType,
+        monsterType: monsterPubKey,
         owner: ownerAddress,
         systemProgram: web3.SystemProgram.programId,
         clock: web3.SYSVAR_CLOCK_PUBKEY,
