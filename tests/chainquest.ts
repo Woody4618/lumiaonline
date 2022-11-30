@@ -5,7 +5,7 @@ import { expect } from "chai"
 import {
   createCharacter,
   createMonsterType,
-  createSpawnInstance,
+  createMonsterSpawn,
   joinBattle,
   killSpawn,
 } from "../app/lib/gen/instructions"
@@ -115,7 +115,7 @@ describe("chainquest", () => {
       expect(monsterAcc.hitpoints.toNumber()).to.eq(monsterToValidate.hitpoints)
     })
 
-    it("Can create spawn instances", async () => {
+    it("Can create a monster spawn", async () => {
       const ixs = spawns.map((spawnConfig, index) => {
         const { monsterName, spawntime, town } = spawnConfig
 
@@ -124,17 +124,17 @@ describe("chainquest", () => {
           PROGRAM_ID
         )[0]
 
-        const spawnInstance = anchor.web3.PublicKey.findProgramAddressSync(
-          [Buffer.from("spawn_instance"), Buffer.from(monsterName)],
+        const monsterSpawn = anchor.web3.PublicKey.findProgramAddressSync(
+          [Buffer.from("monster_spawn"), Buffer.from(monsterName)],
           PROGRAM_ID
         )[0]
 
-        const ix = createSpawnInstance(
+        const ix = createMonsterSpawn(
           {
             spawntime: new anchor.BN(spawntime),
           },
           {
-            spawnInstance,
+            monsterSpawn,
             monsterType,
             signer: program.provider.publicKey,
             systemProgram,
@@ -151,7 +151,7 @@ describe("chainquest", () => {
       const spawnToValidate = spawns[0]
       const spawnAddress = anchor.web3.PublicKey.findProgramAddressSync(
         [
-          Buffer.from("spawn_instance"),
+          Buffer.from("monster_spawn"),
           Buffer.from(spawnToValidate.monsterName),
         ],
         PROGRAM_ID
@@ -435,13 +435,13 @@ describe("chainquest", () => {
         PROGRAM_ID
       )[0]
 
-      const spawnInstance = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("spawn_instance"), Buffer.from(monsterName)],
+      const monsterSpawn = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("monster_spawn"), Buffer.from(monsterName)],
         PROGRAM_ID
       )[0]
 
       const ix = killSpawn({
-        spawnInstance,
+        monsterSpawn,
         monsterType,
         owner: program.provider.publicKey,
         systemProgram,
@@ -452,7 +452,7 @@ describe("chainquest", () => {
       await program.provider.sendAndConfirm(tx)
 
       const spawnAcc = await program.account.monsterSpawnAccount.fetch(
-        spawnInstance
+        monsterSpawn
       )
 
       expect(spawnAcc.lastKilled).to.not.be.null

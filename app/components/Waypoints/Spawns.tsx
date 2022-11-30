@@ -21,7 +21,7 @@ type SpawnInstanceResponse = {
 export function Spawns() {
   const { connection } = useConnection()
   const { publicKey, sendTransaction } = useWallet()
-  const [spawnInstance, setSpawnInstance] =
+  const [monsterSpawn, setSpawnInstance] =
     useState<SpawnInstanceResponse[]>(null)
 
   const { selectedCharacter } = useContext(characterContext)
@@ -29,9 +29,9 @@ export function Spawns() {
   useEffect(() => {
     ;(async () => {
       if (connection) {
-        const spawnInstance = await getSpawnInstances(connection)
+        const monsterSpawn = await getSpawnInstances(connection)
 
-        setSpawnInstance(spawnInstance)
+        setSpawnInstance(monsterSpawn)
       }
     })()
   }, [connection])
@@ -45,13 +45,13 @@ export function Spawns() {
 
     const monster = await MonsterTypeAccount.fetch(connection, monsterTypeKey)
 
-    const spawnInstance = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("spawn_instance"), Buffer.from(monster.name)],
+    const monsterSpawn = web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("monster_spawn"), Buffer.from(monster.name)],
       PROGRAM_ID
     )[0]
 
     const ix = killSpawn({
-      spawnInstance,
+      monsterSpawn,
       monsterType: monsterTypeKey,
       owner: publicKey,
       systemProgram: web3.SystemProgram.programId,
@@ -84,8 +84,8 @@ export function Spawns() {
           gap: "1.6rem",
         }}
       >
-        {spawnInstance ? (
-          spawnInstance.map(
+        {monsterSpawn ? (
+          monsterSpawn.map(
             ({ account: { lastKilled, monsterType, spawntime }, pubkey }) => {
               return (
                 <Flex

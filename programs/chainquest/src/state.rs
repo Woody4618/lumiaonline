@@ -26,7 +26,7 @@ pub struct MonsterSpawnAccount {
 }
 
 #[account]
-// Monster Type is a type of monster that can be spawned
+// Monster Type is a type of monster that can be spawned. It holds all information about a monster
 pub struct MonsterTypeAccount {
     pub name: String,
     pub hitpoints: u64,

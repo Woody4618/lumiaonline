@@ -62,27 +62,27 @@ pub mod chainquest {
         Ok(())
     }
 
-    pub fn create_spawn_instance(ctx: Context<CreateSpawnType>, spawntime: i64) -> Result<()> {
-        let spawn_instance = MonsterSpawnAccount {
+    pub fn create_monster_spawn(ctx: Context<CreateMonsterSpawn>, spawntime: i64) -> Result<()> {
+        let monster_spawn = MonsterSpawnAccount {
             monster_type: ctx.accounts.monster_type.key(),
             spawntime,
             last_killed: None,
         };
 
-        ctx.accounts.spawn_instance.set_inner(spawn_instance);
+        ctx.accounts.monster_spawn.set_inner(monster_spawn);
 
         Ok(())
     }
 
     pub fn kill_spawn(ctx: Context<KillSpawn>) -> Result<()> {
-        if ctx.accounts.spawn_instance.last_killed.is_none() {
-            ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
+        if ctx.accounts.monster_spawn.last_killed.is_none() {
+            ctx.accounts.monster_spawn.last_killed = Some(ctx.accounts.clock.unix_timestamp);
             msg!("Spawn killed for the first time");
             // ctx.accounts.character.experience += ctx.accounts.monster_type.experience
         } else {
             let required_timestamp =
-                ctx.accounts.spawn_instance.last_killed.as_ref().unwrap() +
-                ctx.accounts.spawn_instance.spawntime;
+                ctx.accounts.monster_spawn.last_killed.as_ref().unwrap() +
+                ctx.accounts.monster_spawn.spawntime;
 
             require_gte!(
                 ctx.accounts.clock.unix_timestamp,
@@ -90,7 +90,7 @@ pub mod chainquest {
                 SpawnTypeError::InvalidTimestamp
             );
 
-            ctx.accounts.spawn_instance.last_killed = Some(ctx.accounts.clock.unix_timestamp);
+            ctx.accounts.monster_spawn.last_killed = Some(ctx.accounts.clock.unix_timestamp);
             msg!("Spawn killed after spawntime");
         }
 
@@ -149,15 +149,15 @@ pub mod chainquest {
 
 #[derive(Accounts)]
 #[instruction(spawntime: i64)]
-pub struct CreateSpawnType<'info> {
+pub struct CreateMonsterSpawn<'info> {
     #[account(
         init,
-        seeds = [b"spawn_instance".as_ref(), monster_type.name.as_ref()],
+        seeds = [b"monster_spawn".as_ref(), monster_type.name.as_ref()],
         bump,
         payer = signer,
         space = 8 + size_of::<MonsterSpawnAccount>()
     )]
-    pub spawn_instance: Account<'info, MonsterSpawnAccount>,
+    pub monster_spawn: Account<'info, MonsterSpawnAccount>,
 
     #[account(mut)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
@@ -214,8 +214,8 @@ pub struct KillSpawn<'info> {
     #[account(mut)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
 
-    #[account(mut, seeds = [b"spawn_instance".as_ref(), monster_type.name.as_ref()], bump)]
-    pub spawn_instance: Account<'info, MonsterSpawnAccount>,
+    #[account(mut, seeds = [b"monster_spawn".as_ref(), monster_type.name.as_ref()], bump)]
+    pub monster_spawn: Account<'info, MonsterSpawnAccount>,
 
     #[account(mut)]
     pub owner: Signer<'info>,
