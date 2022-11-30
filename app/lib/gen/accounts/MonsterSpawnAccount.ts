@@ -4,13 +4,13 @@ import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface SpawnTypeAccountFields {
+export interface MonsterSpawnAccountFields {
   monsterType: PublicKey
   spawntime: BN
   lastKilled: BN | null
 }
 
-export interface SpawnTypeAccountJSON {
+export interface MonsterSpawnAccountJSON {
   monsterType: string
   spawntime: string
   lastKilled: string | null
@@ -22,7 +22,7 @@ export class MonsterSpawnAccount {
   readonly lastKilled: BN | null
 
   static readonly discriminator = Buffer.from([
-    90, 81, 143, 40, 109, 242, 236, 135,
+    57, 99, 38, 235, 45, 103, 136, 32,
   ])
 
   static readonly layout = borsh.struct([
@@ -31,7 +31,7 @@ export class MonsterSpawnAccount {
     borsh.option(borsh.i64(), "lastKilled"),
   ])
 
-  constructor(fields: SpawnTypeAccountFields) {
+  constructor(fields: MonsterSpawnAccountFields) {
     this.monsterType = fields.monsterType
     this.spawntime = fields.spawntime
     this.lastKilled = fields.lastKilled
@@ -85,7 +85,7 @@ export class MonsterSpawnAccount {
     })
   }
 
-  toJSON(): SpawnTypeAccountJSON {
+  toJSON(): MonsterSpawnAccountJSON {
     return {
       monsterType: this.monsterType.toString(),
       spawntime: this.spawntime.toString(),
@@ -93,7 +93,7 @@ export class MonsterSpawnAccount {
     }
   }
 
-  static fromJSON(obj: SpawnTypeAccountJSON): MonsterSpawnAccount {
+  static fromJSON(obj: MonsterSpawnAccountJSON): MonsterSpawnAccount {
     return new MonsterSpawnAccount({
       monsterType: new PublicKey(obj.monsterType),
       spawntime: new BN(obj.spawntime),

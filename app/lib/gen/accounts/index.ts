@@ -1,10 +1,10 @@
 export { BattleAccount } from "./BattleAccount"
 export type { BattleAccountFields, BattleAccountJSON } from "./BattleAccount"
-export { SpawnTypeAccount } from "./SpawnTypeAccount"
+export { MonsterSpawnAccount } from "./MonsterSpawnAccount"
 export type {
-  SpawnTypeAccountFields,
-  SpawnTypeAccountJSON,
-} from "./SpawnTypeAccount"
+  MonsterSpawnAccountFields,
+  MonsterSpawnAccountJSON,
+} from "./MonsterSpawnAccount"
 export { MonsterTypeAccount } from "./MonsterTypeAccount"
 export type {
   MonsterTypeAccountFields,
