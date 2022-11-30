@@ -5,7 +5,6 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface CreateSpawnInstanceArgs {
-  monsterId: string
   spawntime: BN
 }
 
@@ -17,10 +16,7 @@ export interface CreateSpawnInstanceAccounts {
   clock: PublicKey
 }
 
-export const layout = borsh.struct([
-  borsh.str("monsterId"),
-  borsh.i64("spawntime"),
-])
+export const layout = borsh.struct([borsh.i64("spawntime")])
 
 export function createSpawnInstance(
   args: CreateSpawnInstanceArgs,
@@ -28,7 +24,7 @@ export function createSpawnInstance(
 ) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.spawnInstance, isSigner: false, isWritable: true },
-    { pubkey: accounts.monsterType, isSigner: false, isWritable: false },
+    { pubkey: accounts.monsterType, isSigner: false, isWritable: true },
     { pubkey: accounts.signer, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
     { pubkey: accounts.clock, isSigner: false, isWritable: false },
@@ -37,7 +33,6 @@ export function createSpawnInstance(
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
-      monsterId: args.monsterId,
       spawntime: args.spawntime,
     },
     buffer

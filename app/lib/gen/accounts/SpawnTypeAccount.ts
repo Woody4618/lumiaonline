@@ -5,19 +5,19 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface SpawnTypeAccountFields {
-  monsterId: string
+  monsterType: PublicKey
   spawntime: BN
   lastKilled: BN | null
 }
 
 export interface SpawnTypeAccountJSON {
-  monsterId: string
+  monsterType: string
   spawntime: string
   lastKilled: string | null
 }
 
 export class SpawnTypeAccount {
-  readonly monsterId: string
+  readonly monsterType: PublicKey
   readonly spawntime: BN
   readonly lastKilled: BN | null
 
@@ -26,13 +26,13 @@ export class SpawnTypeAccount {
   ])
 
   static readonly layout = borsh.struct([
-    borsh.str("monsterId"),
+    borsh.publicKey("monsterType"),
     borsh.i64("spawntime"),
     borsh.option(borsh.i64(), "lastKilled"),
   ])
 
   constructor(fields: SpawnTypeAccountFields) {
-    this.monsterId = fields.monsterId
+    this.monsterType = fields.monsterType
     this.spawntime = fields.spawntime
     this.lastKilled = fields.lastKilled
   }
@@ -79,7 +79,7 @@ export class SpawnTypeAccount {
     const dec = SpawnTypeAccount.layout.decode(data.slice(8))
 
     return new SpawnTypeAccount({
-      monsterId: dec.monsterId,
+      monsterType: dec.monsterType,
       spawntime: dec.spawntime,
       lastKilled: dec.lastKilled,
     })
@@ -87,7 +87,7 @@ export class SpawnTypeAccount {
 
   toJSON(): SpawnTypeAccountJSON {
     return {
-      monsterId: this.monsterId,
+      monsterType: this.monsterType.toString(),
       spawntime: this.spawntime.toString(),
       lastKilled: (this.lastKilled && this.lastKilled.toString()) || null,
     }
@@ -95,7 +95,7 @@ export class SpawnTypeAccount {
 
   static fromJSON(obj: SpawnTypeAccountJSON): SpawnTypeAccount {
     return new SpawnTypeAccount({
-      monsterId: obj.monsterId,
+      monsterType: new PublicKey(obj.monsterType),
       spawntime: new BN(obj.spawntime),
       lastKilled: (obj.lastKilled && new BN(obj.lastKilled)) || null,
     })
