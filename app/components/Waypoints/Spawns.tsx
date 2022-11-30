@@ -6,7 +6,11 @@ import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
 import { getMonsterSpawns } from "lib/program-utils"
-import { MonsterSpawnAccount, CharacterAccount } from "lib/gen/accounts"
+import {
+  MonsterSpawnAccount,
+  CharacterAccount,
+  MonsterTypeAccount,
+} from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
@@ -15,12 +19,13 @@ import { PublicKey } from "@solana/web3.js"
 type SpawnInstanceResponse = {
   pubkey: web3.PublicKey
   account: MonsterSpawnAccount
+  monster: MonsterTypeAccount
 }
 
 export function Spawns() {
   const { connection } = useConnection()
   const { publicKey, sendTransaction } = useWallet()
-  const [monsterSpawns, setSpawnInstance] =
+  const [monsterSpawns, setMonsterSpawns] =
     useState<SpawnInstanceResponse[]>(null)
 
   const { selectedCharacter } = useContext(characterContext)
@@ -30,7 +35,21 @@ export function Spawns() {
       if (connection) {
         const monsterSpawns = await getMonsterSpawns(connection)
 
-        setSpawnInstance(monsterSpawns)
+        const withMonster = await Promise.all(
+          monsterSpawns.map(async (spawn) => {
+            const monster = await MonsterTypeAccount.fetch(
+              connection,
+              spawn.account.monsterType
+            )
+
+            const withMonster = Object.assign(spawn, {
+              monster,
+            })
+            return withMonster
+          })
+        )
+
+        setMonsterSpawns(withMonster)
       }
     })()
   }, [connection])
@@ -61,34 +80,42 @@ export function Spawns() {
     const tx = web3.Transaction.from(rawTx.data)
 
     const loadingToast = toast.loading("Awaiting approval...")
-    const txid = await sendTransaction(tx, connection)
 
-    toast.loading("Confirming transaction...", {
-      id: loadingToast,
-    })
+    try {
+      const txid = await sendTransaction(tx, connection)
 
-    const characterPubKey = new PublicKey(characterAddress)
-    const previousCharacterAccount = CharacterAccount.decode(
-      (await connection.getAccountInfo(characterPubKey)).data
-    )
-
-    const latest = await connection.getLatestBlockhash("confirmed")
-    await connection.confirmTransaction({
-      blockhash: latest.blockhash,
-      lastValidBlockHeight: latest.lastValidBlockHeight,
-      signature: txid,
-    })
-
-    const newCharacterAcc = CharacterAccount.decode(
-      (await connection.getAccountInfo(characterPubKey)).data
-    )
-
-    if (newCharacterAcc.deaths > previousCharacterAccount.deaths) {
-      toast.error("died ", {
+      toast.loading("Confirming transaction...", {
         id: loadingToast,
       })
-    } else {
-      toast.success("won", {
+
+      const characterPubKey = new PublicKey(characterAddress)
+      const previousCharacterAccount = CharacterAccount.decode(
+        (await connection.getAccountInfo(characterPubKey)).data
+      )
+
+      const latest = await connection.getLatestBlockhash("confirmed")
+      await connection.confirmTransaction({
+        blockhash: latest.blockhash,
+        lastValidBlockHeight: latest.lastValidBlockHeight,
+        signature: txid,
+      })
+
+      const newCharacterAcc = CharacterAccount.decode(
+        (await connection.getAccountInfo(characterPubKey)).data
+      )
+
+      if (newCharacterAcc.deaths > previousCharacterAccount.deaths) {
+        toast.error("died ", {
+          id: loadingToast,
+        })
+      } else {
+        toast.success("won", {
+          id: loadingToast,
+        })
+      }
+    } catch (e) {
+      console.log(e)
+      toast.error(e + "", {
         id: loadingToast,
       })
     }
@@ -112,7 +139,11 @@ export function Spawns() {
       >
         {monsterSpawns ? (
           monsterSpawns.map(
-            ({ account: { lastKilled, monsterType, spawntime }, pubkey }) => {
+            ({
+              account: { lastKilled, spawntime, monsterType },
+              monster,
+              pubkey,
+            }) => {
               return (
                 <Flex
                   sx={{
@@ -126,9 +157,7 @@ export function Spawns() {
                   }}
                   key={pubkey.toString()}
                 >
-                  <Heading variant="heading2">
-                    {monsterType.toString().slice(0, 6)}
-                  </Heading>
+                  <Heading variant="heading2">{monster.name}</Heading>
                   {/* <img
                   sx={{
                     maxWidth: "8rem",
@@ -143,9 +172,9 @@ export function Spawns() {
                       alignItems: "flex-start",
                     }}
                   >
-                    {/* <Text>
-                      Hitpoints: {monster.account.hitpoints.toNumber()}
-                    </Text> */}
+                    <Text>Hitpoints: {monster.hitpoints.toNumber()}</Text>
+                    <Text>meleeSkill: {monster.meleeSkill}</Text>
+                    <Text>Spawntime: {spawntime.toNumber()}</Text>
                   </Flex>
                   <form sx={{}} onSubmit={handleJoinFormSubmit}>
                     <input
