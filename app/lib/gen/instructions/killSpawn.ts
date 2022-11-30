@@ -6,7 +6,7 @@ import { PROGRAM_ID } from "../programId"
 
 export interface KillSpawnAccounts {
   monsterType: PublicKey
-  spawnInstance: PublicKey
+  monsterSpawn: PublicKey
   owner: PublicKey
   clock: PublicKey
   systemProgram: PublicKey
@@ -15,7 +15,7 @@ export interface KillSpawnAccounts {
 export function killSpawn(accounts: KillSpawnAccounts) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.monsterType, isSigner: false, isWritable: true },
-    { pubkey: accounts.spawnInstance, isSigner: false, isWritable: true },
+    { pubkey: accounts.monsterSpawn, isSigner: false, isWritable: true },
     { pubkey: accounts.owner, isSigner: true, isWritable: true },
     { pubkey: accounts.clock, isSigner: false, isWritable: false },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
