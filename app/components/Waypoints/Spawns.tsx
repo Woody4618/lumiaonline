@@ -5,12 +5,13 @@ import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
 import { getCharacterAddress, getSpawnInstances } from "lib/program-utils"
-import { SpawnTypeAccount } from "lib/gen/accounts"
+import { MonsterTypeAccount, SpawnTypeAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import { killSpawn } from "lib/gen/instructions"
+import { PublicKey } from "@solana/web3.js"
 
 type SpawnInstanceResponse = {
   pubkey: web3.PublicKey
@@ -39,22 +40,19 @@ export function Spawns() {
     e.preventDefault()
 
     const data = new FormData(e.currentTarget)
-    const monsterName = data.get("monster_name").toString()
+    const monsterTypeKey = new PublicKey(data.get("monster_type").toString())
     if (!selectedCharacter) throw new Error("Select a character first")
 
-    const monsterType = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("monster_type"), Buffer.from(monsterName)],
-      PROGRAM_ID
-    )[0]
+    const monster = await MonsterTypeAccount.fetch(connection, monsterTypeKey)
 
     const spawnInstance = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("spawn_instance"), Buffer.from(monsterName)],
+      [Buffer.from("spawn_instance"), Buffer.from(monster.name)],
       PROGRAM_ID
     )[0]
 
     const ix = killSpawn({
       spawnInstance,
-      monsterType,
+      monsterType: monsterTypeKey,
       owner: publicKey,
       systemProgram: web3.SystemProgram.programId,
       clock: web3.SYSVAR_CLOCK_PUBKEY,
@@ -88,7 +86,7 @@ export function Spawns() {
       >
         {spawnInstance ? (
           spawnInstance.map(
-            ({ account: { lastKilled, monsterId, spawntime }, pubkey }) => {
+            ({ account: { lastKilled, monsterType, spawntime }, pubkey }) => {
               return (
                 <Flex
                   sx={{
@@ -102,7 +100,7 @@ export function Spawns() {
                   }}
                   key={pubkey.toString()}
                 >
-                  <Heading variant="heading2">{monsterId}</Heading>
+                  <Heading variant="heading2">{monsterType.toString()}</Heading>
                   {/* <img
                   sx={{
                     maxWidth: "8rem",
@@ -124,8 +122,8 @@ export function Spawns() {
                   <form sx={{}} onSubmit={handleJoinFormSubmit}>
                     <input
                       type="hidden"
-                      name="monster_name"
-                      value={monsterId}
+                      name="monster_type"
+                      value={monsterType.toString()}
                     />
                     <Button type="submit" mt="1.6rem">
                       Kill

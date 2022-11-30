@@ -131,7 +131,6 @@ describe("chainquest", () => {
 
         const ix = createSpawnInstance(
           {
-            monsterId: monsterName,
             spawntime: new anchor.BN(spawntime),
           },
           {

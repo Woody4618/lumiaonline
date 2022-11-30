@@ -17,9 +17,9 @@ pub struct BattleAccount {
 }
 
 #[account]
-// Spawn Type is a type of monster that can be spawned in a certain time interval
+// Spawn is an account used in battles that is spawning a Monster Type in a certain time interval
 pub struct SpawnTypeAccount {
-    pub monster_id: String,
+    pub monster_type: Pubkey,
     pub spawntime: i64,
     // defines the last time the monster was killed. this is used to determine if the monster can join a battle or not
     pub last_killed: Option<i64>,

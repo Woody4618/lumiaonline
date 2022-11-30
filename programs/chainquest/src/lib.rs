@@ -62,13 +62,9 @@ pub mod chainquest {
         Ok(())
     }
 
-    pub fn create_spawn_instance(
-        ctx: Context<CreateSpawnType>,
-        monster_id: String,
-        spawntime: i64
-    ) -> Result<()> {
+    pub fn create_spawn_instance(ctx: Context<CreateSpawnType>, spawntime: i64) -> Result<()> {
         let spawn_instance = SpawnTypeAccount {
-            monster_id,
+            monster_type: ctx.accounts.monster_type.key(),
             spawntime,
             last_killed: None,
         };
@@ -152,18 +148,18 @@ pub mod chainquest {
 }
 
 #[derive(Accounts)]
-#[instruction(monster_id: String,spawntime: i64,)]
+#[instruction(spawntime: i64)]
 pub struct CreateSpawnType<'info> {
     #[account(
         init,
-        seeds = [b"spawn_instance".as_ref(), monster_id.as_ref()],
+        seeds = [b"spawn_instance".as_ref(), monster_type.name.as_ref()],
         bump,
         payer = signer,
         space = 8 + size_of::<SpawnTypeAccount>()
     )]
     pub spawn_instance: Account<'info, SpawnTypeAccount>,
 
-    #[account(seeds = [b"monster_type".as_ref(), monster_id.as_ref()], bump)]
+    #[account(mut)]
     pub monster_type: Account<'info, MonsterTypeAccount>,
 
     #[account(mut)]
