@@ -47,7 +47,7 @@ export default function Play() {
   }, [effectsAudioRef.current])
 
   const handleModalToggle = () => {
-    setIsModalOpen((prev) => !prev)
+    // setIsModalOpen((prev) => !prev)
   }
 
   const handleEffectsAudioPlay = () => {
@@ -129,7 +129,7 @@ export default function Play() {
         flex: 1,
       }}
     >
-      <Flex
+      {/* <Flex
         sx={{
           background: "background2",
           zIndex: 10,
@@ -179,7 +179,6 @@ export default function Play() {
                   maxHeight: "4.8rem",
                 }}
               />
-              {/* <Text mr="1.6rem">{selectedCharacter.account.name}</Text> */}
             </Flex>
             <Heading
               sx={{
@@ -193,9 +192,7 @@ export default function Play() {
             >
               {publicKey ? `Gm,` : `Gm`}
               &nbsp;{selectedCharacter && selectedCharacter?.account?.name}.
-              {/* <Text ml="1.6rem" variant="small">
-                You're in <b>Teristraz</b>
-              </Text> */}
+           
             </Heading>
           </Flex>
           <Text
@@ -213,10 +210,9 @@ export default function Play() {
           </Text>
           <WalletManager />
         </Flex>
-      </Flex>
+      </Flex> */}
 
-      {/** Mobile status bar */}
-      <Heading
+      {/* <Heading
         sx={{
           display: "flex",
           alignItems: "center",
@@ -230,11 +226,10 @@ export default function Play() {
       >
         {publicKey ? `Gm, ` : `Gm`}
         <Text variant="heading3">
-          {/* {publicKey ? publicKey?.toString().slice(0, 6) + "..." : null}; */}
           {selectedCharacter && selectedCharacter?.account?.name}. You're in
           Teristraz
         </Text>
-      </Heading>
+      </Heading> */}
 
       <Flex
         sx={{
