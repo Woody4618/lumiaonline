@@ -5,22 +5,34 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface MonsterTypeAccountFields {
-  config: types.MonsterConfigFields
+  name: string
+  hitpoints: BN
+  meleeSkill: number
 }
 
 export interface MonsterTypeAccountJSON {
-  config: types.MonsterConfigJSON
+  name: string
+  hitpoints: string
+  meleeSkill: number
 }
 
 export class MonsterTypeAccount {
-  readonly config: types.MonsterConfig
+  readonly name: string
+  readonly hitpoints: BN
+  readonly meleeSkill: number
 
   static readonly discriminator = Buffer.from([124, 151, 222, 83, 50, 9, 6, 7])
 
-  static readonly layout = borsh.struct([types.MonsterConfig.layout("config")])
+  static readonly layout = borsh.struct([
+    borsh.str("name"),
+    borsh.u64("hitpoints"),
+    borsh.u8("meleeSkill"),
+  ])
 
   constructor(fields: MonsterTypeAccountFields) {
-    this.config = new types.MonsterConfig({ ...fields.config })
+    this.name = fields.name
+    this.hitpoints = fields.hitpoints
+    this.meleeSkill = fields.meleeSkill
   }
 
   static async fetch(
@@ -65,19 +77,25 @@ export class MonsterTypeAccount {
     const dec = MonsterTypeAccount.layout.decode(data.slice(8))
 
     return new MonsterTypeAccount({
-      config: types.MonsterConfig.fromDecoded(dec.config),
+      name: dec.name,
+      hitpoints: dec.hitpoints,
+      meleeSkill: dec.meleeSkill,
     })
   }
 
   toJSON(): MonsterTypeAccountJSON {
     return {
-      config: this.config.toJSON(),
+      name: this.name,
+      hitpoints: this.hitpoints.toString(),
+      meleeSkill: this.meleeSkill,
     }
   }
 
   static fromJSON(obj: MonsterTypeAccountJSON): MonsterTypeAccount {
     return new MonsterTypeAccount({
-      config: types.MonsterConfig.fromJSON(obj.config),
+      name: obj.name,
+      hitpoints: new BN(obj.hitpoints),
+      meleeSkill: obj.meleeSkill,
     })
   }
 }
