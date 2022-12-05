@@ -15,7 +15,6 @@ import { useEffect, useState } from "react"
 import { Heading, Flex, Text } from "theme-ui"
 import { CharacterAccount } from "lib/gen/accounts"
 import { PublicKey } from "@solana/web3.js"
-import toast from "react-hot-toast"
 import Head from "next/head"
 
 type Character = CharacterAccount & {
@@ -32,7 +31,6 @@ const CharacterPage: NextPage = () => {
   useEffect(() => {
     ;(async () => {
       if (connection && !character) {
-        const toastId = toast.loading("Loading character...")
         try {
           const character = await CharacterAccount.fetch(
             connection,
@@ -48,10 +46,6 @@ const CharacterPage: NextPage = () => {
               .run()
 
             setCharacter(Object.assign(character, { nft }))
-
-            toast.success("Success", {
-              id: toastId,
-            })
           }
         } catch (e) {
           console.error(e)
