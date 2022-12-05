@@ -15,18 +15,18 @@ import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { useContext, useEffect, useRef, useState } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
-import { ArrowLeftIcon, BackIcon, WildernessIcon } from "@/components/icons"
+import { ArrowLeftIcon, SettingsIcon } from "@/components/icons"
 import WayPoints from "components/Waypoints"
 import { useRouter } from "next/router"
+import { Modal } from "@/components/Modal/Modal"
 
 export default function Play() {
-  const { publicKey, wallet, autoConnect, isWalletReady } = useWalletWrapper()
-  const { selectedCharacter, characters, setSelectedCharacter, isLoading } =
-    useContext(characterContext)
+  const { publicKey, isWalletReady } = useWalletWrapper()
+  const { selectedCharacter, isLoading } = useContext(characterContext)
   const { query } = useRouter()
   const backgroundAudioRef = useRef<HTMLAudioElement>(null)
   const effectsAudioRef = useRef<HTMLAudioElement>(null)
-  const [isModalOpen, setIsModalOpen] = useState(true)
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
 
   // const isOnboarding = !localStorage.getItem('onboardDone')
 
@@ -45,10 +45,6 @@ export default function Play() {
       }
     }
   }, [effectsAudioRef.current])
-
-  const handleModalToggle = () => {
-    // setIsModalOpen((prev) => !prev)
-  }
 
   const handleEffectsAudioPlay = () => {
     if (effectsAudioRef.current) {
@@ -129,107 +125,61 @@ export default function Play() {
         flex: 1,
       }}
     >
-      {/* <Flex
+      <Flex
         sx={{
-          background: "background2",
-          zIndex: 10,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          maxWidth: "64rem",
+          margin: "0 auto",
           alignSelf: "stretch",
-          justifyContent: "center",
+          justifyContent: "flex-end",
+          padding: "1.6rem 0",
           minHeight: "6.4rem",
+          zIndex: 10,
         }}
       >
-        <Flex
-          sx={{
-            alignItems: "center",
-            padding: ".8rem 0",
-            gap: "4.8rem",
-          }}
-        >
+        <a onClick={() => setIsSettingsModalOpen(true)}>
+          <SettingsIcon />
+        </a>
+        <Modal isOpen={isSettingsModalOpen} setIsOpen={setIsSettingsModalOpen}>
           <Flex
             sx={{
               alignItems: "center",
-              gap: ".8rem",
+              flexDirection: "column",
+              padding: ".8rem 0",
+              gap: "1.6rem",
             }}
           >
-            <Link href="/" passHref>
-              <a
-                sx={{
-                  alignItems: "center",
-                  display: "flex",
-                }}
-              >
-                <ArrowLeftIcon
-                  sx={{
-                    width: "2.4rem",
-                    height: "2.4rem",
-                  }}
-                />
-              </a>
-            </Link>
             <Flex
               sx={{
                 alignItems: "center",
-                gap: "1.6rem",
-                marginRight: ".8rem",
+                gap: ".8rem",
               }}
             >
-              <img
-                src={selectedCharacter.nft.json.image}
-                sx={{
-                  maxHeight: "4.8rem",
-                }}
-              />
+              <Link href="/" passHref>
+                <a
+                  sx={{
+                    alignItems: "center",
+                    display: "flex",
+                    gap: ".8rem",
+                  }}
+                >
+                  <ArrowLeftIcon
+                    sx={{
+                      width: "2.4rem",
+                      height: "2.4rem",
+                    }}
+                  />
+                  Return to home
+                </a>
+              </Link>
             </Flex>
-            <Heading
-              sx={{
-                display: "none",
-                "@media screen and (min-width: 768px)": {
-                  display: "flex",
-                  alignItems: "center",
-                },
-              }}
-              variant="heading2"
-            >
-              {publicKey ? `Gm,` : `Gm`}
-              &nbsp;{selectedCharacter && selectedCharacter?.account?.name}.
-           
-            </Heading>
+            <WalletManager />
           </Flex>
-          <Text
-            sx={{
-              color: "#4bd84b",
-              display: "none",
-
-              "@media (min-width: 768px)": {
-                display: "flex",
-              },
-            }}
-            variant="xsmall"
-          >
-            &#8226;&nbsp;21 players online
-          </Text>
-          <WalletManager />
-        </Flex>
-      </Flex> */}
-
-      {/* <Heading
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          zIndex: 9,
-
-          "@media screen and (min-width: 768px)": {
-            display: "none",
-          },
-        }}
-        variant="heading2"
-      >
-        {publicKey ? `Gm, ` : `Gm`}
-        <Text variant="heading3">
-          {selectedCharacter && selectedCharacter?.account?.name}. You're in
-          Teristraz
-        </Text>
-      </Heading> */}
+        </Modal>
+      </Flex>
 
       <Flex
         sx={{
@@ -244,31 +194,7 @@ export default function Play() {
         }}
       >
         {/** Waypoints modal */}
-        <Flex
-          sx={{
-            display: isModalOpen ? "flex" : "none",
-
-            flexDirection: "column",
-            padding: "1.6rem",
-            listStyle: "none",
-            gap: "1.6rem",
-            borderRight: "1px solid",
-            borderColor: "background2",
-            alignSelf: "flex-start",
-
-            position: "absolute",
-            top: "12rem",
-            margin: "0 auto",
-            flex: 0,
-            background: "background",
-            boxShadow: "0px 4px 4px rgba(0,0,0,0.25)",
-            zIndex: 9,
-
-            "@media (min-width: 768px)": {
-              minWidth: "64rem",
-            },
-          }}
-        >
+        <Modal isOpen={true}>
           <Heading variant="heading3">
             You're&nbsp;
             <Text
@@ -474,7 +400,7 @@ export default function Play() {
             </Flex>
             {currentWaypoint ? <WaypointComponent /> : null}
           </Flex>
-        </Flex>
+        </Modal>
         <Flex
           sx={{
             order: 1,
@@ -489,30 +415,10 @@ export default function Play() {
             sx={{
               cursor: "pointer",
             }}
-            onClick={handleModalToggle}
             src="/assets/teristraz.png"
           />
         </Flex>
       </Flex>
-
-      {/** Background Blur */}
-      <div
-        onClick={handleModalToggle}
-        sx={{
-          display: isModalOpen ? "block" : "none",
-          "::before": {
-            content: "''",
-            position: "fixed",
-            backgroundColor: "background",
-            zIndex: 8,
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            opacity: 0.3,
-          },
-        }}
-      ></div>
 
       {/** Audio stuff */}
 
