@@ -74,7 +74,7 @@ pub mod chainquest {
         Ok(())
     }
 
-    // battle between a character and a monster spawn
+    /// battle between a character and a monster spawn
     pub fn join_battle(ctx: Context<JoinBattle>, battle_turns: Vec<BattleTurn>) -> Result<()> {
         // if there is last_killed, then validate the timestamp
         if ctx.accounts.monster_spawn.last_killed.is_some() {
@@ -92,11 +92,6 @@ pub mod chainquest {
         let last_turn = battle_turns.last().unwrap();
 
         if last_turn.character_hitpoints <= 0 {
-            // ctx.accounts.character.deaths.push(Death {
-            //     monster_id: ctx.accounts.monster_type.id.clone(),
-            //     timestamp: ctx.accounts.clock.unix_timestamp,
-            // });
-
             ctx.accounts.character.deaths += 1;
         }
 
@@ -260,7 +255,6 @@ pub const CHARACTER_PREFIX: &str = "character";
 
 #[derive(Accounts)]
 pub struct CreateCharacter<'info> {
-    // -- Basic accounts
     #[account(
         init,
         space = 8 + size_of::<CharacterAccount>(),
