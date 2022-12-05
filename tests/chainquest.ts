@@ -21,7 +21,7 @@ import { quests } from "../app/data/quests"
 import { monsters } from "../app/data/monsters"
 import { spawns } from "../app/data/spawns"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
-import { BattleAccountJSON } from "../app/lib/gen/accounts"
+import { BattleAccountJSON, MonsterTypeAccount } from "../app/lib/gen/accounts"
 import { getBattleTurns } from "../app/lib/battle"
 import { BattleTurn } from "../app/lib/gen/types"
 
@@ -87,6 +87,7 @@ describe("chainquest", () => {
             name,
             hitpoints: new anchor.BN(monsterConfig.hitpoints),
             meleeSkill: monsterConfig.meleeSkill,
+            experience: new anchor.BN(monsterConfig.experience),
           },
           {
             monsterType,
@@ -388,6 +389,10 @@ describe("chainquest", () => {
         program.programId
       )
 
+      const previousCharacterAcc = await program.account.characterAccount.fetch(
+        character
+      )
+
       const battleTurns = await getBattleTurns(
         program.provider.connection,
         character,
@@ -435,6 +440,17 @@ describe("chainquest", () => {
         expect(characterAcc.deaths).to.be.eq(1)
       } else {
         expect(characterAcc.deaths).to.be.eq(0)
+
+        const monsterTypeAcc = await MonsterTypeAccount.fetch(
+          program.provider.connection,
+          monsterType
+        )
+
+        // expect character to have gained experience
+        const expToExpect = previousCharacterAcc.experience.add(
+          monsterTypeAcc.experience
+        )
+        expect(characterAcc.experience).to.be.eq(expToExpect)
       }
 
       /** Try to kill the same spawn again */

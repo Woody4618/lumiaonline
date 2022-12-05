@@ -49,12 +49,14 @@ pub mod chainquest {
         ctx: Context<CreateMonsterType>,
         name: String,
         hitpoints: u64,
-        melee_skill: u8
+        melee_skill: u8,
+        experience: u64
     ) -> Result<()> {
         let monster_type = MonsterTypeAccount {
             name,
             hitpoints,
             melee_skill,
+            experience,
         };
 
         ctx.accounts.monster_type.set_inner(monster_type);
@@ -93,6 +95,8 @@ pub mod chainquest {
 
         if last_turn.character_hitpoints <= 0 {
             ctx.accounts.character.deaths += 1;
+        } else {
+            ctx.accounts.character.experience += ctx.accounts.monster_type.experience;
         }
 
         let battle = BattleAccount {

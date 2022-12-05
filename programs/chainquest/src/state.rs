@@ -31,6 +31,7 @@ pub struct MonsterTypeAccount {
     pub name: String,
     pub hitpoints: u64,
     pub melee_skill: u8,
+    pub experience: u64,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
