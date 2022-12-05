@@ -1,4 +1,4 @@
-import { getRandomValues } from "crypto"
+import { getRandomValues, webcrypto } from "crypto"
 import { CharacterAccount, MonsterTypeAccount } from "./gen/accounts"
 import { BN, web3 } from "@project-serum/anchor"
 import { Connection } from "@solana/web3.js"
@@ -6,7 +6,8 @@ import { Connection } from "@solana/web3.js"
 const getRandomBetween = (min: number, max: number) => {
   return (
     (min +
-      ((max - min + 1) * getRandomValues(new Uint32Array(1))[0]) / 2 ** 32) |
+      ((max - min + 1) * webcrypto.getRandomValues(new Uint32Array(1))[0]) /
+        2 ** 32) |
     0
   )
 }
