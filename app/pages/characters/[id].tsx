@@ -61,7 +61,13 @@ const CharacterPage: NextPage = () => {
       </Head>
       <Layout>
         {character ? (
-          <>
+          <Flex
+            sx={{
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Flex
               mb=".8rem"
               sx={{
@@ -95,6 +101,7 @@ const CharacterPage: NextPage = () => {
                   sx={{
                     alignItems: "center",
                     justifyContent: "space-between",
+                    gap: '5rem'
                   }}
                 >
                   <Text>Attribute</Text>
@@ -110,9 +117,12 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
+                      gap: '5rem'
                     }}
                   >
-                    <Text variant="small" color="lightText">Experience</Text>
+                    <Text variant="small" color="lightText">
+                      Experience
+                    </Text>
                     <Text variant="small">
                       {character.experience.toString()}
                     </Text>
@@ -121,9 +131,12 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
+                      gap: '5rem'
                     }}
                   >
-                    <Text variant="small" color="lightText">Hitpoints</Text>
+                    <Text variant="small" color="lightText">
+                      Hitpoints
+                    </Text>
                     <Text variant="small">
                       {character.hitpoints.toString()}
                     </Text>
@@ -132,18 +145,24 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
+                      gap: '5rem'
                     }}
                   >
-                    <Text variant="small" color="lightText">Deaths</Text>
+                    <Text variant="small" color="lightText">
+                      Deaths
+                    </Text>
                     <Text variant="small">{character.deaths.toString()}</Text>
                   </Flex>
                   <Flex
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
+                      gap: '5rem'
                     }}
                   >
-                    <Text variant="small" color="lightText">Melee Skill</Text>
+                    <Text variant="small" color="lightText">
+                      Melee Skill
+                    </Text>
                     <Text variant="small">
                       {character.meleeSkill.toString()}
                     </Text>
@@ -152,9 +171,12 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
+                      gap: '5rem'
                     }}
                   >
-                    <Text variant="small" color="lightText">In Quest</Text>
+                    <Text variant="small" color="lightText">
+                      In Quest
+                    </Text>
                     <Text variant="small">
                       {character.questState ? "true" : "false"}
                     </Text>
@@ -162,7 +184,7 @@ const CharacterPage: NextPage = () => {
                 </Flex>
               </Flex>
             </Flex>
-          </>
+          </Flex>
         ) : (
           <LoadingIcon />
         )}
