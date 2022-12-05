@@ -105,11 +105,15 @@ export function Spawns() {
       )
 
       if (newCharacterAcc.deaths > previousCharacterAccount.deaths) {
-        toast.error("died ", {
+        toast.error("Died ", {
           id: loadingToast,
         })
       } else {
-        toast.success("won", {
+        const monsterAcc = await MonsterTypeAccount.fetch(
+          connection,
+          monsterTypeKey
+        )
+        toast.success(`Won. +${monsterAcc.experience.toNumber()} exp`, {
           id: loadingToast,
         })
       }
