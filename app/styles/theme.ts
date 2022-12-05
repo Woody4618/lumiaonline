@@ -28,6 +28,7 @@ const theme: Theme = {
     heading: "rgb(226, 217, 211)",
     background2: "#1E1E24",
     backgroundGradient: getGradient("rgb(24, 19, 19)"),
+    lightText: "rgba(226, 217, 211, 0.5)",
     // modes: {
     //   light: {
     //     background: "rgb(226, 217, 211)",

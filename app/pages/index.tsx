@@ -153,11 +153,6 @@ export default function Home() {
             flexDirection: "column",
 
             position: "relative",
-
-            "@media (min-width: 768px)": {
-              /** Workaround to keep it centralized in relation to the mennu */
-              marginLeft: "-13rem",
-            },
           }}
         >
           <Heading mb="1.6rem" variant="heading2">
