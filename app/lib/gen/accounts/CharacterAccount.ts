@@ -10,6 +10,7 @@ export interface CharacterAccountFields {
   name: string
   experience: BN
   hitpoints: BN
+  /** pub deaths: Vec<Death>, */
   deaths: number
   questState: types.CharacterQuestStateFields | null
   meleeSkill: number
@@ -21,6 +22,7 @@ export interface CharacterAccountJSON {
   name: string
   experience: string
   hitpoints: string
+  /** pub deaths: Vec<Death>, */
   deaths: number
   questState: types.CharacterQuestStateJSON | null
   meleeSkill: number
@@ -32,6 +34,7 @@ export class CharacterAccount {
   readonly name: string
   readonly experience: BN
   readonly hitpoints: BN
+  /** pub deaths: Vec<Death>, */
   readonly deaths: number
   readonly questState: types.CharacterQuestState | null
   readonly meleeSkill: number

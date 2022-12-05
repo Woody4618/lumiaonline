@@ -7,18 +7,22 @@ import { PROGRAM_ID } from "../programId"
 export interface MonsterSpawnAccountFields {
   monsterType: PublicKey
   spawntime: BN
+  /** defines the last time the monster was killed. this is used to determine if the monster can join a battle or not */
   lastKilled: BN | null
 }
 
 export interface MonsterSpawnAccountJSON {
   monsterType: string
   spawntime: string
+  /** defines the last time the monster was killed. this is used to determine if the monster can join a battle or not */
   lastKilled: string | null
 }
 
+/** Monster Spawn is an account used in battles that is spawning a Monster Type in a certain time interval */
 export class MonsterSpawnAccount {
   readonly monsterType: PublicKey
   readonly spawntime: BN
+  /** defines the last time the monster was killed. this is used to determine if the monster can join a battle or not */
   readonly lastKilled: BN | null
 
   static readonly discriminator = Buffer.from([

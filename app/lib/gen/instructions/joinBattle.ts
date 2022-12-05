@@ -22,6 +22,7 @@ export const layout = borsh.struct([
   borsh.vec(types.BattleTurn.layout(), "battleTurns"),
 ])
 
+/** battle between a character and a monster spawn */
 export function joinBattle(args: JoinBattleArgs, accounts: JoinBattleAccounts) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.monsterType, isSigner: false, isWritable: true },

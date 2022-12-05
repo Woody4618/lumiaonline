@@ -14,6 +14,7 @@ export interface BattleAccountJSON {
   participants: Array<string>
 }
 
+/** Holds information about a battle between a character and a monster */
 export class BattleAccount {
   readonly battleTurns: Array<types.BattleTurn>
   readonly participants: Array<PublicKey>

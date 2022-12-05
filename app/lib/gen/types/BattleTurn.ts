@@ -17,6 +17,7 @@ export interface BattleTurnJSON {
   monsterHitpoints: string
 }
 
+/** Contains information about a single battle turn between a character and a monster */
 export class BattleTurn {
   readonly characterDamage: BN
   readonly monsterDamage: BN

@@ -8,18 +8,22 @@ export interface MonsterTypeAccountFields {
   name: string
   hitpoints: BN
   meleeSkill: number
+  experience: BN
 }
 
 export interface MonsterTypeAccountJSON {
   name: string
   hitpoints: string
   meleeSkill: number
+  experience: string
 }
 
+/** Monster Type is a type of monster that can be spawned. It holds all information about a monster */
 export class MonsterTypeAccount {
   readonly name: string
   readonly hitpoints: BN
   readonly meleeSkill: number
+  readonly experience: BN
 
   static readonly discriminator = Buffer.from([124, 151, 222, 83, 50, 9, 6, 7])
 
@@ -27,12 +31,14 @@ export class MonsterTypeAccount {
     borsh.str("name"),
     borsh.u64("hitpoints"),
     borsh.u8("meleeSkill"),
+    borsh.u64("experience"),
   ])
 
   constructor(fields: MonsterTypeAccountFields) {
     this.name = fields.name
     this.hitpoints = fields.hitpoints
     this.meleeSkill = fields.meleeSkill
+    this.experience = fields.experience
   }
 
   static async fetch(
@@ -80,6 +86,7 @@ export class MonsterTypeAccount {
       name: dec.name,
       hitpoints: dec.hitpoints,
       meleeSkill: dec.meleeSkill,
+      experience: dec.experience,
     })
   }
 
@@ -88,6 +95,7 @@ export class MonsterTypeAccount {
       name: this.name,
       hitpoints: this.hitpoints.toString(),
       meleeSkill: this.meleeSkill,
+      experience: this.experience.toString(),
     }
   }
 
@@ -96,6 +104,7 @@ export class MonsterTypeAccount {
       name: obj.name,
       hitpoints: new BN(obj.hitpoints),
       meleeSkill: obj.meleeSkill,
+      experience: new BN(obj.experience),
     })
   }
 }

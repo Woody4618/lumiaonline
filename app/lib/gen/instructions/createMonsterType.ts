@@ -8,6 +8,7 @@ export interface CreateMonsterTypeArgs {
   name: string
   hitpoints: BN
   meleeSkill: number
+  experience: BN
 }
 
 export interface CreateMonsterTypeAccounts {
@@ -20,6 +21,7 @@ export const layout = borsh.struct([
   borsh.str("name"),
   borsh.u64("hitpoints"),
   borsh.u8("meleeSkill"),
+  borsh.u64("experience"),
 ])
 
 export function createMonsterType(
@@ -38,6 +40,7 @@ export function createMonsterType(
       name: args.name,
       hitpoints: args.hitpoints,
       meleeSkill: args.meleeSkill,
+      experience: args.experience,
     },
     buffer
   )
