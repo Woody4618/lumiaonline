@@ -18,6 +18,7 @@ import { Layout } from "@/components/Layout/Layout"
 
 import { TableColumn } from "react-data-table-component"
 import { DataTable } from "@/components/DataTable/DataTable"
+import Link from "next/link"
 
 const columns: TableColumn<CharacterResponse>[] = [
   {
@@ -38,6 +39,23 @@ const columns: TableColumn<CharacterResponse>[] = [
     name: "Name",
     selector: (row) => row.account.name.toString(),
     sortable: true,
+    cell: (row) => {
+      return (
+        <>
+          <Link href={`/characters/${row.pubkey}`}>
+            <a>
+              <Text
+                sx={{
+                  cursor: "pointer",
+                }}
+              >
+                {row.account.name.toString()}
+              </Text>
+            </a>
+          </Link>
+        </>
+      )
+    },
   },
   {
     name: "Experience",
@@ -55,6 +73,8 @@ type CharacterResponse = {
 export default function Characters() {
   const { connection } = useConnection()
   const [characters, setCharacters] = useState<CharacterResponse[]>(null)
+
+  console.log(characters)
 
   useEffect(() => {
     ;(async () => {

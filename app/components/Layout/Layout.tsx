@@ -89,9 +89,7 @@ export function Layout({
           <Flex
             sx={{
               flexDirection: "column",
-              /** Workaround to keep it centralized in relation to the mennu */
-              marginLeft: type === "default" ? "-13rem" : "0",
-
+              marginLeft: "0",
               paddingTop: type === "default" ? "4rem" : "0",
               position: "relative",
             }}
