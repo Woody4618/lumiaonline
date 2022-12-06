@@ -112,7 +112,7 @@ export function Dungeons() {
                 <Heading variant="heading2">{questData.name}</Heading>
                 <img
                   sx={{
-                    maxWidth: "32rem",
+                    maxWidth: "16rem",
                     borderRadius: ".4rem",
                   }}
                   src={questData.image}
@@ -148,7 +148,15 @@ export function Dungeons() {
             )
           })
         ) : (
-          <LoadingIcon />
+          <Text
+            sx={{
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <LoadingIcon />
+          </Text>
         )}
       </Flex>
     </Flex>

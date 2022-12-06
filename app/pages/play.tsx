@@ -195,17 +195,6 @@ export default function Play() {
       >
         {/** Waypoints modal */}
         <Modal isOpen={true}>
-          <Heading variant="heading3">
-            You're&nbsp;
-            <Text
-              sx={{
-                display: "inline-flex",
-              }}
-            >
-              In Teristraz
-            </Text>
-          </Heading>
-
           <Flex
             sx={{
               gap: "3.2rem",
@@ -220,7 +209,135 @@ export default function Play() {
             <Flex
               sx={{
                 flexDirection: "column",
+                flex: "0 20%",
+              }}
+            >
+              <Flex
+                mb=".8rem"
+                sx={{
+                  alignItems: "center",
+                }}
+              >
+                <img
+                  sx={{
+                    maxWidth: "6.4rem",
+                    borderRadius: ".4rem",
+                  }}
+                  src={selectedCharacter.nft.json.image}
+                />
+                <Heading mb=".8rem" ml=".8rem" variant="heading1">
+                  {selectedCharacter.account.name.toString()}
+                </Heading>
+              </Flex>
+              <Flex
+                sx={{
+                  flexDirection: "column",
+                }}
+              >
+                <Flex
+                  sx={{
+                    flexDirection: "column",
+                    maxWidth: "20rem",
+                  }}
+                >
+                  <Flex
+                    mb=".4rem"
+                    sx={{
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "5rem",
+                    }}
+                  >
+                    <Text>Attribute</Text>
+                    <Text>Value</Text>
+                  </Flex>
+                  <Flex
+                    sx={{
+                      flexDirection: "column",
+                      gap: ".4rem",
+                    }}
+                  >
+                    <Flex
+                      sx={{
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "5rem",
+                      }}
+                    >
+                      <Text variant="small" color="lightText">
+                        Experience
+                      </Text>
+                      <Text variant="small">
+                        {selectedCharacter.account.experience.toString()}
+                      </Text>
+                    </Flex>
+                    <Flex
+                      sx={{
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "5rem",
+                      }}
+                    >
+                      <Text variant="small" color="lightText">
+                        Hitpoints
+                      </Text>
+                      <Text variant="small">
+                        {selectedCharacter.account.hitpoints.toString()}
+                      </Text>
+                    </Flex>
+                    <Flex
+                      sx={{
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "5rem",
+                      }}
+                    >
+                      <Text variant="small" color="lightText">
+                        Deaths
+                      </Text>
+                      <Text variant="small">
+                        {selectedCharacter.account.deaths.toString()}
+                      </Text>
+                    </Flex>
+                    <Flex
+                      sx={{
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "5rem",
+                      }}
+                    >
+                      <Text variant="small" color="lightText">
+                        Melee Skill
+                      </Text>
+                      <Text variant="small">
+                        {selectedCharacter.account.meleeSkill.toString()}
+                      </Text>
+                    </Flex>
+                    <Flex
+                      sx={{
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "5rem",
+                      }}
+                    >
+                      <Text variant="small" color="lightText">
+                        In Quest
+                      </Text>
+                      <Text variant="small">
+                        {selectedCharacter.account.questState
+                          ? "true"
+                          : "false"}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex
+              sx={{
+                flexDirection: "column",
                 gap: ".8rem",
+                flex: "0 20%",
               }}
             >
               <Link passHref href="/play">
@@ -398,7 +515,15 @@ export default function Play() {
                 </ThemeLink>
               </Link>
             </Flex>
-            {currentWaypoint ? <WaypointComponent /> : null}
+
+            <Flex
+              sx={{
+                flex: "1 auto",
+                flexDirection: "column",
+              }}
+            >
+              {currentWaypoint ? <WaypointComponent /> : null}
+            </Flex>
           </Flex>
         </Modal>
         <Flex

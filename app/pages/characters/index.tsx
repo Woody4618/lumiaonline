@@ -29,6 +29,7 @@ const columns: TableColumn<CharacterResponse>[] = [
           sx={{
             maxWidth: "6.4rem",
             borderRadius: ".4rem",
+            margin: ".8rem 0",
           }}
           src={row.nft.json.image}
         />

@@ -65,6 +65,7 @@ export function CharacterContextProvider({ children }) {
             return Object.assign(character, { nft })
           })
         )
+
         setCharacters(withNft)
 
         if (withNft.length) {

@@ -136,13 +136,14 @@ export function Spawns() {
       </Heading>
 
       <Text my="3.2rem"></Text>
-      <Flex
-        sx={{
-          gap: "1.6rem",
-        }}
-      >
-        {monsterSpawns ? (
-          monsterSpawns.map(
+
+      {monsterSpawns ? (
+        <Flex
+          sx={{
+            gap: "1.6rem",
+          }}
+        >
+          {monsterSpawns.map(
             ({
               account: { lastKilled, spawntime, monsterType },
               monster,
@@ -187,17 +188,25 @@ export function Spawns() {
                       value={monsterType.toString()}
                     />
                     <Button type="submit" mt="1.6rem">
-                      Kill
+                      Battle
                     </Button>
                   </form>
                 </Flex>
               )
             }
-          )
-        ) : (
+          )}
+        </Flex>
+      ) : (
+        <Text
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <LoadingIcon />
-        )}
-      </Flex>
+        </Text>
+      )}
     </Flex>
   )
 }

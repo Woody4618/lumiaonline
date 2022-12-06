@@ -29,6 +29,7 @@ const theme: Theme = {
     background2: "#1E1E24",
     backgroundGradient: getGradient("rgb(24, 19, 19)"),
     lightText: "rgba(226, 217, 211, 0.5)",
+    malachite: "#0BDA51",
     // modes: {
     //   light: {
     //     background: "rgb(226, 217, 211)",
@@ -211,7 +212,7 @@ const theme: Theme = {
       minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
-      scrollbarGutter: "stable both-edges",
+      // scrollbarGutter: "stable both-edges",
 
       body: {
         /** Default text styles */

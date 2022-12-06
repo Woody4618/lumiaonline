@@ -32,7 +32,7 @@ export function Modal({ children, isOpen, setIsOpen }: Props) {
           zIndex: 9,
 
           "@media (min-width: 768px)": {
-            minWidth: "64rem",
+            minWidth: "96rem",
           },
         }}
       >
