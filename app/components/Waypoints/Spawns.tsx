@@ -84,26 +84,28 @@ export function Spawns() {
     const loadingToast = toast.loading("Awaiting approval...")
 
     try {
+      const characterPubKey = new PublicKey(characterAddress)
+      const previousCharacterAccount = await CharacterAccount.fetch(
+        connection,
+        characterPubKey
+      )
+
       const txid = await sendTransaction(tx, connection)
 
       toast.loading("Confirming transaction...", {
         id: loadingToast,
       })
 
-      const characterPubKey = new PublicKey(characterAddress)
-      const previousCharacterAccount = CharacterAccount.decode(
-        (await connection.getAccountInfo(characterPubKey)).data
-      )
-
-      const latest = await connection.getLatestBlockhash("confirmed")
+      const latest = await connection.getLatestBlockhash("max")
       await connection.confirmTransaction({
         blockhash: latest.blockhash,
         lastValidBlockHeight: latest.lastValidBlockHeight,
         signature: txid,
       })
 
-      const newCharacterAcc = CharacterAccount.decode(
-        (await connection.getAccountInfo(characterPubKey)).data
+      const newCharacterAcc = await CharacterAccount.fetch(
+        connection,
+        characterPubKey
       )
 
       if (newCharacterAcc.deaths > previousCharacterAccount.deaths) {
