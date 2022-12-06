@@ -28,6 +28,8 @@ export function Spawns() {
   const [monsterSpawns, setMonsterSpawns] =
     useState<SpawnInstanceResponse[]>(null)
 
+  const { fetchCharacters } = useContext(characterContext)
+
   const { selectedCharacter } = useContext(characterContext)
 
   useEffect(() => {
@@ -117,6 +119,8 @@ export function Spawns() {
           id: loadingToast,
         })
       }
+
+      fetchCharacters()
     } catch (e) {
       console.log(e)
       toast.error(e + "", {

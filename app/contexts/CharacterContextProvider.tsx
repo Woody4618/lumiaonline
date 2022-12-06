@@ -2,6 +2,7 @@ import {
   createContext,
   Dispatch,
   SetStateAction,
+  useCallback,
   useEffect,
   useState,
 } from "react"
@@ -30,12 +31,14 @@ export const characterContext = createContext<{
   setSelectedCharacter: Dispatch<SetStateAction<CharacterApiResponseWithNft>>
   characters: CharacterApiResponseWithNft[]
   isLoading: boolean
+  fetchCharacters: () => Promise<void>
 }>({
   selectedCharacter: null,
 
   setSelectedCharacter: null,
   characters: null,
   isLoading: false,
+  fetchCharacters: null,
 })
 
 export function CharacterContextProvider({ children }) {
@@ -47,33 +50,35 @@ export function CharacterContextProvider({ children }) {
     useState<CharacterApiResponseWithNft>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const fetchCharacters = useCallback(async () => {
+    setIsLoading(true)
+    const userCharacters = await getCharacters(connection, publicKey)
+
+    const metaplex = Metaplex.make(connection)
+
+    const withNft = await Promise.all(
+      userCharacters.map(async (character) => {
+        const nft = await metaplex
+          .nfts()
+          .findByMint({ mintAddress: character.account.nftMint })
+          .run()
+
+        return Object.assign(character, { nft })
+      })
+    )
+
+    setCharacters(withNft)
+
+    if (withNft.length) {
+      setSelectedCharacter(withNft[0])
+    }
+
+    setIsLoading(false)
+  }, [isWalletReady, publicKey])
+
   useEffect(() => {
     if (isWalletReady && publicKey) {
-      ;(async () => {
-        setIsLoading(true)
-        const userCharacters = await getCharacters(connection, publicKey)
-
-        const metaplex = Metaplex.make(connection)
-
-        const withNft = await Promise.all(
-          userCharacters.map(async (character) => {
-            const nft = await metaplex
-              .nfts()
-              .findByMint({ mintAddress: character.account.nftMint })
-              .run()
-
-            return Object.assign(character, { nft })
-          })
-        )
-
-        setCharacters(withNft)
-
-        if (withNft.length) {
-          setSelectedCharacter(withNft[0])
-        }
-
-        setIsLoading(false)
-      })()
+      fetchCharacters()
     } else if (isWalletReady && !publicKey) {
       setIsLoading(false)
     }
@@ -86,6 +91,7 @@ export function CharacterContextProvider({ children }) {
         characters,
         setSelectedCharacter,
         isLoading,
+        fetchCharacters,
       }}
     >
       {children}

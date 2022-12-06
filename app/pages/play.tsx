@@ -22,7 +22,8 @@ import { Modal } from "@/components/Modal/Modal"
 
 export default function Play() {
   const { publicKey, isWalletReady } = useWalletWrapper()
-  const { selectedCharacter, isLoading } = useContext(characterContext)
+  const { selectedCharacter, isLoading: isCharacterLoading } =
+    useContext(characterContext)
   const { query } = useRouter()
   const backgroundAudioRef = useRef<HTMLAudioElement>(null)
   const effectsAudioRef = useRef<HTMLAudioElement>(null)
@@ -54,7 +55,7 @@ export default function Play() {
     }
   }
 
-  if (!isWalletReady || isLoading) {
+  if (!isWalletReady) {
     return (
       <Text
         sx={{
@@ -85,28 +86,28 @@ export default function Play() {
     )
   }
 
-  if (!selectedCharacter) {
-    return (
-      <Text
-        sx={{
-          alignItems: "center",
-          margin: "auto",
-        }}
-      >
-        Please,{" "}
-        <Link passHref href="/characters/new">
-          <a
-            sx={{
-              color: (theme) => theme.colors.primary + "!important",
-            }}
-          >
-            create a character
-          </a>
-        </Link>{" "}
-        first.
-      </Text>
-    )
-  }
+  // if (!isCharacterLoading && !selectedCharacter) {
+  //   return (
+  //     <Text
+  //       sx={{
+  //         alignItems: "center",
+  //         margin: "auto",
+  //       }}
+  //     >
+  //       Please,{" "}
+  //       <Link passHref href="/characters/new">
+  //         <a
+  //           sx={{
+  //             color: (theme) => theme.colors.primary + "!important",
+  //           }}
+  //         >
+  //           create a character
+  //         </a>
+  //       </Link>{" "}
+  //       first.
+  //     </Text>
+  //   )
+  // }
 
   const currentWaypoint = query.waypoint?.toString()
   /** Make it uppercase */
@@ -206,133 +207,137 @@ export default function Play() {
               },
             }}
           >
-            <Flex
-              sx={{
-                flexDirection: "column",
-                flex: "0 20%",
-              }}
-            >
-              <Flex
-                mb=".8rem"
-                sx={{
-                  alignItems: "center",
-                }}
-              >
-                <img
-                  sx={{
-                    maxWidth: "6.4rem",
-                    borderRadius: ".4rem",
-                  }}
-                  src={selectedCharacter.nft.json.image}
-                />
-                <Heading mb=".8rem" ml=".8rem" variant="heading1">
-                  {selectedCharacter.account.name.toString()}
-                </Heading>
-              </Flex>
+            {selectedCharacter ? (
               <Flex
                 sx={{
                   flexDirection: "column",
+                  flex: "0 20%",
                 }}
               >
                 <Flex
+                  mb=".8rem"
+                  sx={{
+                    alignItems: "center",
+                  }}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "6.4rem",
+                      borderRadius: ".4rem",
+                    }}
+                    src={selectedCharacter.nft.json.image}
+                  />
+                  <Heading mb=".8rem" ml=".8rem" variant="heading1">
+                    {selectedCharacter.account.name.toString()}
+                  </Heading>
+                </Flex>
+                <Flex
                   sx={{
                     flexDirection: "column",
-                    maxWidth: "20rem",
                   }}
                 >
                   <Flex
-                    mb=".4rem"
-                    sx={{
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: "5rem",
-                    }}
-                  >
-                    <Text>Attribute</Text>
-                    <Text>Value</Text>
-                  </Flex>
-                  <Flex
                     sx={{
                       flexDirection: "column",
-                      gap: ".4rem",
+                      maxWidth: "20rem",
                     }}
                   >
                     <Flex
+                      mb=".4rem"
                       sx={{
                         alignItems: "center",
                         justifyContent: "space-between",
                         gap: "5rem",
                       }}
                     >
-                      <Text variant="small" color="lightText">
-                        Experience
-                      </Text>
-                      <Text variant="small">
-                        {selectedCharacter.account.experience.toString()}
-                      </Text>
+                      <Text>Attribute</Text>
+                      <Text>Value</Text>
                     </Flex>
                     <Flex
                       sx={{
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "5rem",
+                        flexDirection: "column",
+                        gap: ".4rem",
                       }}
                     >
-                      <Text variant="small" color="lightText">
-                        Hitpoints
-                      </Text>
-                      <Text variant="small">
-                        {selectedCharacter.account.hitpoints.toString()}
-                      </Text>
-                    </Flex>
-                    <Flex
-                      sx={{
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "5rem",
-                      }}
-                    >
-                      <Text variant="small" color="lightText">
-                        Deaths
-                      </Text>
-                      <Text variant="small">
-                        {selectedCharacter.account.deaths.toString()}
-                      </Text>
-                    </Flex>
-                    <Flex
-                      sx={{
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "5rem",
-                      }}
-                    >
-                      <Text variant="small" color="lightText">
-                        Melee Skill
-                      </Text>
-                      <Text variant="small">
-                        {selectedCharacter.account.meleeSkill.toString()}
-                      </Text>
-                    </Flex>
-                    <Flex
-                      sx={{
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "5rem",
-                      }}
-                    >
-                      <Text variant="small" color="lightText">
-                        In Quest
-                      </Text>
-                      <Text variant="small">
-                        {selectedCharacter.account.questState
-                          ? "true"
-                          : "false"}
-                      </Text>
+                      <Flex
+                        sx={{
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "5rem",
+                        }}
+                      >
+                        <Text variant="small" color="lightText">
+                          Experience
+                        </Text>
+                        <Text variant="small">
+                          {selectedCharacter.account.experience.toString()}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        sx={{
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "5rem",
+                        }}
+                      >
+                        <Text variant="small" color="lightText">
+                          Hitpoints
+                        </Text>
+                        <Text variant="small">
+                          {selectedCharacter.account.hitpoints.toString()}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        sx={{
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "5rem",
+                        }}
+                      >
+                        <Text variant="small" color="lightText">
+                          Deaths
+                        </Text>
+                        <Text variant="small">
+                          {selectedCharacter.account.deaths.toString()}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        sx={{
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "5rem",
+                        }}
+                      >
+                        <Text variant="small" color="lightText">
+                          Melee Skill
+                        </Text>
+                        <Text variant="small">
+                          {selectedCharacter.account.meleeSkill.toString()}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        sx={{
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "5rem",
+                        }}
+                      >
+                        <Text variant="small" color="lightText">
+                          In Quest
+                        </Text>
+                        <Text variant="small">
+                          {selectedCharacter.account.questState
+                            ? "true"
+                            : "false"}
+                        </Text>
+                      </Flex>
                     </Flex>
                   </Flex>
                 </Flex>
               </Flex>
-            </Flex>
+            ) : (
+              <LoadingIcon />
+            )}
             <Flex
               sx={{
                 flexDirection: "column",
