@@ -5,6 +5,7 @@ import {
   Button,
   Flex,
   Link as ThemeLink,
+  Slider,
 } from "@theme-ui/components"
 
 import WalletConnectButton from "@/components/WalletConnectButton"
@@ -13,7 +14,7 @@ import useWalletWrapper from "@/hooks/useWalletWrapper"
 import WalletManager from "@/components/WalletManager/WalletManager"
 import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
-import { useContext, useEffect, useRef, useState } from "react"
+import { useCallback, useContext, useRef, useState } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import { ArrowLeftIcon, SettingsIcon } from "@/components/icons"
 import WayPoints from "components/Waypoints"
@@ -25,27 +26,22 @@ export default function Play() {
   const { selectedCharacter, isLoading: isCharacterLoading } =
     useContext(characterContext)
   const { query } = useRouter()
-  const backgroundAudioRef = useRef<HTMLAudioElement>(null)
-  const effectsAudioRef = useRef<HTMLAudioElement>(null)
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
+  const [audioVolume, setAudioVolume] = useState(0.4)
+  const effectsAudioRef = useRef<HTMLAudioElement>()
 
-  // const isOnboarding = !localStorage.getItem('onboardDone')
-
-  useEffect(() => {
-    if (backgroundAudioRef.current) {
-      if (backgroundAudioRef.current.volume !== 0.4) {
-        backgroundAudioRef.current.volume = 0.4
-      }
+  const backgroundRefCallback = useCallback((node) => {
+    if (node !== null && node.volume !== audioVolume) {
+      node.volume = audioVolume
     }
-  }, [backgroundAudioRef])
+  }, [])
 
-  useEffect(() => {
-    if (effectsAudioRef.current) {
-      if (effectsAudioRef.current.volume !== 0.2) {
-        effectsAudioRef.current.volume = 0.2
-      }
+  const effectsRefCallback = useCallback((node) => {
+    if (node !== null && node.volume !== 0.2) {
+      node.volume = 0.2
+      effectsAudioRef.current = node
     }
-  }, [effectsAudioRef.current])
+  }, [])
 
   const handleEffectsAudioPlay = () => {
     if (effectsAudioRef.current) {
@@ -144,7 +140,13 @@ export default function Play() {
         <a onClick={() => setIsSettingsModalOpen(true)}>
           <SettingsIcon />
         </a>
-        <Modal isOpen={isSettingsModalOpen} setIsOpen={setIsSettingsModalOpen}>
+        <Modal
+          sx={{
+            maxWidth: "64rem",
+          }}
+          isOpen={isSettingsModalOpen}
+          setIsOpen={setIsSettingsModalOpen}
+        >
           <Flex
             sx={{
               alignItems: "center",
@@ -178,6 +180,14 @@ export default function Play() {
               </Link>
             </Flex>
             <WalletManager />
+            <Heading variant="heading3">Sound</Heading>
+            <Slider
+              sx={{
+                maxWidth: "16rem",
+              }}
+              defaultValue={audioVolume * 100}
+              onChange={(e) => setAudioVolume(Number(e.target.value) / 100)}
+            />
           </Flex>
         </Modal>
       </Flex>
@@ -552,11 +562,11 @@ export default function Play() {
 
       {/** Audio stuff */}
 
-      <audio id="player" autoPlay loop ref={backgroundAudioRef}>
+      <audio id="player" autoPlay loop ref={backgroundRefCallback}>
         <source src="/assets/village_loop.wav" type="audio/mp3" />
       </audio>
 
-      <audio id="player" ref={effectsAudioRef}>
+      <audio id="player" ref={effectsRefCallback}>
         <source src="/assets/typingsfx_sound.wav" type="audio/mp3" />
       </audio>
     </Flex>

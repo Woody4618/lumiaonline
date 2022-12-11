@@ -6,9 +6,10 @@ type Props = {
   children: React.ReactNode
   isOpen: boolean
   setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  className?: string
 }
 
-export function Modal({ children, isOpen, setIsOpen }: Props) {
+export function Modal({ className, children, isOpen, setIsOpen }: Props) {
   return (
     <>
       <Flex
@@ -16,25 +17,28 @@ export function Modal({ children, isOpen, setIsOpen }: Props) {
           display: isOpen ? "flex" : "none",
 
           flexDirection: "column",
-          padding: "1.6rem",
+          padding: "3.2rem 1.6rem",
           listStyle: "none",
           gap: "1.6rem",
-          borderRight: "1px solid",
+          border: "1px solid",
           borderColor: "background2",
           alignSelf: "flex-start",
 
           position: "absolute",
           top: "12rem",
           margin: "0 auto",
+          left: 0,
+          right: 0,
           flex: 0,
           background: "background",
           boxShadow: "0px 4px 4px rgba(0,0,0,0.25)",
           zIndex: 9,
 
           "@media (min-width: 768px)": {
-            minWidth: "96rem",
+            width: "96rem",
           },
         }}
+        className={className}
       >
         {children}
       </Flex>
