@@ -14,12 +14,14 @@ import useWalletWrapper from "@/hooks/useWalletWrapper"
 import WalletManager from "@/components/WalletManager/WalletManager"
 import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
-import { useCallback, useContext, useRef, useState } from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import { ArrowLeftIcon, SettingsIcon } from "@/components/icons"
 import WayPoints from "components/Waypoints"
 import { useRouter } from "next/router"
 import { Modal } from "@/components/Modal/Modal"
+
+const DEFAULT_AUDIO_VOLUME = 0.4
 
 export default function Play() {
   const { publicKey, isWalletReady } = useWalletWrapper()
@@ -27,12 +29,23 @@ export default function Play() {
     useContext(characterContext)
   const { query } = useRouter()
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
-  const [audioVolume, setAudioVolume] = useState(0.4)
+  const [audioVolume, setAudioVolume] = useState(DEFAULT_AUDIO_VOLUME)
   const effectsAudioRef = useRef<HTMLAudioElement>()
+  const backgroundAudioRef = useRef<HTMLAudioElement>()
+
+  useEffect(() => {
+    if (
+      backgroundAudioRef.current &&
+      backgroundAudioRef.current.volume !== audioVolume
+    ) {
+      backgroundAudioRef.current.volume = audioVolume
+    }
+  }, [audioVolume])
 
   const backgroundRefCallback = useCallback((node) => {
-    if (node !== null && node.volume !== audioVolume) {
-      node.volume = audioVolume
+    if (node !== null && node.volume !== DEFAULT_AUDIO_VOLUME) {
+      node.volume = DEFAULT_AUDIO_VOLUME
+      backgroundAudioRef.current = node
     }
   }, [])
 
