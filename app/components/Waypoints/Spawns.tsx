@@ -15,6 +15,7 @@ import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import { PublicKey } from "@solana/web3.js"
+import { monsters } from "data/monsters"
 
 type SpawnInstanceResponse = {
   pubkey: web3.PublicKey
@@ -155,6 +156,10 @@ export function Spawns() {
               monster,
               pubkey,
             }) => {
+              const monsterData = monsters.find(
+                (monsterData) => monsterData.name === monster.name
+              )
+
               return (
                 <Flex
                   sx={{
@@ -169,13 +174,13 @@ export function Spawns() {
                   key={pubkey.toString()}
                 >
                   <Heading variant="heading2">{monster.name}</Heading>
-                  {/* <img
-                  sx={{
-                    maxWidth: "8rem",
-                    borderRadius: ".4rem",
-                  }}
-                  src={spawnData.image}
-                /> */}
+                  <img
+                    sx={{
+                      maxWidth: "8rem",
+                      borderRadius: ".4rem",
+                    }}
+                    src={monsterData.image}
+                  />
 
                   <Flex
                     sx={{
