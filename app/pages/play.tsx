@@ -16,12 +16,13 @@ import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
-import { ArrowLeftIcon, SettingsIcon } from "@/components/icons"
+import { ArrowLeftIcon, SettingsIcon, ShirtIcon } from "@/components/icons"
 import WayPoints from "components/Waypoints"
 import { useRouter } from "next/router"
 import { Modal } from "@/components/Modal/Modal"
 
-const DEFAULT_AUDIO_VOLUME = 0.4
+const DEFAULT_BACKGROUND_VOLUME = 0.4
+const DEFAULT_EFFECTS_VOLUME = 0.2
 
 export default function Play() {
   const { publicKey, isWalletReady } = useWalletWrapper()
@@ -29,7 +30,7 @@ export default function Play() {
     useContext(characterContext)
   const { query } = useRouter()
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
-  const [audioVolume, setAudioVolume] = useState(DEFAULT_AUDIO_VOLUME)
+  const [audioVolume, setAudioVolume] = useState(DEFAULT_BACKGROUND_VOLUME)
   const effectsAudioRef = useRef<HTMLAudioElement>()
   const backgroundAudioRef = useRef<HTMLAudioElement>()
 
@@ -42,16 +43,20 @@ export default function Play() {
     }
   }, [audioVolume])
 
+  /** Callback used to store the reference to the audio element. */
   const backgroundRefCallback = useCallback((node) => {
-    if (node !== null && node.volume !== DEFAULT_AUDIO_VOLUME) {
-      node.volume = DEFAULT_AUDIO_VOLUME
+    if (node !== null && node.volume !== DEFAULT_BACKGROUND_VOLUME) {
+      /** Set default volume on mount */
+      node.volume = DEFAULT_BACKGROUND_VOLUME
       backgroundAudioRef.current = node
     }
   }, [])
 
+  /** Callback used to store the reference to the audio element. */
   const effectsRefCallback = useCallback((node) => {
-    if (node !== null && node.volume !== 0.2) {
-      node.volume = 0.2
+    if (node !== null && node.volume !== DEFAULT_EFFECTS_VOLUME) {
+      /** Set default volume on mount */
+      node.volume = DEFAULT_EFFECTS_VOLUME
       effectsAudioRef.current = node
     }
   }, [])
@@ -64,6 +69,7 @@ export default function Play() {
     }
   }
 
+  /** Add wallet loading before anything else to prevent flash of content. */
   if (!isWalletReady) {
     return (
       <Text
@@ -79,21 +85,177 @@ export default function Play() {
     )
   }
 
-  if (isWalletReady && !publicKey) {
-    return (
-      <Flex
-        sx={{
-          flexDirection: "column",
-          gap: ".8rem",
-          alignSelf: "center",
-          margin: "auto",
-        }}
-      >
-        Please, connect your wallet first:
-        <WalletConnectButton label={<Button>Connect</Button>} />
-      </Flex>
-    )
+  /**
+   * Only a verbose way to render the character JSX elements.
+   */
+  const renderCharacterHeader = () => {
+    /** Wallet is not connected */
+    if (!isWalletConnected) {
+      return (
+        <>
+          Please, connect your wallet first:
+          <WalletConnectButton label={<Button>Connect</Button>} />
+        </>
+      )
+    }
+
+    if (isCharacterLoading) {
+      return <LoadingIcon />
+    }
+
+    if (selectedCharacter) {
+      return (
+        <>
+          <Flex
+            mb=".8rem"
+            sx={{
+              alignItems: "center",
+            }}
+          >
+            <img
+              sx={{
+                maxWidth: "6.4rem",
+                borderRadius: ".4rem",
+              }}
+              src={selectedCharacter.nft.json.image}
+            />
+            <Heading mb=".8rem" ml=".8rem" variant="heading1">
+              {selectedCharacter.account.name.toString()}
+            </Heading>
+          </Flex>
+          <Flex
+            sx={{
+              flexDirection: "column",
+            }}
+          >
+            <Flex
+              sx={{
+                flexDirection: "column",
+                maxWidth: "20rem",
+              }}
+            >
+              <Flex
+                mb=".4rem"
+                sx={{
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "5rem",
+                }}
+              >
+                <Text>Attribute</Text>
+                <Text>Value</Text>
+              </Flex>
+              <Flex
+                sx={{
+                  flexDirection: "column",
+                  gap: ".4rem",
+                }}
+              >
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "5rem",
+                  }}
+                >
+                  <Text variant="small" color="lightText">
+                    Experience
+                  </Text>
+                  <Text variant="small">
+                    {selectedCharacter.account.experience.toString()}
+                  </Text>
+                </Flex>
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "5rem",
+                  }}
+                >
+                  <Text variant="small" color="lightText">
+                    Hitpoints
+                  </Text>
+                  <Text variant="small">
+                    {selectedCharacter.account.hitpoints.toString()}
+                  </Text>
+                </Flex>
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "5rem",
+                  }}
+                >
+                  <Text variant="small" color="lightText">
+                    Deaths
+                  </Text>
+                  <Text variant="small">
+                    {selectedCharacter.account.deaths.toString()}
+                  </Text>
+                </Flex>
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "5rem",
+                  }}
+                >
+                  <Text variant="small" color="lightText">
+                    Melee Skill
+                  </Text>
+                  <Text variant="small">
+                    {selectedCharacter.account.meleeSkill.toString()}
+                  </Text>
+                </Flex>
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "5rem",
+                  }}
+                >
+                  <Text variant="small" color="lightText">
+                    In Quest
+                  </Text>
+                  <Text variant="small">
+                    {selectedCharacter.account.questState ? "true" : "false"}
+                  </Text>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+        </>
+      )
+    }
+
+    /**
+     * If the character is not loading, and it is not selected,
+     * it means the user doesn't have any character.
+     */
+    if (!isCharacterLoading && !selectedCharacter) {
+      return (
+        <Text
+          sx={{
+            alignItems: "center",
+          }}
+        >
+          Please, <br />
+          <Link passHref href="/characters/new">
+            <a
+              sx={{
+                color: (theme) => theme.colors.primary + "!important",
+              }}
+            >
+              create a character
+            </a>
+          </Link>{" "}
+          first.
+        </Text>
+      )
+    }
   }
+
+  const isWalletConnected = isWalletReady && publicKey
 
   const currentWaypoint = query.waypoint?.toString()
   /** Make it uppercase */
@@ -213,150 +375,7 @@ export default function Play() {
                 flex: "0 20%",
               }}
             >
-              {selectedCharacter ? (
-                <>
-                  <Flex
-                    mb=".8rem"
-                    sx={{
-                      alignItems: "center",
-                    }}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "6.4rem",
-                        borderRadius: ".4rem",
-                      }}
-                      src={selectedCharacter.nft.json.image}
-                    />
-                    <Heading mb=".8rem" ml=".8rem" variant="heading1">
-                      {selectedCharacter.account.name.toString()}
-                    </Heading>
-                  </Flex>
-                  <Flex
-                    sx={{
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Flex
-                      sx={{
-                        flexDirection: "column",
-                        maxWidth: "20rem",
-                      }}
-                    >
-                      <Flex
-                        mb=".4rem"
-                        sx={{
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "5rem",
-                        }}
-                      >
-                        <Text>Attribute</Text>
-                        <Text>Value</Text>
-                      </Flex>
-                      <Flex
-                        sx={{
-                          flexDirection: "column",
-                          gap: ".4rem",
-                        }}
-                      >
-                        <Flex
-                          sx={{
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: "5rem",
-                          }}
-                        >
-                          <Text variant="small" color="lightText">
-                            Experience
-                          </Text>
-                          <Text variant="small">
-                            {selectedCharacter.account.experience.toString()}
-                          </Text>
-                        </Flex>
-                        <Flex
-                          sx={{
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: "5rem",
-                          }}
-                        >
-                          <Text variant="small" color="lightText">
-                            Hitpoints
-                          </Text>
-                          <Text variant="small">
-                            {selectedCharacter.account.hitpoints.toString()}
-                          </Text>
-                        </Flex>
-                        <Flex
-                          sx={{
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: "5rem",
-                          }}
-                        >
-                          <Text variant="small" color="lightText">
-                            Deaths
-                          </Text>
-                          <Text variant="small">
-                            {selectedCharacter.account.deaths.toString()}
-                          </Text>
-                        </Flex>
-                        <Flex
-                          sx={{
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: "5rem",
-                          }}
-                        >
-                          <Text variant="small" color="lightText">
-                            Melee Skill
-                          </Text>
-                          <Text variant="small">
-                            {selectedCharacter.account.meleeSkill.toString()}
-                          </Text>
-                        </Flex>
-                        <Flex
-                          sx={{
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: "5rem",
-                          }}
-                        >
-                          <Text variant="small" color="lightText">
-                            In Quest
-                          </Text>
-                          <Text variant="small">
-                            {selectedCharacter.account.questState
-                              ? "true"
-                              : "false"}
-                          </Text>
-                        </Flex>
-                      </Flex>
-                    </Flex>
-                  </Flex>
-                </>
-              ) : isCharacterLoading ? (
-                <LoadingIcon />
-              ) : (
-                <Text
-                  sx={{
-                    alignItems: "center",
-                  }}
-                >
-                  Please, <br />
-                  <Link passHref href="/characters/new">
-                    <a
-                      sx={{
-                        color: (theme) => theme.colors.primary + "!important",
-                      }}
-                    >
-                      create a character
-                    </a>
-                  </Link>{" "}
-                  first.
-                </Text>
-              )}
+              {renderCharacterHeader()}
 
               <Flex
                 sx={{
@@ -400,12 +419,6 @@ export default function Play() {
                       }}
                       src="/assets/icon_quests.png"
                     />
-                    {/* <DotsIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
                     Dungeons
                   </ThemeLink>
                 </Link>
@@ -424,12 +437,6 @@ export default function Play() {
                       }}
                       src="/assets/icon_equipment.png"
                     />
-                    {/* <ShirtIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
                     Equipment Shop
                   </ThemeLink>
                 </Link>
@@ -449,12 +456,6 @@ export default function Play() {
                       }}
                       src="/assets/icon_magic.png"
                     />
-                    {/* <MagicIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
                     Magic Shop
                   </ThemeLink>
                 </Link>
@@ -474,12 +475,6 @@ export default function Play() {
                       }}
                       src="/assets/icon_sailboat.png"
                     />
-                    {/* <BoatIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
                     Sailboat
                   </ThemeLink>
                 </Link>
@@ -512,13 +507,6 @@ export default function Play() {
                       }}
                       src="/assets/icon_temple.png"
                     />
-                    {/* <WildernessIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
-                    Temple
                   </ThemeLink>
                 </Link>
                 <Link passHref href="/play">
