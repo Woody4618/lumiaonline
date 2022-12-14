@@ -3,8 +3,10 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import { WalletMultiButton } from "./WalletMultiButton"
 import { Flex } from "theme-ui"
 import theme from "@/styles/theme"
-import { SettingsIcon } from "../icons"
 
+/**
+ * Renders the connect button and also allows the user to manage their wallet.
+ */
 const WalletManager = () => {
   const wallet = useWallet()
 

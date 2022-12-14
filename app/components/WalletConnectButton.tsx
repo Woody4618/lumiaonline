@@ -3,6 +3,9 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import { Flex } from "theme-ui"
 import { WalletMultiButton } from "./WalletManager/WalletMultiButton"
 
+/**
+ * Renders only the connect button. If there is public key, it will not render anything.
+ */
 const WalletConnectButton = ({
   label = <span>Select Wallet</span>,
 }: {

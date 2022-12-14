@@ -1,6 +1,6 @@
 import { Theme } from "theme-ui"
 
-import base from "./preset-base"
+import { base } from "@theme-ui/presets"
 
 export const getGradient = (rgb: string) => {
   /**
@@ -30,26 +30,13 @@ const theme: Theme = {
     backgroundGradient: getGradient("rgb(24, 19, 19)"),
     lightText: "rgba(226, 217, 211, 0.5)",
     malachite: "#0BDA51",
-    // modes: {
-    //   light: {
-    //     background: "rgb(226, 217, 211)",
-    //     text: "rgb(24, 19, 19)",
-    //     primary: "rgb(247, 183, 125)",
-    //     primaryGradient: getGradient("rgb(247, 183, 125)"),
-    //     background2: "#1E1E24",
-    //     heading: "#1E1E24",
-    //     backgroundGradient: getGradient("rgb(226, 217, 211)"),
-    //   },
-    // },
+
     error: "#B00020",
     success: "#5cb85c",
   },
 
   sizes: {
     container: "80rem",
-  },
-  config: {
-    useLocalStorage: true,
   },
 
   fonts: {
@@ -104,6 +91,7 @@ const theme: Theme = {
       },
     },
 
+    /** Button with all styles resetted. Used for accessibility */
     resetted: {
       display: "flex",
       background: "none" /*essential*/,
@@ -208,6 +196,7 @@ const theme: Theme = {
 
     root: {
       ...base.styles?.root,
+      /** Set font-size to 62.5%, so that 1 rem = 10px. */
       fontSize: "62.5%",
       minHeight: "100vh",
       display: "flex",
@@ -266,10 +255,6 @@ const theme: Theme = {
       ul: {
         paddingInlineStart: 0,
       },
-    },
-
-    spinnerSmall: {
-      size: "1.2rem!important",
     },
   },
 }

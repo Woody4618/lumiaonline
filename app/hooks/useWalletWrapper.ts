@@ -1,7 +1,7 @@
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useEffect, useState } from "react"
 
-/** Wrapper around useWallet to set the ready variable */
+/** Wrapper around useWallet to set the 'isWalletReady' variable */
 const useWalletWrapper = () => {
   const walletContetState = useWallet()
 

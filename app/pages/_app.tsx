@@ -14,12 +14,9 @@ import { Toaster } from "react-hot-toast"
 import { Layout } from "@/components/Layout/Layout"
 import { CharacterContextProvider } from "contexts/CharacterContextProvider"
 
-const WalletProvider = dynamic(
-  () => import("@/components/WalletProvider/WalletProvider"),
-  {
-    ssr: false,
-  }
-)
+const WalletProvider = dynamic(() => import("contexts/WalletProvider"), {
+  ssr: false,
+})
 
 function App(props: AppProps) {
   const { Component, pageProps } = props
