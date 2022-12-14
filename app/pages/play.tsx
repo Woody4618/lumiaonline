@@ -566,11 +566,6 @@ export default function Play() {
                 flex: "1 auto",
                 flexDirection: "column",
                 padding: "3.2rem 1.6rem",
-
-                "@media (min-width: 768px)": {
-                  maxHeight: "80vh",
-                  overflowY: "scroll",
-                },
               }}
             >
               {currentWaypoint ? <WaypointComponent /> : null}

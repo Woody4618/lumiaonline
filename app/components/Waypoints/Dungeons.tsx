@@ -89,6 +89,11 @@ export function Dungeons() {
         sx={{
           flexDirection: "column",
           gap: "1.6rem",
+
+          "@media (min-width: 768px)": {
+            maxHeight: "70vh",
+            overflowY: "scroll",
+          },
         }}
       >
         {quests ? (
