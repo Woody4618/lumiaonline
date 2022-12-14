@@ -95,29 +95,6 @@ export default function Play() {
     )
   }
 
-  // if (!isCharacterLoading && !selectedCharacter) {
-  //   return (
-  //     <Text
-  //       sx={{
-  //         alignItems: "center",
-  //         margin: "auto",
-  //       }}
-  //     >
-  //       Please,{" "}
-  //       <Link passHref href="/characters/new">
-  //         <a
-  //           sx={{
-  //             color: (theme) => theme.colors.primary + "!important",
-  //           }}
-  //         >
-  //           create a character
-  //         </a>
-  //       </Link>{" "}
-  //       first.
-  //     </Text>
-  //   )
-  // }
-
   const currentWaypoint = query.waypoint?.toString()
   /** Make it uppercase */
   const WaypointComponent = currentWaypoint
@@ -230,320 +207,340 @@ export default function Play() {
               },
             }}
           >
-            {selectedCharacter ? (
-              <Flex
-                sx={{
-                  flexDirection: "column",
-                  flex: "0 20%",
-                }}
-              >
-                <Flex
-                  mb=".8rem"
+            <Flex
+              sx={{
+                flexDirection: "column",
+                flex: "0 20%",
+              }}
+            >
+              {selectedCharacter ? (
+                <>
+                  <Flex
+                    mb=".8rem"
+                    sx={{
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      sx={{
+                        maxWidth: "6.4rem",
+                        borderRadius: ".4rem",
+                      }}
+                      src={selectedCharacter.nft.json.image}
+                    />
+                    <Heading mb=".8rem" ml=".8rem" variant="heading1">
+                      {selectedCharacter.account.name.toString()}
+                    </Heading>
+                  </Flex>
+                  <Flex
+                    sx={{
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Flex
+                      sx={{
+                        flexDirection: "column",
+                        maxWidth: "20rem",
+                      }}
+                    >
+                      <Flex
+                        mb=".4rem"
+                        sx={{
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "5rem",
+                        }}
+                      >
+                        <Text>Attribute</Text>
+                        <Text>Value</Text>
+                      </Flex>
+                      <Flex
+                        sx={{
+                          flexDirection: "column",
+                          gap: ".4rem",
+                        }}
+                      >
+                        <Flex
+                          sx={{
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "5rem",
+                          }}
+                        >
+                          <Text variant="small" color="lightText">
+                            Experience
+                          </Text>
+                          <Text variant="small">
+                            {selectedCharacter.account.experience.toString()}
+                          </Text>
+                        </Flex>
+                        <Flex
+                          sx={{
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "5rem",
+                          }}
+                        >
+                          <Text variant="small" color="lightText">
+                            Hitpoints
+                          </Text>
+                          <Text variant="small">
+                            {selectedCharacter.account.hitpoints.toString()}
+                          </Text>
+                        </Flex>
+                        <Flex
+                          sx={{
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "5rem",
+                          }}
+                        >
+                          <Text variant="small" color="lightText">
+                            Deaths
+                          </Text>
+                          <Text variant="small">
+                            {selectedCharacter.account.deaths.toString()}
+                          </Text>
+                        </Flex>
+                        <Flex
+                          sx={{
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "5rem",
+                          }}
+                        >
+                          <Text variant="small" color="lightText">
+                            Melee Skill
+                          </Text>
+                          <Text variant="small">
+                            {selectedCharacter.account.meleeSkill.toString()}
+                          </Text>
+                        </Flex>
+                        <Flex
+                          sx={{
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "5rem",
+                          }}
+                        >
+                          <Text variant="small" color="lightText">
+                            In Quest
+                          </Text>
+                          <Text variant="small">
+                            {selectedCharacter.account.questState
+                              ? "true"
+                              : "false"}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </>
+              ) : isCharacterLoading ? (
+                <LoadingIcon />
+              ) : (
+                <Text
                   sx={{
                     alignItems: "center",
                   }}
                 >
-                  <img
+                  Please, <br />
+                  <Link passHref href="/characters/new">
+                    <a
+                      sx={{
+                        color: (theme) => theme.colors.primary + "!important",
+                      }}
+                    >
+                      create a character
+                    </a>
+                  </Link>{" "}
+                  first.
+                </Text>
+              )}
+
+              <Flex
+                sx={{
+                  flexDirection: "column",
+                  gap: ".8rem",
+                  flex: "0 20%",
+                }}
+              >
+                <Link passHref href="/play">
+                  <ThemeLink
+                    variant="gameButton"
+                    onClick={handleEffectsAudioPlay}
                     sx={{
-                      maxWidth: "6.4rem",
-                      borderRadius: ".4rem",
-                    }}
-                    src={selectedCharacter.nft.json.image}
-                  />
-                  <Heading mb=".8rem" ml=".8rem" variant="heading1">
-                    {selectedCharacter.account.name.toString()}
-                  </Heading>
-                </Flex>
-                <Flex
-                  sx={{
-                    flexDirection: "column",
-                  }}
-                >
-                  <Flex
-                    sx={{
-                      flexDirection: "column",
-                      maxWidth: "20rem",
+                      opacity: 0.5,
+                      pointerEvents: "none",
                     }}
                   >
-                    <Flex
-                      mb=".4rem"
+                    <img
                       sx={{
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "5rem",
+                        maxWidth: "2.4rem",
                       }}
-                    >
-                      <Text>Attribute</Text>
-                      <Text>Value</Text>
-                    </Flex>
-                    <Flex
+                      src="/assets/icon_bank.png"
+                    />
+                    {/* <DotsIcon
+                        sx={{
+                          width: "2.4rem",
+                          height: "2.4rem",
+                        }}
+                      />{" "} */}
+                    Bank
+                  </ThemeLink>
+                </Link>
+                <Link passHref href="/play?waypoint=dungeons">
+                  <ThemeLink
+                    variant="gameButton"
+                    onClick={handleEffectsAudioPlay}
+                  >
+                    <img
                       sx={{
-                        flexDirection: "column",
-                        gap: ".4rem",
+                        maxWidth: "2.4rem",
                       }}
-                    >
-                      <Flex
+                      src="/assets/icon_quests.png"
+                    />
+                    {/* <DotsIcon
                         sx={{
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "5rem",
+                          width: "2.4rem",
+                          height: "2.4rem",
                         }}
-                      >
-                        <Text variant="small" color="lightText">
-                          Experience
-                        </Text>
-                        <Text variant="small">
-                          {selectedCharacter.account.experience.toString()}
-                        </Text>
-                      </Flex>
-                      <Flex
+                      />{" "} */}
+                    Dungeons
+                  </ThemeLink>
+                </Link>
+                <Link passHref href="/play">
+                  <ThemeLink
+                    variant="gameButton"
+                    onClick={handleEffectsAudioPlay}
+                    sx={{
+                      opacity: 0.5,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <img
+                      sx={{
+                        maxWidth: "2.4rem",
+                      }}
+                      src="/assets/icon_equipment.png"
+                    />
+                    {/* <ShirtIcon
                         sx={{
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "5rem",
+                          width: "2.4rem",
+                          height: "2.4rem",
                         }}
-                      >
-                        <Text variant="small" color="lightText">
-                          Hitpoints
-                        </Text>
-                        <Text variant="small">
-                          {selectedCharacter.account.hitpoints.toString()}
-                        </Text>
-                      </Flex>
-                      <Flex
+                      />{" "} */}
+                    Equipment Shop
+                  </ThemeLink>
+                </Link>
+
+                <Link passHref href="/play">
+                  <ThemeLink
+                    variant="gameButton"
+                    onClick={handleEffectsAudioPlay}
+                    sx={{
+                      opacity: 0.5,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <img
+                      sx={{
+                        maxWidth: "2.4rem",
+                      }}
+                      src="/assets/icon_magic.png"
+                    />
+                    {/* <MagicIcon
                         sx={{
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "5rem",
+                          width: "2.4rem",
+                          height: "2.4rem",
                         }}
-                      >
-                        <Text variant="small" color="lightText">
-                          Deaths
-                        </Text>
-                        <Text variant="small">
-                          {selectedCharacter.account.deaths.toString()}
-                        </Text>
-                      </Flex>
-                      <Flex
+                      />{" "} */}
+                    Magic Shop
+                  </ThemeLink>
+                </Link>
+
+                <Link passHref href="/play">
+                  <ThemeLink
+                    variant="gameButton"
+                    onClick={handleEffectsAudioPlay}
+                    sx={{
+                      opacity: 0.5,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <img
+                      sx={{
+                        maxWidth: "2.4rem",
+                      }}
+                      src="/assets/icon_sailboat.png"
+                    />
+                    {/* <BoatIcon
                         sx={{
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "5rem",
+                          width: "2.4rem",
+                          height: "2.4rem",
                         }}
-                      >
-                        <Text variant="small" color="lightText">
-                          Melee Skill
-                        </Text>
-                        <Text variant="small">
-                          {selectedCharacter.account.meleeSkill.toString()}
-                        </Text>
-                      </Flex>
-                      <Flex
+                      />{" "} */}
+                    Sailboat
+                  </ThemeLink>
+                </Link>
+                <Link passHref href="/play?waypoint=spawns">
+                  <ThemeLink
+                    variant="gameButton"
+                    onClick={handleEffectsAudioPlay}
+                  >
+                    <img
+                      sx={{
+                        maxWidth: "2.4rem",
+                      }}
+                      src="/assets/icon_wilderness.png"
+                    />
+                    Spawns
+                  </ThemeLink>
+                </Link>
+                <Link passHref href="/play">
+                  <ThemeLink
+                    variant="gameButton"
+                    onClick={handleEffectsAudioPlay}
+                    sx={{
+                      opacity: 0.5,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <img
+                      sx={{
+                        maxWidth: "2.4rem",
+                      }}
+                      src="/assets/icon_temple.png"
+                    />
+                    {/* <WildernessIcon
                         sx={{
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "5rem",
+                          width: "2.4rem",
+                          height: "2.4rem",
                         }}
-                      >
-                        <Text variant="small" color="lightText">
-                          In Quest
-                        </Text>
-                        <Text variant="small">
-                          {selectedCharacter.account.questState
-                            ? "true"
-                            : "false"}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  </Flex>
-                </Flex>
+                      />{" "} */}
+                    Temple
+                  </ThemeLink>
+                </Link>
+                <Link passHref href="/play">
+                  <ThemeLink
+                    variant="gameButton"
+                    onClick={handleEffectsAudioPlay}
+                    sx={{
+                      opacity: 0.5,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <img
+                      sx={{
+                        maxWidth: "2.4rem",
+                      }}
+                      src="/assets/icon_train.png"
+                    />
+                    Trainer
+                  </ThemeLink>
+                </Link>
               </Flex>
-            ) : (
-              <LoadingIcon />
-            )}
-            <Flex
-              sx={{
-                flexDirection: "column",
-                gap: ".8rem",
-                flex: "0 20%",
-              }}
-            >
-              <Link passHref href="/play">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                  sx={{
-                    opacity: 0.5,
-                    pointerEvents: "none",
-                  }}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_bank.png"
-                  />
-                  {/* <DotsIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
-                  Bank
-                </ThemeLink>
-              </Link>
-              <Link passHref href="/play?waypoint=dungeons">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_quests.png"
-                  />
-                  {/* <DotsIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
-                  Dungeons
-                </ThemeLink>
-              </Link>
-              <Link passHref href="/play">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                  sx={{
-                    opacity: 0.5,
-                    pointerEvents: "none",
-                  }}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_equipment.png"
-                  />
-                  {/* <ShirtIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
-                  Equipment Shop
-                </ThemeLink>
-              </Link>
-
-              <Link passHref href="/play">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                  sx={{
-                    opacity: 0.5,
-                    pointerEvents: "none",
-                  }}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_magic.png"
-                  />
-                  {/* <MagicIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
-                  Magic Shop
-                </ThemeLink>
-              </Link>
-
-              <Link passHref href="/play">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                  sx={{
-                    opacity: 0.5,
-                    pointerEvents: "none",
-                  }}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_sailboat.png"
-                  />
-                  {/* <BoatIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
-                  Sailboat
-                </ThemeLink>
-              </Link>
-              <Link passHref href="/play?waypoint=spawns">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_wilderness.png"
-                  />
-                  Spawns
-                </ThemeLink>
-              </Link>
-              <Link passHref href="/play">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                  sx={{
-                    opacity: 0.5,
-                    pointerEvents: "none",
-                  }}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_temple.png"
-                  />
-                  {/* <WildernessIcon
-                        sx={{
-                          width: "2.4rem",
-                          height: "2.4rem",
-                        }}
-                      />{" "} */}
-                  Temple
-                </ThemeLink>
-              </Link>
-              <Link passHref href="/play">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                  sx={{
-                    opacity: 0.5,
-                    pointerEvents: "none",
-                  }}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_train.png"
-                  />
-                  Trainer
-                </ThemeLink>
-              </Link>
             </Flex>
-
             <Flex
               sx={{
                 flex: "1 auto",
