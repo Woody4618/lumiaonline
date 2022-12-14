@@ -307,7 +307,7 @@ export default function Play() {
                 flex: "0 20%",
               }}
             >
-              <Flex sx={{}}>
+              <Flex sx={{ alignItems: "flex-start" }}>
                 <Flex
                   sx={{
                     flexDirection: "column",
@@ -316,24 +316,43 @@ export default function Play() {
                   {renderCharacterHeaderContent()}
                 </Flex>
 
-                <a onClick={() => setIsSettingsModalOpen(true)}>
-                  <SettingsIcon />
-                </a>
-                <Modal
-                  sx={{
-                    maxWidth: "64rem",
-                  }}
-                  isOpen={isSettingsModalOpen}
-                  setIsOpen={setIsSettingsModalOpen}
+                <Button
+                  variant="resetted"
+                  tabIndex={1}
+                  onClick={() => setIsSettingsModalOpen(true)}
                 >
-                  <Flex
+                  <SettingsIcon />
+                </Button>
+                {isSettingsModalOpen ? (
+                  <Modal
                     sx={{
-                      alignItems: "center",
-                      flexDirection: "column",
-                      padding: ".8rem 0",
-                      gap: "1.6rem",
+                      maxWidth: "64rem",
                     }}
+                    isOpen={isSettingsModalOpen}
+                    setIsOpen={setIsSettingsModalOpen}
                   >
+                    <Flex
+                      sx={{
+                        alignItems: "center",
+                        flexDirection: "column",
+                        padding: ".8rem 0",
+                        gap: "1.6rem",
+                      }}
+                    >
+                      <Heading variant="heading3">Wallet</Heading>
+                      <WalletManager />
+                      <br />
+                      <Heading variant="heading3">Sound</Heading>
+                      <Slider
+                        sx={{
+                          maxWidth: "16rem",
+                        }}
+                        defaultValue={audioVolume * 100}
+                        onChange={(e) =>
+                          setAudioVolume(Number(e.target.value) / 100)
+                        }
+                      />
+                    </Flex>
                     <Flex
                       sx={{
                         alignItems: "center",
@@ -354,23 +373,12 @@ export default function Play() {
                               height: "2.4rem",
                             }}
                           />
-                          Return to home
+                          Log out
                         </a>
                       </Link>
                     </Flex>
-                    <WalletManager />
-                    <Heading variant="heading3">Sound</Heading>
-                    <Slider
-                      sx={{
-                        maxWidth: "16rem",
-                      }}
-                      defaultValue={audioVolume * 100}
-                      onChange={(e) =>
-                        setAudioVolume(Number(e.target.value) / 100)
-                      }
-                    />
-                  </Flex>
-                </Modal>
+                  </Modal>
+                ) : null}
               </Flex>
 
               <Flex

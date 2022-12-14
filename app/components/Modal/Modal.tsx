@@ -1,6 +1,7 @@
 /** @jsxImportSource theme-ui */
 import * as React from "react"
-import { Flex } from "theme-ui"
+import { Button, Flex } from "theme-ui"
+import { CloseIcon } from "../icons"
 
 type Props = {
   children: React.ReactNode
@@ -40,6 +41,18 @@ export function Modal({ className, children, isOpen, setIsOpen }: Props) {
         }}
         className={className}
       >
+        {setIsOpen ? (
+          <Flex
+            sx={{
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button variant="resetted" onClick={() => setIsOpen(false)}>
+              {" "}
+              <CloseIcon />
+            </Button>
+          </Flex>
+        ) : null}
         {children}
       </Flex>
       {/** Background Blur */}
