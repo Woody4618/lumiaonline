@@ -15,7 +15,7 @@ const useWalletWrapper = () => {
    * So we wait for the wallet to be ready Before assuming the user hasn't connected.
    */
   useEffect(() => {
-    const walletName = localStorage.getItem("walletName")
+    const walletName = localStorage.getItem("walletName")?.replaceAll('"', "")
 
     const availableWallets = wallets.map((wallet) =>
       wallet.adapter.name.toString()
