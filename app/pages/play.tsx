@@ -44,10 +44,12 @@ export default function Play() {
   }, [audioVolume])
 
   /** Callback used to store the reference to the audio element. */
-  const backgroundRefCallback = useCallback((node) => {
+  const backgroundRefCallback = useCallback((node: HTMLAudioElement) => {
     if (node !== null && node.volume !== DEFAULT_BACKGROUND_VOLUME) {
       /** Set default volume on mount */
       node.volume = DEFAULT_BACKGROUND_VOLUME
+      node.play()
+
       backgroundAudioRef.current = node
     }
   }, [])
@@ -88,7 +90,7 @@ export default function Play() {
   /**
    * Only a verbose way to render the character JSX elements.
    */
-  const renderCharacterHeader = () => {
+  const renderCharacterHeaderContent = () => {
     /** Wallet is not connected */
     if (!isWalletConnected) {
       return (
@@ -276,76 +278,6 @@ export default function Play() {
     >
       <Flex
         sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          maxWidth: "64rem",
-          margin: "0 auto",
-          alignSelf: "stretch",
-          justifyContent: "flex-end",
-          padding: "1.6rem 0",
-          minHeight: "6.4rem",
-          zIndex: 10,
-        }}
-      >
-        <a onClick={() => setIsSettingsModalOpen(true)}>
-          <SettingsIcon />
-        </a>
-        <Modal
-          sx={{
-            maxWidth: "64rem",
-          }}
-          isOpen={isSettingsModalOpen}
-          setIsOpen={setIsSettingsModalOpen}
-        >
-          <Flex
-            sx={{
-              alignItems: "center",
-              flexDirection: "column",
-              padding: ".8rem 0",
-              gap: "1.6rem",
-            }}
-          >
-            <Flex
-              sx={{
-                alignItems: "center",
-                gap: ".8rem",
-              }}
-            >
-              <Link href="/" passHref>
-                <a
-                  sx={{
-                    alignItems: "center",
-                    display: "flex",
-                    gap: ".8rem",
-                  }}
-                >
-                  <ArrowLeftIcon
-                    sx={{
-                      width: "2.4rem",
-                      height: "2.4rem",
-                    }}
-                  />
-                  Return to home
-                </a>
-              </Link>
-            </Flex>
-            <WalletManager />
-            <Heading variant="heading3">Sound</Heading>
-            <Slider
-              sx={{
-                maxWidth: "16rem",
-              }}
-              defaultValue={audioVolume * 100}
-              onChange={(e) => setAudioVolume(Number(e.target.value) / 100)}
-            />
-          </Flex>
-        </Modal>
-      </Flex>
-
-      <Flex
-        sx={{
           alignSelf: "stretch",
           order: 2,
           justifyContent: "center",
@@ -375,7 +307,71 @@ export default function Play() {
                 flex: "0 20%",
               }}
             >
-              {renderCharacterHeader()}
+              <Flex sx={{}}>
+                <Flex
+                  sx={{
+                    flexDirection: "column",
+                  }}
+                >
+                  {renderCharacterHeaderContent()}
+                </Flex>
+
+                <a onClick={() => setIsSettingsModalOpen(true)}>
+                  <SettingsIcon />
+                </a>
+                <Modal
+                  sx={{
+                    maxWidth: "64rem",
+                  }}
+                  isOpen={isSettingsModalOpen}
+                  setIsOpen={setIsSettingsModalOpen}
+                >
+                  <Flex
+                    sx={{
+                      alignItems: "center",
+                      flexDirection: "column",
+                      padding: ".8rem 0",
+                      gap: "1.6rem",
+                    }}
+                  >
+                    <Flex
+                      sx={{
+                        alignItems: "center",
+                        gap: ".8rem",
+                      }}
+                    >
+                      <Link href="/" passHref>
+                        <a
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                            gap: ".8rem",
+                          }}
+                        >
+                          <ArrowLeftIcon
+                            sx={{
+                              width: "2.4rem",
+                              height: "2.4rem",
+                            }}
+                          />
+                          Return to home
+                        </a>
+                      </Link>
+                    </Flex>
+                    <WalletManager />
+                    <Heading variant="heading3">Sound</Heading>
+                    <Slider
+                      sx={{
+                        maxWidth: "16rem",
+                      }}
+                      defaultValue={audioVolume * 100}
+                      onChange={(e) =>
+                        setAudioVolume(Number(e.target.value) / 100)
+                      }
+                    />
+                  </Flex>
+                </Modal>
+              </Flex>
 
               <Flex
                 sx={{
@@ -507,6 +503,7 @@ export default function Play() {
                       }}
                       src="/assets/icon_temple.png"
                     />
+                    Temple
                   </ThemeLink>
                 </Link>
                 <Link passHref href="/play">
