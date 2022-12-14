@@ -289,25 +289,52 @@ export default function Play() {
         }}
       >
         {/** Waypoints modal */}
-        <Modal isOpen={true}>
+        <Flex
+          sx={{
+            flexDirection: "column",
+            border: "1px solid",
+            borderColor: "background2",
+            alignSelf: "flex-start",
+
+            position: "absolute",
+            top: "12rem",
+            margin: "0 auto",
+            left: 0,
+            right: 0,
+            flex: 0,
+            background: "background",
+            boxShadow: "0px 4px 4px rgba(0,0,0,0.25)",
+            zIndex: 9,
+
+            "@media (min-width: 768px)": {
+              width: "96rem",
+            },
+          }}
+        >
           <Flex
             sx={{
               gap: "3.2rem",
               flexDirection: "column",
+              alignItems: "stretch",
 
               "@media (min-width: 768px)": {
                 flexDirection: "row",
-                alignItems: "flex-start",
               },
             }}
           >
             <Flex
               sx={{
                 flexDirection: "column",
-                flex: "0 20%",
+                alignItems: "stretch",
+                padding: "3.2rem 1.6rem",
+                background: "rgb(29, 24, 24)",
+
+                "@media (min-width: 768px)": {
+                  maxWidth: "24rem",
+                },
               }}
             >
-              <Flex sx={{ alignItems: "flex-start" }}>
+              <Flex sx={{ alignItems: "flex-start", marginBottom: "1.6rem" }}>
                 <Flex
                   sx={{
                     flexDirection: "column",
@@ -538,12 +565,18 @@ export default function Play() {
               sx={{
                 flex: "1 auto",
                 flexDirection: "column",
+                padding: "3.2rem 1.6rem",
+
+                "@media (min-width: 768px)": {
+                  maxHeight: "80vh",
+                  overflowY: "scroll",
+                },
               }}
             >
               {currentWaypoint ? <WaypointComponent /> : null}
             </Flex>
           </Flex>
-        </Modal>
+        </Flex>
         <Flex
           sx={{
             order: 1,
@@ -556,7 +589,7 @@ export default function Play() {
         >
           <img
             sx={{
-              cursor: "pointer",
+              opacity: 0.6,
             }}
             src="/assets/teristraz.png"
           />
