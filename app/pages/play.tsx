@@ -300,6 +300,8 @@ export default function Play() {
             border: "1px solid",
             borderColor: "background2",
             alignSelf: "flex-start",
+            alignItems: "stretch",
+            gap: "3.2rem",
 
             position: "fixed",
             margin: "auto",
@@ -313,215 +315,216 @@ export default function Play() {
 
             "@media (min-width: 768px)": {
               width: "90vw",
-              maxHeight: "90vh",
+              height: "90vh",
+              flexDirection: "row",
             },
           }}
         >
           <Flex
             sx={{
-              gap: "3.2rem",
               flexDirection: "column",
-              alignItems: "stretch",
+              alignItems: "center",
+              padding: "3.2rem 1.6rem",
+              gap: "3.2rem",
+              background: "rgb(29, 24, 24)",
+              alignSelf: "stretch",
 
               "@media (min-width: 768px)": {
-                flexDirection: "row",
+                maxWidth: "24rem",
               },
             }}
           >
             <Flex
               sx={{
                 flexDirection: "column",
-                alignItems: "center",
-                padding: "3.2rem 1.6rem",
-                gap: "3.2rem",
-                background: "rgb(29, 24, 24)",
-
-                "@media (min-width: 768px)": {
-                  maxWidth: "24rem",
-                },
               }}
             >
-              <Flex
-                sx={{
-                  flexDirection: "column",
-                }}
-              >
-                {renderCharacterHeaderContent()}
-              </Flex>
+              {renderCharacterHeaderContent()}
+            </Flex>
 
-              <Divider />
+            <Divider />
 
-              {/** Waypoint links */}
-              <Flex
-                sx={{
-                  flexDirection: "column",
-                  gap: ".8rem",
-                }}
-              >
-                <Link passHref href="/play">
-                  <ThemeLink
-                    variant="gameButton"
-                    onClick={handleEffectsAudioPlay}
+            {/** Waypoint links */}
+            <Flex
+              sx={{
+                flexDirection: "column",
+                gap: ".8rem",
+              }}
+            >
+              <Link passHref href="/play">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <img
                     sx={{
-                      opacity: 0.5,
-                      pointerEvents: "none",
+                      maxWidth: "2.4rem",
                     }}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "2.4rem",
-                      }}
-                      src="/assets/icon_bank.png"
-                    />
-                    {/* <DotsIcon
+                    src="/assets/icon_bank.png"
+                  />
+                  {/* <DotsIcon
                         sx={{
                           width: "2.4rem",
                           height: "2.4rem",
                         }}
                       />{" "} */}
-                    Bank
-                  </ThemeLink>
-                </Link>
-                <Link passHref href="/play?waypoint=dungeons">
-                  <ThemeLink
-                    variant="gameButton"
-                    onClick={handleEffectsAudioPlay}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "2.4rem",
-                      }}
-                      src="/assets/icon_quests.png"
-                    />
-                    Dungeons
-                  </ThemeLink>
-                </Link>
-                <Link passHref href="/play">
-                  <ThemeLink
-                    variant="gameButton"
-                    onClick={handleEffectsAudioPlay}
-                    sx={{
-                      opacity: 0.5,
-                      pointerEvents: "none",
-                    }}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "2.4rem",
-                      }}
-                      src="/assets/icon_equipment.png"
-                    />
-                    Equipment Shop
-                  </ThemeLink>
-                </Link>
-
-                <Link passHref href="/play">
-                  <ThemeLink
-                    variant="gameButton"
-                    onClick={handleEffectsAudioPlay}
-                    sx={{
-                      opacity: 0.5,
-                      pointerEvents: "none",
-                    }}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "2.4rem",
-                      }}
-                      src="/assets/icon_magic.png"
-                    />
-                    Magic Shop
-                  </ThemeLink>
-                </Link>
-
-                <Link passHref href="/play">
-                  <ThemeLink
-                    variant="gameButton"
-                    onClick={handleEffectsAudioPlay}
-                    sx={{
-                      opacity: 0.5,
-                      pointerEvents: "none",
-                    }}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "2.4rem",
-                      }}
-                      src="/assets/icon_sailboat.png"
-                    />
-                    Sailboat
-                  </ThemeLink>
-                </Link>
-                <Link passHref href="/play?waypoint=spawns">
-                  <ThemeLink
-                    variant="gameButton"
-                    onClick={handleEffectsAudioPlay}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "2.4rem",
-                      }}
-                      src="/assets/icon_wilderness.png"
-                    />
-                    Spawns
-                  </ThemeLink>
-                </Link>
-                <Link passHref href="/play">
-                  <ThemeLink
-                    variant="gameButton"
-                    onClick={handleEffectsAudioPlay}
-                    sx={{
-                      opacity: 0.5,
-                      pointerEvents: "none",
-                    }}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "2.4rem",
-                      }}
-                      src="/assets/icon_temple.png"
-                    />
-                    Temple
-                  </ThemeLink>
-                </Link>
-                <Link passHref href="/play">
-                  <ThemeLink
-                    variant="gameButton"
-                    onClick={handleEffectsAudioPlay}
-                    sx={{
-                      opacity: 0.5,
-                      pointerEvents: "none",
-                    }}
-                  >
-                    <img
-                      sx={{
-                        maxWidth: "2.4rem",
-                      }}
-                      src="/assets/icon_train.png"
-                    />
-                    Trainer
-                  </ThemeLink>
-                </Link>
-              </Flex>
-
-              <Divider />
-
-              <Flex>
-                <Button
-                  variant="resetted"
-                  tabIndex={1}
-                  onClick={() => setIsSettingsModalOpen(true)}
+                  Bank
+                </ThemeLink>
+              </Link>
+              <Link passHref href="/play?waypoint=dungeons">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
                 >
-                  <SettingsIcon />
-                </Button>
-                <Text>11 players online</Text>
-              </Flex>
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_quests.png"
+                  />
+                  Dungeons
+                </ThemeLink>
+              </Link>
+              <Link passHref href="/play">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_equipment.png"
+                  />
+                  Equipment Shop
+                </ThemeLink>
+              </Link>
+
+              <Link passHref href="/play">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_magic.png"
+                  />
+                  Magic Shop
+                </ThemeLink>
+              </Link>
+
+              <Link passHref href="/play">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_sailboat.png"
+                  />
+                  Sailboat
+                </ThemeLink>
+              </Link>
+              <Link passHref href="/play?waypoint=spawns">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_wilderness.png"
+                  />
+                  Spawns
+                </ThemeLink>
+              </Link>
+              <Link passHref href="/play">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_temple.png"
+                  />
+                  Temple
+                </ThemeLink>
+              </Link>
+              <Link passHref href="/play">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                  sx={{
+                    opacity: 0.5,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_train.png"
+                  />
+                  Trainer
+                </ThemeLink>
+              </Link>
             </Flex>
+
+            <Divider />
+
+            <Flex>
+              <Button
+                variant="resetted"
+                tabIndex={1}
+                onClick={() => setIsSettingsModalOpen(true)}
+              >
+                <SettingsIcon />
+              </Button>
+              {/* <Text>11 players online</Text> */}
+            </Flex>
+          </Flex>
+          <Flex
+            sx={{
+              flex: "1 auto",
+              flexDirection: "column",
+              padding: "3.2rem 1.6rem",
+            }}
+          >
+            <Heading mb=".8rem" variant="heading1">
+              {currentWaypoint.toUpperCase()}
+            </Heading>
+
             <Flex
               sx={{
-                flex: "1 auto",
                 flexDirection: "column",
-                padding: "3.2rem 1.6rem",
+                overflowY: "scroll",
               }}
             >
               {currentWaypoint ? <WaypointComponent /> : null}

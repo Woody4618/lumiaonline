@@ -138,12 +138,6 @@ export function Spawns() {
         flexDirection: "column",
       }}
     >
-      <Heading mb=".8rem" variant="heading1">
-        Spawns
-      </Heading>
-
-      <Text my="3.2rem"></Text>
-
       {monsterSpawns ? (
         <Flex
           sx={{

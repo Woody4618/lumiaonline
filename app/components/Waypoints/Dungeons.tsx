@@ -74,92 +74,81 @@ export function Dungeons() {
     <Flex
       sx={{
         flexDirection: "column",
+        gap: "1.6rem",
+
+        "@media (min-width: 768px)": {
+          // maxHeight: "70vh",
+          // overflowY: "scroll",
+        },
       }}
     >
-      <Heading mb=".8rem" variant="heading1">
-        Quests
-      </Heading>
-      <Text mb="3.2rem">List of created Quests</Text>
-
-      <Flex
-        sx={{
-          flexDirection: "column",
-          gap: "1.6rem",
-
-          "@media (min-width: 768px)": {
-            maxHeight: "70vh",
-            overflowY: "scroll",
-          },
-        }}
-      >
-        {quests ? (
-          quests.map((quest) => {
-            const questData = questsData.find(
-              (questData) => questData.id === quest.account.id
-            )
-            return (
+      {quests ? (
+        quests.map((quest) => {
+          const questData = questsData.find(
+            (questData) => questData.id === quest.account.id
+          )
+          return (
+            <Flex
+              sx={{
+                alignItems: "center",
+                flexDirection: "column",
+                gap: ".8rem",
+                borderTop: "1px solid",
+                borderBottom: "1px solid",
+                borderColor: "primary",
+                padding: ".8rem 0",
+              }}
+              key={quest.pubkey.toString()}
+            >
+              <Heading variant="heading2">{questData.name}</Heading>
+              <img
+                sx={{
+                  maxWidth: "16rem",
+                  borderRadius: ".4rem",
+                }}
+                src={questData.image}
+              />
+              <Text
+                sx={{
+                  maxWidth: "32rem",
+                }}
+              >
+                {questData.description}
+              </Text>
               <Flex
                 sx={{
-                  alignItems: "center",
                   flexDirection: "column",
-                  gap: ".8rem",
-                  borderTop: "1px solid",
-                  borderBottom: "1px solid",
-                  borderColor: "primary",
-                  padding: ".8rem 0",
+                  alignItems: "flex-start",
+                  margin: "3.2rem 0",
                 }}
-                key={quest.pubkey.toString()}
               >
-                <Heading variant="heading2">{questData.name}</Heading>
-                <img
-                  sx={{
-                    maxWidth: "16rem",
-                    borderRadius: ".4rem",
-                  }}
-                  src={questData.image}
-                />
-                <Text
-                  sx={{
-                    maxWidth: "32rem",
-                  }}
-                >
-                  {questData.description}
-                </Text>
-                <Flex
-                  sx={{
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    margin: "3.2rem 0",
-                  }}
-                >
-                  <Text>Reward Exp: +{quest.account.rewardExp.toNumber()}</Text>
-                  <Text>Duration: {quest.account.duration.toNumber()}s</Text>
-                </Flex>
-                <form sx={{}} onSubmit={handleJoinFormSubmit}>
-                  <input
-                    type="hidden"
-                    name="id"
-                    value={quest.account.id.toString()}
-                  />
-                  <Button type="submit" mt="1.6rem">
-                    Join
-                  </Button>
-                </form>
+                <Text>Reward Exp: +{quest.account.rewardExp.toNumber()}</Text>
+                <Text>Duration: {quest.account.duration.toNumber()}s</Text>
               </Flex>
-            )
-          })
-        ) : (
-          <Text
-            sx={{
-              textAlign: "center",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <LoadingIcon />
-          </Text>
-        )}
-      </Flex>
+              <form sx={{}} onSubmit={handleJoinFormSubmit}>
+                <input
+                  type="hidden"
+                  name="id"
+                  value={quest.account.id.toString()}
+                />
+                <Button type="submit" mt="1.6rem">
+                  Join
+                </Button>
+              </form>
+            </Flex>
+          )
+        })
+      ) : (
+        <Text
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <LoadingIcon />
+        </Text>
+      )}
     </Flex>
   )
 }
