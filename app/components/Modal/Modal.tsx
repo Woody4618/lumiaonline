@@ -33,7 +33,7 @@ export function Modal({ className, children, isOpen, setIsOpen }: Props) {
           flex: 0,
           background: "background",
           boxShadow: "0px 4px 4px rgba(0,0,0,0.25)",
-          zIndex: 9,
+          zIndex: 10,
 
           "@media (min-width: 768px)": {
             width: "96rem",
@@ -60,6 +60,7 @@ export function Modal({ className, children, isOpen, setIsOpen }: Props) {
         onClick={setIsOpen ? () => setIsOpen(false) : null}
         sx={{
           display: isOpen ? "block" : "none",
+          zIndex: 9,
           "::before": {
             content: "''",
             position: "fixed",

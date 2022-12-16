@@ -1,7 +1,6 @@
 /** @jsxImportSource theme-ui */
 import { Heading, Text, Button, Flex } from "@theme-ui/components"
 
-import Header from "@/components/Header/Header"
 import { FormEvent, useEffect, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
@@ -10,12 +9,9 @@ import { QuestAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { joinQuest } from "lib/gen/instructions"
-import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
-import useWalletNFTs from "@/hooks/useWalletNFTs"
 import { quests as questsData } from "data/quests"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
-import { Layout } from "@/components/Layout/Layout"
 
 type QuestResponse = {
   pubkey: web3.PublicKey

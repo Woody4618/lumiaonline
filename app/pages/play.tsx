@@ -16,7 +16,12 @@ import Link from "next/link"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
-import { ArrowLeftIcon, SettingsIcon, ShirtIcon } from "@/components/icons"
+import {
+  ArrowLeftIcon,
+  Divider,
+  SettingsIcon,
+  ShirtIcon,
+} from "@/components/icons"
 import WayPoints from "components/Waypoints"
 import { useRouter } from "next/router"
 import { Modal } from "@/components/Modal/Modal"
@@ -307,7 +312,8 @@ export default function Play() {
             zIndex: 9,
 
             "@media (min-width: 768px)": {
-              width: "96rem",
+              width: "90vw",
+              maxHeight: "90vh",
             },
           }}
         >
@@ -325,8 +331,9 @@ export default function Play() {
             <Flex
               sx={{
                 flexDirection: "column",
-                alignItems: "stretch",
+                alignItems: "center",
                 padding: "3.2rem 1.6rem",
+                gap: "3.2rem",
                 background: "rgb(29, 24, 24)",
 
                 "@media (min-width: 768px)": {
@@ -334,85 +341,21 @@ export default function Play() {
                 },
               }}
             >
-              <Flex sx={{ alignItems: "flex-start", marginBottom: "1.6rem" }}>
-                <Flex
-                  sx={{
-                    flexDirection: "column",
-                  }}
-                >
-                  {renderCharacterHeaderContent()}
-                </Flex>
-
-                <Button
-                  variant="resetted"
-                  tabIndex={1}
-                  onClick={() => setIsSettingsModalOpen(true)}
-                >
-                  <SettingsIcon />
-                </Button>
-                {isSettingsModalOpen ? (
-                  <Modal
-                    sx={{
-                      maxWidth: "64rem",
-                    }}
-                    isOpen={isSettingsModalOpen}
-                    setIsOpen={setIsSettingsModalOpen}
-                  >
-                    <Flex
-                      sx={{
-                        alignItems: "center",
-                        flexDirection: "column",
-                        padding: ".8rem 0",
-                        gap: "1.6rem",
-                      }}
-                    >
-                      <Heading variant="heading3">Wallet</Heading>
-                      <WalletManager />
-                      <br />
-                      <Heading variant="heading3">Sound</Heading>
-                      <Slider
-                        sx={{
-                          maxWidth: "16rem",
-                        }}
-                        defaultValue={audioVolume * 100}
-                        onChange={(e) =>
-                          setAudioVolume(Number(e.target.value) / 100)
-                        }
-                      />
-                    </Flex>
-                    <Flex
-                      sx={{
-                        alignItems: "center",
-                        gap: ".8rem",
-                      }}
-                    >
-                      <Link href="/" passHref>
-                        <a
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                            gap: ".8rem",
-                          }}
-                        >
-                          <ArrowLeftIcon
-                            sx={{
-                              width: "2.4rem",
-                              height: "2.4rem",
-                            }}
-                          />
-                          Log out
-                        </a>
-                      </Link>
-                    </Flex>
-                  </Modal>
-                ) : null}
+              <Flex
+                sx={{
+                  flexDirection: "column",
+                }}
+              >
+                {renderCharacterHeaderContent()}
               </Flex>
 
+              <Divider />
+
+              {/** Waypoint links */}
               <Flex
                 sx={{
                   flexDirection: "column",
                   gap: ".8rem",
-                  flex: "0 20%",
                 }}
               >
                 <Link passHref href="/play">
@@ -560,6 +503,19 @@ export default function Play() {
                   </ThemeLink>
                 </Link>
               </Flex>
+
+              <Divider />
+
+              <Flex>
+                <Button
+                  variant="resetted"
+                  tabIndex={1}
+                  onClick={() => setIsSettingsModalOpen(true)}
+                >
+                  <SettingsIcon />
+                </Button>
+                <Text>11 players online</Text>
+              </Flex>
             </Flex>
             <Flex
               sx={{
@@ -590,6 +546,62 @@ export default function Play() {
           />
         </Flex>
       </Flex>
+
+      {/** Settings modal */}
+      {isSettingsModalOpen ? (
+        <Modal
+          sx={{
+            maxWidth: "64rem",
+          }}
+          isOpen={isSettingsModalOpen}
+          setIsOpen={setIsSettingsModalOpen}
+        >
+          <Flex
+            sx={{
+              alignItems: "center",
+              flexDirection: "column",
+              padding: ".8rem 0",
+              gap: "1.6rem",
+            }}
+          >
+            <Heading variant="heading3">Wallet</Heading>
+            <WalletManager />
+            <br />
+            <Heading variant="heading3">Sound</Heading>
+            <Slider
+              sx={{
+                maxWidth: "16rem",
+              }}
+              defaultValue={audioVolume * 100}
+              onChange={(e) => setAudioVolume(Number(e.target.value) / 100)}
+            />
+          </Flex>
+          <Flex
+            sx={{
+              alignItems: "center",
+              gap: ".8rem",
+            }}
+          >
+            <Link href="/" passHref>
+              <a
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                  gap: ".8rem",
+                }}
+              >
+                <ArrowLeftIcon
+                  sx={{
+                    width: "2.4rem",
+                    height: "2.4rem",
+                  }}
+                />
+                Log out
+              </a>
+            </Link>
+          </Flex>
+        </Modal>
+      ) : null}
 
       {/** Audio stuff */}
 
