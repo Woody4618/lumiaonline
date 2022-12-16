@@ -3,7 +3,6 @@ import React, { useRef, useState } from "react"
 import { Button, Flex, Text } from "theme-ui"
 
 import { DotsIcon } from "@/components/icons/"
-import useOutsideClick from "@/hooks/useOutsideClick"
 import { FindNftByMintOutput } from "@metaplex-foundation/js"
 
 type Props = {
@@ -16,8 +15,6 @@ type Props = {
 const CollectionItem = (props: Props) => {
   const { item, additionalOptions = null, className, onClick } = props
   const [isDropdownActive, setIsDropdownActive] = useState(false)
-  const wrapperRef = useRef(null)
-  useOutsideClick(wrapperRef, () => setIsDropdownActive(false))
 
   const handleDropdownToggle = () => {
     setIsDropdownActive((previous) => !previous)
@@ -41,7 +38,6 @@ const CollectionItem = (props: Props) => {
   return (
     <Flex
       tabIndex={1}
-      ref={wrapperRef}
       sx={{
         flexDirection: "column",
         position: "relative",
