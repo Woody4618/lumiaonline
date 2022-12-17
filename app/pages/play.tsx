@@ -130,7 +130,7 @@ export default function Play() {
               {selectedCharacter.account.name.toString()}
             </Heading>
           </Flex>
-          <Flex
+          {/* <Flex
             sx={{
               flexDirection: "column",
             }}
@@ -230,7 +230,7 @@ export default function Play() {
                 </Flex>
               </Flex>
             </Flex>
-          </Flex>
+          </Flex> */}
         </>
       )
     }
@@ -293,7 +293,7 @@ export default function Play() {
           },
         }}
       >
-        {/** Waypoints modal */}
+        {/** Main modal */}
         <Flex
           sx={{
             flexDirection: "column",
@@ -314,8 +314,6 @@ export default function Play() {
             zIndex: 9,
 
             "@media (min-width: 768px)": {
-              width: "90vw",
-              height: "90vh",
               flexDirection: "row",
             },
           }}
@@ -331,6 +329,7 @@ export default function Play() {
 
               "@media (min-width: 768px)": {
                 maxWidth: "24rem",
+                overflowY: "scroll",
               },
             }}
           >
@@ -534,7 +533,7 @@ export default function Play() {
         <Flex
           sx={{
             order: 1,
-
+            maxHeight: "100vh",
             "@media (min-width: 768px)": {
               flexDirection: "row",
               order: 2,
