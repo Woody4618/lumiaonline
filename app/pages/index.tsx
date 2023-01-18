@@ -159,7 +159,7 @@ export default function Home() {
             Latest news
           </Heading>
 
-          <NewsContentBlock title="Closed Beta launch." date="2022-10-20">
+          <NewsContentBlock title="Closed Alpha launch." date="2022-10-20">
             <Text>
               Dear Lumia community, <br />
               You can now start creating your character
@@ -169,10 +169,10 @@ export default function Home() {
               Lumia.
             </Text>
             <br />
-            <Text>
+            {/* <Text>
               Kind Regards, <br />
               Ellagoris
-            </Text>
+            </Text> */}
           </NewsContentBlock>
         </Flex>
       </Flex>

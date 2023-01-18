@@ -517,7 +517,7 @@ export default function Play() {
             }}
           >
             <Heading mb=".8rem" variant="heading1">
-              {currentWaypoint.toUpperCase()}
+              {currentWaypoint?.toUpperCase()}
             </Heading>
 
             <Flex
