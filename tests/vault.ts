@@ -33,20 +33,18 @@ describe("vault", () => {
     await connection.confirmTransaction(tx)
   })
 
-  it("should be able to initialize a vault", async () => {
-    await program.methods
-      .initialize()
+  it("SOL - Deposit", async () => {
+    const initializeVault = await program.methods
+      .initializeVault()
       .accounts({
+        vault,
         owner: user.publicKey,
         authority: authority.publicKey,
-        vault,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .signers([user, authority])
-      .rpc()
-  })
+      .instruction()
 
-  it("should be able to deposit into a vault", async () => {
     await program.methods
       .solDeposit(new BN(100000))
       .accounts({
@@ -56,10 +54,11 @@ describe("vault", () => {
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .signers([user, authority])
+      .preInstructions([initializeVault])
       .rpc()
   })
 
-  it("should be able to withdraw from a vault", async () => {
+  it("SOL - Withdraw", async () => {
     await program.methods
       .solWithdraw(new BN(1000))
       .accounts({

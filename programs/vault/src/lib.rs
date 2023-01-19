@@ -8,7 +8,7 @@ pub mod vault {
 
     use super::*;
 
-    pub fn initialize(ctx: Context<InitializeVault>) -> Result<()> {
+    pub fn initialize_vault(ctx: Context<InitializeVault>) -> Result<()> {
         *ctx.accounts.vault = Vault {
             owner: ctx.accounts.owner.key(),
             authority: ctx.accounts.authority.key(),
@@ -71,6 +71,7 @@ pub struct InitializeVault<'info> {
 pub struct SolDeposit<'info> {
     #[account(
         mut,
+        has_one = authority,
         seeds = [
           Vault::PREFIX,
           owner.key().as_ref(),
@@ -82,7 +83,9 @@ pub struct SolDeposit<'info> {
 
     #[account(mut)]
     pub owner: Signer<'info>,
+
     pub authority: Signer<'info>,
+
     pub system_program: Program<'info, System>,
 }
 
@@ -90,6 +93,8 @@ pub struct SolDeposit<'info> {
 pub struct SolWithdraw<'info> {
     #[account(
         mut,
+        has_one = owner,
+        has_one = authority,
         seeds = [
           Vault::PREFIX,
           owner.key().as_ref(),
@@ -98,6 +103,7 @@ pub struct SolWithdraw<'info> {
         bump
     )]
     pub vault: Account<'info, Vault>,
+
     #[account(mut)]
     pub owner: SystemAccount<'info>,
     pub authority: Signer<'info>,
