@@ -477,7 +477,7 @@ export default function Play() {
                   Spawns
                 </ThemeLink>
               </Link>
-              <Link passHref href="/play">
+              {/* <Link passHref href="/play">
                 <ThemeLink
                   variant="gameButton"
                   onClick={handleEffectsAudioPlay}
@@ -494,7 +494,7 @@ export default function Play() {
                   />
                   Temple
                 </ThemeLink>
-              </Link>
+              </Link> */}
               <Link passHref href="/play">
                 <ThemeLink
                   variant="gameButton"

@@ -21,7 +21,13 @@ import { quests } from "../app/data/quests"
 import { monsters } from "../app/data/monsters"
 import { spawns } from "../app/data/spawns"
 import { claimQuest } from "../app/lib/gen/instructions/claimQuest"
-import { BattleAccountJSON, MonsterTypeAccount } from "../app/lib/gen/accounts"
+import {
+  BattleAccountJSON,
+  CharacterAccount,
+  CharacterAccountJSON,
+  MonsterTypeAccount,
+  CharacterAccountFields,
+} from "../app/lib/gen/accounts"
 import { getBattleTurns } from "../app/lib/battle"
 import { BattleTurn } from "../app/lib/gen/types"
 
@@ -239,6 +245,127 @@ describe("chainquest", () => {
         throw new Error("Could create a character with an invalid NFT")
       } catch (e) {}
     })
+
+    it("Can battle a monster spawn, obtain experience, and advance their level", async () => {
+      const { monsterName, spawntime, town } = spawns[0]
+
+      const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("monster_type"), Buffer.from(monsterName)],
+        PROGRAM_ID
+      )[0]
+
+      const monsterSpawn = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("monster_spawn"), Buffer.from(monsterName)],
+        PROGRAM_ID
+      )[0]
+
+      const mint = new anchor.web3.PublicKey(
+        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
+      )
+
+      const character = getCharacterAddress(
+        program.provider.publicKey,
+        mint,
+        program.programId
+      )
+
+      let characterAccBeforeBattle: CharacterAccountFields
+      let characterAccAfterBattle: CharacterAccountFields
+
+      /** Battle monsters til the character advance in level */
+      do {
+        const battleTurns = await getBattleTurns(
+          program.provider.connection,
+          character,
+          monsterType
+        )
+
+        const battle = anchor.web3.Keypair.generate()
+
+        const ix = joinBattle(
+          {
+            battleTurns,
+          },
+          {
+            battle: battle.publicKey,
+            character: character,
+            monsterSpawn,
+            monsterType,
+            owner: program.provider.publicKey,
+            systemProgram,
+            clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          }
+        )
+
+        characterAccBeforeBattle = await program.account.characterAccount.fetch(
+          character
+        )
+
+        const tx = new anchor.web3.Transaction().add(ix)
+        await program.provider.sendAndConfirm(tx, [battle])
+
+        const spawnAcc = await program.account.monsterSpawnAccount.fetch(
+          monsterSpawn
+        )
+
+        expect(spawnAcc.lastKilled).to.not.be.null
+
+        // @ts-ignore
+        const battleAcc: BattleAccountJSON & {
+          battleTurns: BattleTurn[]
+        } = await program.account.battleAccount.fetch(battle.publicKey)
+
+        const lastTurn = battleAcc.battleTurns[battleAcc.battleTurns.length - 1]
+        characterAccAfterBattle = await program.account.characterAccount.fetch(
+          character
+        )
+
+        if (lastTurn.characterHitpoints.toNumber() <= 0) {
+          /** Expect to die if no hitpoints */
+          expect(characterAccAfterBattle.deaths).to.be.greaterThan(
+            characterAccBeforeBattle.deaths
+          )
+        } else {
+          expect(characterAccAfterBattle.deaths).to.be.eq(
+            characterAccBeforeBattle.deaths
+          )
+
+          const monsterTypeAcc = await MonsterTypeAccount.fetch(
+            program.provider.connection,
+            monsterType
+          )
+
+          // expect character to have gained experience
+          const expToExpect = characterAccBeforeBattle.experience.add(
+            monsterTypeAcc.experience
+          )
+
+          expect(characterAccAfterBattle.experience.eq(expToExpect)).to.be.true
+
+          /** Expect character to have advanced in level if the experience is enough */
+          const expForNextLevel =
+            50 * Math.pow(characterAccBeforeBattle.level.toNumber(), 2)
+          if (
+            characterAccAfterBattle.experience.gte(
+              new anchor.BN(expForNextLevel)
+            )
+          ) {
+            expect(
+              characterAccAfterBattle.level.gt(characterAccBeforeBattle.level)
+            )
+          }
+        }
+        /** Do everything til the level upgrades */
+      } while (characterAccAfterBattle.level <= characterAccBeforeBattle.level)
+
+      /** Try to kill the same spawn again */
+      // @TODO add test to validate spawntimes
+      // try {
+      //   await program.provider.sendAndConfirm(tx)
+
+      //   throw new Error("Could terminate a spawn instance before the spawntime")
+      // } catch (e) {}
+    })
   })
 
   describe("validate quests", () => {
@@ -314,7 +441,7 @@ describe("chainquest", () => {
       const characterAcc = await program.account.characterAccount.fetch(
         character
       )
-      expect(characterAcc.experience.cmp(questAcc.rewardExp)).to.eq(0)
+      expect(characterAcc.experience.cmp(questAcc.rewardExp)).to.eq(1)
       expect(characterAcc.questState).to.be.null
     })
 
@@ -361,103 +488,6 @@ describe("chainquest", () => {
         const tx = new anchor.web3.Transaction().add(ix2)
         await program.provider.sendAndConfirm(tx)
         throw new Error("Could claim a quest before the duration")
-      } catch (e) {}
-    })
-  })
-
-  describe("validate spawns", () => {
-    it("Can battle a monster spawn til death", async () => {
-      const { monsterName, spawntime, town } = spawns[0]
-
-      const monsterType = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("monster_type"), Buffer.from(monsterName)],
-        PROGRAM_ID
-      )[0]
-
-      const monsterSpawn = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("monster_spawn"), Buffer.from(monsterName)],
-        PROGRAM_ID
-      )[0]
-
-      const mint = new anchor.web3.PublicKey(
-        "6YHvHusPz8LoydSTB77WhehRfs12DgAJ5jR9fXhCagnL"
-      )
-
-      const character = getCharacterAddress(
-        program.provider.publicKey,
-        mint,
-        program.programId
-      )
-
-      const previousCharacterAcc = await program.account.characterAccount.fetch(
-        character
-      )
-
-      const battleTurns = await getBattleTurns(
-        program.provider.connection,
-        character,
-        monsterType
-      )
-
-      const battle = anchor.web3.Keypair.generate()
-
-      const ix = joinBattle(
-        {
-          battleTurns,
-        },
-        {
-          battle: battle.publicKey,
-          character: character,
-          monsterSpawn,
-          monsterType,
-          owner: program.provider.publicKey,
-          systemProgram,
-          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-        }
-      )
-
-      const tx = new anchor.web3.Transaction().add(ix)
-      await program.provider.sendAndConfirm(tx, [battle])
-
-      const spawnAcc = await program.account.monsterSpawnAccount.fetch(
-        monsterSpawn
-      )
-
-      expect(spawnAcc.lastKilled).to.not.be.null
-
-      // @ts-ignore
-      const battleAcc: BattleAccountJSON & {
-        battleTurns: BattleTurn[]
-      } = await program.account.battleAccount.fetch(battle.publicKey)
-
-      /** Expect character to die or win  */
-      const lastTurn = battleAcc.battleTurns[battleAcc.battleTurns.length - 1]
-      const characterAcc = await program.account.characterAccount.fetch(
-        character
-      )
-
-      if (lastTurn.characterHitpoints.toNumber() <= 0) {
-        expect(characterAcc.deaths).to.be.eq(1)
-      } else {
-        expect(characterAcc.deaths).to.be.eq(0)
-
-        const monsterTypeAcc = await MonsterTypeAccount.fetch(
-          program.provider.connection,
-          monsterType
-        )
-
-        // expect character to have gained experience
-        const expToExpect = previousCharacterAcc.experience.add(
-          monsterTypeAcc.experience
-        )
-        expect(characterAcc.experience).to.be.eq(expToExpect)
-      }
-
-      /** Try to kill the same spawn again */
-      try {
-        await program.provider.sendAndConfirm(tx)
-
-        throw new Error("Could terminate a spawn instance before the spawntime")
       } catch (e) {}
     })
   })

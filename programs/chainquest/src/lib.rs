@@ -114,6 +114,13 @@ pub mod chainquest {
             ctx.accounts.character.deaths += 1;
         } else {
             ctx.accounts.character.experience += ctx.accounts.monster_type.experience;
+
+            let exp_for_next_level = 50 * u64::pow(ctx.accounts.character.level, 2);
+
+            // increase character level if possible
+            if ctx.accounts.character.experience > exp_for_next_level {
+                ctx.accounts.character.level += 1;
+            }
         }
 
         let battle = BattleAccount {

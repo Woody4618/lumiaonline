@@ -77,6 +77,7 @@ pub struct CharacterAccount {
     pub nft_mint: Pubkey,
     pub name: String,
     pub experience: u64,
+    pub level: u64,
     pub hitpoints: u64,
     /// pub deaths: Vec<Death>,
     pub deaths: u8,
@@ -93,6 +94,7 @@ impl CharacterAccount {
         let account = CharacterAccount {
             name: name.to_string(),
             experience: 0,
+            level: 1,
             owner,
             nft_mint,
             deaths: 0,
