@@ -391,20 +391,7 @@ export default function Play() {
                   Bank
                 </ThemeLink>
               </Link>
-              <Link passHref href="/play?waypoint=dungeons">
-                <ThemeLink
-                  variant="gameButton"
-                  onClick={handleEffectsAudioPlay}
-                >
-                  <img
-                    sx={{
-                      maxWidth: "2.4rem",
-                    }}
-                    src="/assets/icon_quests.png"
-                  />
-                  Dungeons
-                </ThemeLink>
-              </Link>
+
               <Link passHref href="/play">
                 <ThemeLink
                   variant="gameButton"
@@ -440,6 +427,21 @@ export default function Play() {
                     src="/assets/icon_magic.png"
                   />
                   Magic Shop
+                </ThemeLink>
+              </Link>
+
+              <Link passHref href="/play?waypoint=missions">
+                <ThemeLink
+                  variant="gameButton"
+                  onClick={handleEffectsAudioPlay}
+                >
+                  <img
+                    sx={{
+                      maxWidth: "2.4rem",
+                    }}
+                    src="/assets/icon_quests.png"
+                  />
+                  Missions
                 </ThemeLink>
               </Link>
 

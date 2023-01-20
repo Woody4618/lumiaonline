@@ -35,7 +35,7 @@ type QuestResponse = {
   account: QuestAccount
 }
 
-export function Dungeons() {
+export function Missions() {
   const { connection } = useConnection()
   const { publicKey, sendTransaction } = useWallet()
   const [quests, setQuests] = useState<QuestResponse[]>(null)
