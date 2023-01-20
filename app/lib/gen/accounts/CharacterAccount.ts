@@ -9,6 +9,7 @@ export interface CharacterAccountFields {
   nftMint: PublicKey
   name: string
   experience: BN
+  level: BN
   hitpoints: BN
   /** pub deaths: Vec<Death>, */
   deaths: number
@@ -21,6 +22,7 @@ export interface CharacterAccountJSON {
   nftMint: string
   name: string
   experience: string
+  level: string
   hitpoints: string
   /** pub deaths: Vec<Death>, */
   deaths: number
@@ -33,6 +35,7 @@ export class CharacterAccount {
   readonly nftMint: PublicKey
   readonly name: string
   readonly experience: BN
+  readonly level: BN
   readonly hitpoints: BN
   /** pub deaths: Vec<Death>, */
   readonly deaths: number
@@ -48,6 +51,7 @@ export class CharacterAccount {
     borsh.publicKey("nftMint"),
     borsh.str("name"),
     borsh.u64("experience"),
+    borsh.u64("level"),
     borsh.u64("hitpoints"),
     borsh.u8("deaths"),
     borsh.option(types.CharacterQuestState.layout(), "questState"),
@@ -59,6 +63,7 @@ export class CharacterAccount {
     this.nftMint = fields.nftMint
     this.name = fields.name
     this.experience = fields.experience
+    this.level = fields.level
     this.hitpoints = fields.hitpoints
     this.deaths = fields.deaths
     this.questState =
@@ -114,6 +119,7 @@ export class CharacterAccount {
       nftMint: dec.nftMint,
       name: dec.name,
       experience: dec.experience,
+      level: dec.level,
       hitpoints: dec.hitpoints,
       deaths: dec.deaths,
       questState:
@@ -130,6 +136,7 @@ export class CharacterAccount {
       nftMint: this.nftMint.toString(),
       name: this.name,
       experience: this.experience.toString(),
+      level: this.level.toString(),
       hitpoints: this.hitpoints.toString(),
       deaths: this.deaths,
       questState: (this.questState && this.questState.toJSON()) || null,
@@ -143,6 +150,7 @@ export class CharacterAccount {
       nftMint: new PublicKey(obj.nftMint),
       name: obj.name,
       experience: new BN(obj.experience),
+      level: new BN(obj.level),
       hitpoints: new BN(obj.hitpoints),
       deaths: obj.deaths,
       questState:
