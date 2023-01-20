@@ -121,6 +121,7 @@ pub struct SolDeposit<'info> {
 #[derive(Accounts)]
 pub struct SolWithdraw<'info> {
     #[account(
+        mut,
         has_one = owner,
         has_one = authority,
         seeds = [
@@ -225,7 +226,7 @@ pub struct Vault {
 
 impl Vault {
     pub const PREFIX: &'static [u8] = b"vault";
-    pub const LEN: usize = 32 + 32;
+    pub const LEN: usize = 32 + 32 + 1;
 
     pub fn seeds(&self) -> [&[u8]; 4] {
         [
