@@ -31,6 +31,7 @@ pub struct BattleTurn {
 pub struct BattleAccount {
     pub battle_turns: Vec<BattleTurn>,
     pub participants: Vec<Pubkey>,
+    pub timestamp: i64,
 }
 
 #[account]

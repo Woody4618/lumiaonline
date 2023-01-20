@@ -127,6 +127,7 @@ pub mod chainquest {
         let battle = BattleAccount {
             battle_turns,
             participants: vec![ctx.accounts.character.key(), ctx.accounts.monster_type.key()],
+            timestamp: ctx.accounts.clock.unix_timestamp,
         };
 
         ctx.accounts.battle.set_inner(battle);
