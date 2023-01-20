@@ -80,6 +80,11 @@ const columns: TableColumn<CharacterResponse>[] = [
     selector: (row) => row.account.experience.toString(),
     sortable: true,
   },
+  {
+    name: "Level",
+    selector: (row) => row.account.level.toString(),
+    sortable: true,
+  },
 ]
 
 type CharacterResponse = {
