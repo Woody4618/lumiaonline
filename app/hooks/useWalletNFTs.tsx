@@ -1,6 +1,6 @@
 /**
   Lumia Online (https://github.com/lumiaonline)
-  Copyright (C) 2023 lumiaonline
+  Copyright (C) 2023 Lumia Online
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

@@ -1,6 +1,6 @@
 /**
   Lumia Online (https://github.com/lumiaonline)
-  Copyright (C) 2023 lumiaonline
+  Copyright (C) 2023 Lumia Online
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -118,7 +118,7 @@ const CharacterPage: NextPage = () => {
                   sx={{
                     alignItems: "center",
                     justifyContent: "space-between",
-                    gap: '5rem'
+                    gap: "5rem",
                   }}
                 >
                   <Text>Attribute</Text>
@@ -134,7 +134,7 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
-                      gap: '5rem'
+                      gap: "5rem",
                     }}
                   >
                     <Text variant="small" color="lightText">
@@ -148,7 +148,7 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
-                      gap: '5rem'
+                      gap: "5rem",
                     }}
                   >
                     <Text variant="small" color="lightText">
@@ -162,7 +162,7 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
-                      gap: '5rem'
+                      gap: "5rem",
                     }}
                   >
                     <Text variant="small" color="lightText">
@@ -174,7 +174,7 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
-                      gap: '5rem'
+                      gap: "5rem",
                     }}
                   >
                     <Text variant="small" color="lightText">
@@ -188,7 +188,7 @@ const CharacterPage: NextPage = () => {
                     sx={{
                       alignItems: "center",
                       justifyContent: "space-between",
-                      gap: '5rem'
+                      gap: "5rem",
                     }}
                   >
                     <Text variant="small" color="lightText">
