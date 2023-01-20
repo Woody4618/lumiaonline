@@ -117,9 +117,10 @@ pub mod chainquest {
 
             let exp_for_next_level = 50 * u64::pow(ctx.accounts.character.level, 2);
 
-            // increase character level if possible
+            // increase character level and HP if possible
             if ctx.accounts.character.experience > exp_for_next_level {
                 ctx.accounts.character.level += 1;
+                ctx.accounts.character.hitpoints += 2;
             }
         }
 
