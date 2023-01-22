@@ -27,7 +27,7 @@ pub mod vault {
             CpiContext::new(
                 ctx.accounts.system_program.to_account_info(),
                 Transfer {
-                    from: ctx.accounts.owner.to_account_info(),
+                    from: ctx.accounts.from.to_account_info(),
                     to: ctx.accounts.vault.to_account_info(),
                 },
             ),
@@ -98,23 +98,11 @@ pub struct InitializeVault<'info> {
 
 #[derive(Accounts)]
 pub struct SolDeposit<'info> {
-    #[account(
-        has_one = owner,
-        has_one = authority,
-        seeds = [
-          Vault::PREFIX,
-          owner.key().as_ref(),
-          authority.key().as_ref()
-        ],
-        bump
-    )]
-    pub vault: Account<'info, Vault>,
-
     #[account(mut)]
-    pub owner: Signer<'info>,
-
-    pub authority: Signer<'info>,
-
+    pub vault: Account<'info, Vault>,
+    #[account(mut)]
+    pub from: Signer<'info>,
+    pub authority: SystemAccount<'info>,
     pub system_program: Program<'info, System>,
 }
 

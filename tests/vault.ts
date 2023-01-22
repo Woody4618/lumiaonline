@@ -64,7 +64,7 @@ describe("vault", () => {
       .solDeposit(new BN(100000))
       .accounts({
         vault,
-        owner: user.publicKey,
+        from: user.publicKey,
         authority: authority.publicKey,
         systemProgram: SystemProgram.programId,
       })
