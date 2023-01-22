@@ -64,7 +64,7 @@ pub mod vault {
             anchor_spl::token::Transfer {
                 to: ctx.accounts.owner_ata.to_account_info(),
                 from: ctx.accounts.vault_ata.to_account_info(),
-                authority: ctx.accounts.owner.to_account_info(),
+                authority: ctx.accounts.vault.to_account_info(),
             },
         );
         anchor_spl::token::transfer(
