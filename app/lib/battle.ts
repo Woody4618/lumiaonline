@@ -40,17 +40,19 @@ export const getBattleTurns = async (
    * Static level because there isn't any level attribute.
    * This is basically a base damage calculation.
    */
-  const characterLvl = 10
+  const characterBaseDamage = 10 * characterAccount.level.toNumber()
 
   /** @TODO add skill attribute to the character account. */
   const characterSkill = characterAccount.meleeSkill + 20
 
   /** Damage formulas */
-  const characterMinDamage = characterLvl / 5
-  const characterMaxDamage = 0.085 * characterSkill + characterLvl / 5
-  const monsterMinDamage = characterLvl / 5
+  const characterMinDamage = characterBaseDamage / 5
+  const characterMaxDamage = 0.085 * characterSkill + characterBaseDamage / 5
+
+  const monsterBaseDamage = 10
+  const monsterMinDamage = monsterBaseDamage / 5
   const monsterMaxDamage =
-    0.085 * (monsterAccount.meleeSkill + 20) + characterLvl / 5
+    0.085 * (monsterAccount.meleeSkill + 20) + monsterBaseDamage / 5
 
   let characterHitpoints = characterAccount.hitpoints
   let monsterHitpoints = monsterAccount.hitpoints

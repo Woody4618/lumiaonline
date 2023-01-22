@@ -16,26 +16,28 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 /** @jsxImportSource theme-ui */
-import { Heading, Text, Label, Input, Button, Flex } from "@theme-ui/components"
+import { Heading, Text, Flex } from "@theme-ui/components"
 
-import Header from "@/components/Header/Header"
-import { useEffect, useState } from "react"
-import { useConnection, useWallet } from "@solana/wallet-adapter-react"
+import { useEffect, useMemo, useState } from "react"
+import { useConnection } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
-import { getBattles, getCharacters } from "lib/program-utils"
+import { getBattles } from "lib/program-utils"
 import {
   BattleAccount,
   CharacterAccount,
   MonsterTypeAccount,
 } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
-import { Metaplex } from "@metaplex-foundation/js"
 import { Layout } from "@/components/Layout/Layout"
+import Link from "next/link"
+import { PublicKey } from "@solana/web3.js"
 
 type BattleWithParticipants = {
   account: BattleAccount & {
     participants: {
-      character: CharacterAccount
+      character: CharacterAccount & {
+        publicKey: PublicKey
+      }
       monster: MonsterTypeAccount
     }
   }
@@ -58,13 +60,18 @@ export default function Battles() {
               battle.account.participants[0]
             )
 
+            /** Add public key to the object to use it later */
+            const characterWithPublicKey = Object.assign(character, {
+              publicKey: battle.account.participants[0],
+            })
+
             const monster = await MonsterTypeAccount.fetch(
               connection,
               battle.account.participants[1]
             )
 
             const newBattleAccount = Object.assign(battle.account, {
-              participants: { character, monster },
+              participants: { character: characterWithPublicKey, monster },
             })
 
             return {
@@ -79,6 +86,12 @@ export default function Battles() {
     })()
   }, [connection])
 
+  const sortedBattles = useMemo(() => {
+    if (!battles) return null
+
+    return battles.sort((a, b) => b.account.timestamp.cmp(a.account.timestamp))
+  }, [battles])
+
   return (
     <Layout>
       <Heading mb=".8rem" variant="heading1">
@@ -92,8 +105,8 @@ export default function Battles() {
           gap: "1.6rem",
         }}
       >
-        {battles ? (
-          battles.map((battle) => {
+        {sortedBattles ? (
+          sortedBattles.map((battle) => {
             const { character, monster } = battle.account.participants
             const lastTurn =
               battle.account.battleTurns[battle.account.battleTurns.length - 1]
@@ -111,9 +124,24 @@ export default function Battles() {
                 }}
                 key={battle.pubkey.toString()}
               >
+                <span sx={{ fontSize: "1.1rem" }}>
+                  [
+                  {new Date(
+                    battle.account.timestamp.toNumber() * 1000
+                  ).toLocaleString()}
+                  ]
+                </span>
+                {"  "}
+
+                <Link
+                  href={`/characters/${character.publicKey.toString()}`}
+                  passHref
+                >
+                  <a>{character.name}</a>
+                </Link>
                 {characterDied
-                  ? `${character.name} died by a ${monster.name}`
-                  : `${character.name} killed a ${monster.name}`}
+                  ? `died by a ${monster.name}`
+                  : `killed a ${monster.name}`}
               </Flex>
             )
           })

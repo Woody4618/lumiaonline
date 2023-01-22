@@ -152,6 +152,18 @@ const CharacterPage: NextPage = () => {
                     }}
                   >
                     <Text variant="small" color="lightText">
+                      Level
+                    </Text>
+                    <Text variant="small">{character.level.toString()}</Text>
+                  </Flex>
+                  <Flex
+                    sx={{
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "5rem",
+                    }}
+                  >
+                    <Text variant="small" color="lightText">
                       Hitpoints
                     </Text>
                     <Text variant="small">

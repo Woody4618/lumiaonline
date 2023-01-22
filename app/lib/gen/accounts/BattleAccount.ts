@@ -7,17 +7,20 @@ import { PROGRAM_ID } from "../programId"
 export interface BattleAccountFields {
   battleTurns: Array<types.BattleTurnFields>
   participants: Array<PublicKey>
+  timestamp: BN
 }
 
 export interface BattleAccountJSON {
   battleTurns: Array<types.BattleTurnJSON>
   participants: Array<string>
+  timestamp: string
 }
 
 /** Holds information about a battle between a character and a monster */
 export class BattleAccount {
   readonly battleTurns: Array<types.BattleTurn>
   readonly participants: Array<PublicKey>
+  readonly timestamp: BN
 
   static readonly discriminator = Buffer.from([
     151, 107, 3, 106, 43, 65, 131, 90,
@@ -26,6 +29,7 @@ export class BattleAccount {
   static readonly layout = borsh.struct([
     borsh.vec(types.BattleTurn.layout(), "battleTurns"),
     borsh.vec(borsh.publicKey(), "participants"),
+    borsh.i64("timestamp"),
   ])
 
   constructor(fields: BattleAccountFields) {
@@ -33,6 +37,7 @@ export class BattleAccount {
       (item) => new types.BattleTurn({ ...item })
     )
     this.participants = fields.participants
+    this.timestamp = fields.timestamp
   }
 
   static async fetch(
@@ -83,6 +88,7 @@ export class BattleAccount {
         ) => types.BattleTurn.fromDecoded(item)
       ),
       participants: dec.participants,
+      timestamp: dec.timestamp,
     })
   }
 
@@ -90,6 +96,7 @@ export class BattleAccount {
     return {
       battleTurns: this.battleTurns.map((item) => item.toJSON()),
       participants: this.participants.map((item) => item.toString()),
+      timestamp: this.timestamp.toString(),
     }
   }
 
@@ -99,6 +106,7 @@ export class BattleAccount {
         types.BattleTurn.fromJSON(item)
       ),
       participants: obj.participants.map((item) => new PublicKey(item)),
+      timestamp: new BN(obj.timestamp),
     })
   }
 }

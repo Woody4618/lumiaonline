@@ -350,8 +350,18 @@ describe("chainquest", () => {
               new anchor.BN(expForNextLevel)
             )
           ) {
+            // Expect level upgrade
             expect(
-              characterAccAfterBattle.level.gt(characterAccBeforeBattle.level)
+              characterAccAfterBattle.level.cmp(
+                characterAccBeforeBattle.level.add(new anchor.BN(1))
+              )
+            ).to.be.eq(0)
+
+            // Expect HP upgrade
+            expect(
+              characterAccAfterBattle.hitpoints.gt(
+                characterAccBeforeBattle.hitpoints
+              )
             )
           }
         }
