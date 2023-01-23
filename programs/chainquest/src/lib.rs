@@ -20,9 +20,9 @@ use std::mem::size_of;
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token::{Mint, Token, TokenAccount},
+    token::{ Mint, Token, TokenAccount },
 };
-use metadata::{MetadataAccount, TokenMetadata};
+use metadata::{ MetadataAccount, TokenMetadata };
 
 pub mod metadata;
 pub mod state;
@@ -38,12 +38,12 @@ pub mod chainquest {
     #[access_control(CreateCharacter::validate_nft(&ctx))]
     pub fn create_character(
         ctx: Context<CreateCharacter>,
-        name: String,
+        name: String
     ) -> Result<()> {
         let character = CharacterAccount::new(
             ctx.accounts.owner.key(),
             ctx.accounts.nft_mint.key(),
-            &name,
+            &name
         )?;
 
         ctx.accounts.character.set_inner(character);
@@ -55,7 +55,7 @@ pub mod chainquest {
         ctx: Context<CreateQuest>,
         duration: i64,
         reward_exp: u64,
-        id: String,
+        id: String
     ) -> Result<()> {
         let quest = QuestAccount {
             duration,
@@ -73,7 +73,7 @@ pub mod chainquest {
         name: String,
         hitpoints: u64,
         melee_skill: u8,
-        experience: u64,
+        experience: u64
     ) -> Result<()> {
         let monster_type = MonsterTypeAccount {
             name,
@@ -89,7 +89,7 @@ pub mod chainquest {
 
     pub fn create_monster_spawn(
         ctx: Context<CreateMonsterSpawn>,
-        spawntime: i64,
+        spawntime: i64
     ) -> Result<()> {
         let monster_spawn = MonsterSpawnAccount {
             monster_type: ctx.accounts.monster_type.key(),
@@ -105,13 +105,13 @@ pub mod chainquest {
     /// battle between a character and a monster spawn
     pub fn join_battle(
         ctx: Context<JoinBattle>,
-        battle_turns: Vec<BattleTurn>,
+        battle_turns: Vec<BattleTurn>
     ) -> Result<()> {
         // if there is last_killed, then validate the timestamp
         if ctx.accounts.monster_spawn.last_killed.is_some() {
             let required_timestamp =
-                ctx.accounts.monster_spawn.last_killed.as_ref().unwrap()
-                    + ctx.accounts.monster_spawn.spawntime;
+                ctx.accounts.monster_spawn.last_killed.as_ref().unwrap() +
+                ctx.accounts.monster_spawn.spawntime;
 
             require_gte!(
                 ctx.accounts.clock.unix_timestamp,
@@ -128,11 +128,17 @@ pub mod chainquest {
             ctx.accounts.character.experience +=
                 ctx.accounts.monster_type.experience;
 
+            // leveling up formula
             let exp_for_next_level =
-                50 * u64::pow(ctx.accounts.character.level, 2);
+                // @todo using "as i64" to prevent overflow is a workaround
+                50 * (u64::pow(ctx.accounts.character.level, 2) as i64) -
+                150 * (ctx.accounts.character.level as i64) +
+                200;
+
+            msg!("{}", exp_for_next_level);
 
             // increase character level and HP if possible
-            if ctx.accounts.character.experience > exp_for_next_level {
+            if ctx.accounts.character.experience >= (exp_for_next_level as u64) {
                 ctx.accounts.character.level += 1;
                 ctx.accounts.character.hitpoints += 2;
             }
@@ -142,15 +148,16 @@ pub mod chainquest {
             battle_turns,
             participants: vec![
                 ctx.accounts.character.key(),
-                ctx.accounts.monster_type.key(),
+                ctx.accounts.monster_type.key()
             ],
             timestamp: ctx.accounts.clock.unix_timestamp,
         };
 
         ctx.accounts.battle.set_inner(battle);
 
-        ctx.accounts.monster_spawn.last_killed =
-            Some(ctx.accounts.clock.unix_timestamp);
+        ctx.accounts.monster_spawn.last_killed = Some(
+            ctx.accounts.clock.unix_timestamp
+        );
 
         Ok(())
     }
@@ -165,14 +172,9 @@ pub mod chainquest {
     }
 
     pub fn claim_quest(ctx: Context<ClaimQuest>) -> Result<()> {
-        let required_timestamp = ctx
-            .accounts
-            .character
-            .quest_state
-            .as_ref()
-            .unwrap()
-            .started_at
-            + ctx.accounts.quest.duration;
+        let required_timestamp =
+            ctx.accounts.character.quest_state.as_ref().unwrap().started_at +
+            ctx.accounts.quest.duration;
 
         require_gte!(
             ctx.accounts.clock.unix_timestamp,
@@ -205,9 +207,9 @@ pub mod chainquest {
                 anchor_lang::system_program::Transfer {
                     from: ctx.accounts.from.to_account_info(),
                     to: ctx.accounts.vault.to_account_info(),
-                },
+                }
             ),
-            amount,
+            amount
         )?;
 
         Ok(())
@@ -227,9 +229,9 @@ pub mod chainquest {
                     from: ctx.accounts.owner_ata.to_account_info(),
                     to: ctx.accounts.vault_ata.to_account_info(),
                     authority: ctx.accounts.owner.to_account_info(),
-                },
+                }
             ),
-            amount,
+            amount
         )?;
         Ok(())
     }
@@ -241,11 +243,11 @@ pub mod chainquest {
                 to: ctx.accounts.owner_ata.to_account_info(),
                 from: ctx.accounts.vault_ata.to_account_info(),
                 authority: ctx.accounts.vault.to_account_info(),
-            },
+            }
         );
         anchor_spl::token::transfer(
             cpi_ctx.with_signer(&[&ctx.accounts.vault.seeds()]),
-            amount,
+            amount
         )?;
         Ok(())
     }
@@ -375,7 +377,11 @@ pub struct CreateCharacter<'info> {
         init,
         space = 8 + size_of::<CharacterAccount>(),
         payer = owner,
-        seeds = [CHARACTER_PREFIX.as_ref(), owner.key().as_ref(), nft_mint.key().as_ref()],
+        seeds = [
+            CHARACTER_PREFIX.as_ref(),
+            owner.key().as_ref(),
+            nft_mint.key().as_ref(),
+        ],
         bump
     )]
     pub character: Account<'info, CharacterAccount>,
@@ -409,15 +415,16 @@ pub struct CreateCharacter<'info> {
 
 impl<'info> CreateCharacter<'info> {
     fn verify_holder(ctx: &Context<Self>) -> Result<()> {
-        mpl_token_metadata::utils::assert_currently_holding(
-            &ctx.accounts.token_metadata_program.key(),
-            &ctx.accounts.owner.to_account_info(),
-            &ctx.accounts.token_metadata.to_account_info(),
-            &ctx.accounts.token_metadata,
-            &ctx.accounts.nft_mint.to_account_info(),
-            &ctx.accounts.owner_token_account.to_account_info(),
-        )
-        .map_err(|_| CharacterError::InvalidOwner.into())
+        mpl_token_metadata::utils
+            ::assert_currently_holding(
+                &ctx.accounts.token_metadata_program.key(),
+                &ctx.accounts.owner.to_account_info(),
+                &ctx.accounts.token_metadata.to_account_info(),
+                &ctx.accounts.token_metadata,
+                &ctx.accounts.nft_mint.to_account_info(),
+                &ctx.accounts.owner_token_account.to_account_info()
+            )
+            .map_err(|_| CharacterError::InvalidOwner.into())
     }
 
     pub fn validate_nft(ctx: &Context<Self>) -> Result<()> {
@@ -431,11 +438,7 @@ pub struct InitializeVault<'info> {
         init,
         payer = owner,
         space = 8 + Vault::LEN,
-        seeds = [
-          Vault::PREFIX,
-          owner.key().as_ref(),
-          authority.key().as_ref(),
-        ],
+        seeds = [Vault::PREFIX, owner.key().as_ref(), authority.key().as_ref()],
         bump
     )]
     pub vault: Account<'info, Vault>,
@@ -480,11 +483,7 @@ pub struct SplDeposit<'info> {
     #[account(
         has_one = owner,
         has_one = authority,
-        seeds = [
-          Vault::PREFIX,
-          owner.key().as_ref(),
-          authority.key().as_ref()
-        ],
+        seeds = [Vault::PREFIX, owner.key().as_ref(), authority.key().as_ref()],
         bump
     )]
     pub vault: Account<'info, Vault>,
@@ -494,7 +493,7 @@ pub struct SplDeposit<'info> {
         init_if_needed,
         payer = owner,
         associated_token::mint = mint,
-        associated_token::authority = vault,
+        associated_token::authority = vault
     )]
     pub vault_ata: Account<'info, TokenAccount>,
     #[account(
@@ -519,11 +518,7 @@ pub struct SplWithdraw<'info> {
     #[account(
         has_one = owner,
         has_one = authority,
-        seeds = [
-          Vault::PREFIX,
-          owner.key().as_ref(),
-          authority.key().as_ref()
-        ],
+        seeds = [Vault::PREFIX, owner.key().as_ref(), authority.key().as_ref()],
         bump
     )]
     pub vault: Account<'info, Vault>,
@@ -539,7 +534,7 @@ pub struct SplWithdraw<'info> {
         init_if_needed,
         payer = owner,
         associated_token::mint = mint,
-        associated_token::authority = owner,
+        associated_token::authority = owner
     )]
     pub owner_ata: Account<'info, TokenAccount>,
 
@@ -572,4 +567,3 @@ pub enum SpawnTypeError {
     #[msg("The monster hasn't spawned yet.")]
     InvalidTimestamp,
 }
-

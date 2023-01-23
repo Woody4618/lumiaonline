@@ -45,6 +45,7 @@ import {
   mintTo,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token"
+import { getCharacterExperienceForLevel } from "../app/lib/character-utils"
 
 describe("chainquest", () => {
   // Configure the client to use the local cluster.
@@ -358,8 +359,9 @@ describe("chainquest", () => {
           expect(characterAccAfterBattle.experience.eq(expToExpect)).to.be.true
 
           /** Expect character to have advanced in level if the experience is enough */
-          const expForNextLevel =
-            50 * Math.pow(characterAccBeforeBattle.level.toNumber(), 2)
+          const expForNextLevel = getCharacterExperienceForLevel(
+            characterAccBeforeBattle.level.toNumber() + 1
+          )
           if (
             characterAccAfterBattle.experience.gte(
               new anchor.BN(expForNextLevel)
@@ -382,7 +384,6 @@ describe("chainquest", () => {
         }
         /** Do everything til the level upgrades */
       } while (characterAccAfterBattle.level <= characterAccBeforeBattle.level)
-
       /** Try to kill the same spawn again */
       // @TODO add test to validate spawntimes
       // try {
