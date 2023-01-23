@@ -130,9 +130,11 @@ export default function Play() {
       )
     }
 
-    if (isCharacterLoading) {
-      return <LoadingIcon />
-    }
+    // Remove loading here, because the loading icon is a little bit innapropriate.
+    // Can add a loading skeleton, or progress bar animation later on.
+    // if (isCharacterLoading) {
+    //   return <LoadingIcon />
+    // }
 
     if (selectedCharacter) {
       const characterTotalExperienceToNextLevel = getCharacterGainedExperience(

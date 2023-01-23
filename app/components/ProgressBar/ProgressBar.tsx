@@ -43,6 +43,7 @@ export function ProgressBar(props: IAppProps) {
       <Flex
         sx={{
           width: `${percentage}%`,
+          transition: "width 1.125s ease-in-out",
 
           background: `linear-gradient(to bottom, ${colors[0]}, ${colors[1]})`,
           borderTop: `0.5px solid ${colors[2]}`,

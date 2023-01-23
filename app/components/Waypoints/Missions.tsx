@@ -18,7 +18,7 @@
 /** @jsxImportSource theme-ui */
 import { Heading, Text, Button, Flex } from "@theme-ui/components"
 
-import { FormEvent, useEffect, useMemo, useState } from "react"
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
 import { getCharacterAddress, getQuests } from "lib/program-utils"
@@ -26,11 +26,11 @@ import { QuestAccount } from "lib/gen/accounts"
 import { LoadingIcon } from "@/components/icons/LoadingIcon"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { claimQuest, joinQuest } from "lib/gen/instructions"
-import { quests as questsData } from "data/quests"
+import { quests as missionsData } from "data/quests"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 
-type QuestResponse = {
+type MissionResponse = {
   pubkey: web3.PublicKey
   account: QuestAccount
 }
@@ -38,16 +38,19 @@ type QuestResponse = {
 export function Missions() {
   const { connection } = useConnection()
   const { publicKey, sendTransaction } = useWallet()
-  const [quests, setQuests] = useState<QuestResponse[]>(null)
-  const { selectedCharacter } = useContext(characterContext)
+  const [missions, setMissions] = useState<MissionResponse[]>(null)
+  const { selectedCharacter, fetchCharacters } = useContext(characterContext)
+
+  const fetchMissions = useCallback(async () => {
+    const missions = await getQuests(connection)
+
+    setMissions(missions)
+  }, [connection])
 
   useEffect(() => {
     ;(async () => {
       if (connection) {
-        const quests = await getQuests(connection)
-
-        console.log(quests)
-        setQuests(quests)
+        fetchMissions()
       }
     })()
   }, [connection])
@@ -84,7 +87,14 @@ export function Missions() {
     tx.add(ix)
 
     const txid = await sendTransaction(tx, connection)
-    console.log(txid)
+
+    await connection.confirmTransaction({
+      blockhash: latest.blockhash,
+      lastValidBlockHeight: latest.lastValidBlockHeight,
+      signature: txid,
+    })
+
+    fetchCharacters()
   }
 
   const handleClaimFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -119,7 +129,14 @@ export function Missions() {
     tx.add(ix)
 
     const txid = await sendTransaction(tx, connection)
-    console.log(txid)
+
+    await connection.confirmTransaction({
+      blockhash: latest.blockhash,
+      lastValidBlockHeight: latest.lastValidBlockHeight,
+      signature: txid,
+    })
+
+    fetchCharacters()
   }
 
   const currentCharacterMissionData = useMemo(() => {
@@ -127,7 +144,7 @@ export function Missions() {
 
     const characterQuestId = selectedCharacter?.account.questState?.questId
     if (characterQuestId) {
-      const questData = questsData.find(
+      const questData = missionsData.find(
         (questData) => questData.id === characterQuestId
       )
 
@@ -147,9 +164,9 @@ export function Missions() {
           },
         }}
       >
-        {quests ? (
-          quests.map((quest) => {
-            const questData = questsData.find(
+        {missions ? (
+          missions.map((quest) => {
+            const questData = missionsData.find(
               (questData) => questData.id === quest.account.id
             )
 
