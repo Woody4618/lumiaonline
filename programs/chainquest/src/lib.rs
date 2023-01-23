@@ -125,24 +125,9 @@ pub mod chainquest {
         if last_turn.character_hitpoints <= 0 {
             ctx.accounts.character.deaths += 1;
         } else {
-            ctx.accounts.character.experience +=
-                ctx.accounts.monster_type.experience;
-
-            let next_level = ctx.accounts.character.level + 1;
-            // leveling up formula
-            let exp_for_next_level =
-                // @todo using "as i64" to prevent overflow is a workaround
-                50 * (u64::pow(next_level, 2) as i64) -
-                150 * (next_level as i64) +
-                200;
-
-            msg!("{}", exp_for_next_level);
-
-            // increase character level and HP if possible
-            if ctx.accounts.character.experience >= (exp_for_next_level as u64) {
-                ctx.accounts.character.level += 1;
-                ctx.accounts.character.hitpoints += 2;
-            }
+            ctx.accounts.character.add_exp(
+                ctx.accounts.monster_type.experience
+            );
         }
 
         let battle = BattleAccount {
@@ -183,7 +168,7 @@ pub mod chainquest {
             QuestError::InvalidTimestamp
         );
 
-        ctx.accounts.character.experience += ctx.accounts.quest.reward_exp;
+        ctx.accounts.character.add_exp(ctx.accounts.quest.reward_exp);
 
         ctx.accounts.character.quest_state = None;
 

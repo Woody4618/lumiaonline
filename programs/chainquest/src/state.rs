@@ -109,6 +109,24 @@ impl CharacterAccount {
 
         Ok(account)
     }
+
+    pub fn add_exp(&mut self, exp_to_add: u64) {
+        self.experience += exp_to_add;
+
+        let next_level = self.level + 1;
+        // leveling up formula
+        let exp_for_next_level =
+            // @todo using "as i64" to prevent overflow is a workaround
+            50 * (u64::pow(next_level, 2) as i64) -
+            150 * (next_level as i64) +
+            200;
+
+        // increase character level and HP if possible
+        if self.experience >= (exp_for_next_level as u64) {
+            self.level += 1;
+            self.hitpoints += 2;
+        }
+    }
 }
 
 #[account]
@@ -123,12 +141,7 @@ impl Vault {
     pub const LEN: usize = 32 + 32 + 1;
 
     pub fn seeds(&self) -> [&[u8]; 4] {
-        [
-            Self::PREFIX,
-            self.owner.as_ref(),
-            self.authority.as_ref(),
-            &self.bump,
-        ]
+        [Self::PREFIX, self.owner.as_ref(), self.authority.as_ref(), &self.bump]
     }
 }
 
@@ -139,4 +152,3 @@ pub enum CharacterError {
     #[msg("Owner must be the current holder.")]
     InvalidOwner,
 }
-
