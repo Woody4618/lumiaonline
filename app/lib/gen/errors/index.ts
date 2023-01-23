@@ -11,43 +11,22 @@ export function fromCode(
     : anchor.fromCode(code, logs)
 }
 
-function hasOwnProperty<X extends object, Y extends PropertyKey>(
-  obj: X,
-  prop: Y
-): obj is X & Record<Y, unknown> {
-  return Object.hasOwnProperty.call(obj, prop)
-}
-
-const errorRe = /Program (\w+) failed: custom program error: (\w+)/
+const errorRe = /custom program error: (\w+)/
 
 export function fromTxError(
   err: unknown
 ): custom.CustomError | anchor.AnchorError | null {
-  if (
-    typeof err !== "object" ||
-    err === null ||
-    !hasOwnProperty(err, "logs") ||
-    !Array.isArray(err.logs)
-  ) {
+  if (typeof err !== "object" || err === null) {
     return null
   }
 
-  let firstMatch: RegExpExecArray | null = null
-  for (const logLine of err.logs) {
-    firstMatch = errorRe.exec(logLine)
-    if (firstMatch !== null) {
-      break
-    }
-  }
+  const match = errorRe.exec(err + "")
 
-  if (firstMatch === null) {
+  if (match === null) {
     return null
   }
 
-  const [programIdRaw, codeRaw] = firstMatch.slice(1)
-  if (programIdRaw !== PROGRAM_ID.toString()) {
-    return null
-  }
+  const [codeRaw] = match.slice(1)
 
   let errorCode: number
   try {
@@ -56,5 +35,5 @@ export function fromTxError(
     return null
   }
 
-  return fromCode(errorCode, err.logs)
+  return fromCode(errorCode)
 }

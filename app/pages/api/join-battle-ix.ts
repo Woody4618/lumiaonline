@@ -18,6 +18,7 @@
 import { web3 } from "@project-serum/anchor"
 import { getBattleTurns } from "lib/battle"
 import { MonsterTypeAccount } from "lib/gen/accounts"
+import { fromTxError } from "lib/gen/errors"
 import { joinBattle } from "lib/gen/instructions"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { NextApiRequest, NextApiResponse } from "next"
@@ -90,11 +91,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     return true
   } catch (e) {
-    console.log(e)
-
+    const msg = fromTxError(e) || e
     res.send({
       txid: null,
-      error: e + "",
+      error: msg + "",
     })
 
     return true

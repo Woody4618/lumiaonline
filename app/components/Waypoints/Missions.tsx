@@ -29,6 +29,8 @@ import { claimQuest, joinQuest } from "lib/gen/instructions"
 import { quests as missionsData } from "data/quests"
 import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
+import { toast } from "react-hot-toast"
+import { fromTxError } from "lib/gen/errors"
 
 type MissionResponse = {
   pubkey: web3.PublicKey
@@ -58,85 +60,113 @@ export function Missions() {
   const handleJoinFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const data = new FormData(e.currentTarget)
+    const loadingToast = toast.loading("Joining mission...")
 
-    if (!selectedCharacter) throw new Error("Select a character first")
-    const nftMint = selectedCharacter.nft.mint.address
+    try {
+      const data = new FormData(e.currentTarget)
 
-    const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
+      if (!selectedCharacter) throw new Error("Select a character first")
+      const nftMint = selectedCharacter.nft.mint.address
 
-    const id = data.get("id").toString()
+      const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
 
-    const quest = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("quest"), Buffer.from(id)],
-      PROGRAM_ID
-    )[0]
+      const id = data.get("id").toString()
 
-    const ix = joinQuest({
-      quest,
-      character,
-      nftMint,
-      clock: web3.SYSVAR_CLOCK_PUBKEY,
-      owner: publicKey,
-    })
+      const quest = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("quest"), Buffer.from(id)],
+        PROGRAM_ID
+      )[0]
 
-    const latest = await connection.getLatestBlockhash()
-    const tx = new web3.Transaction()
+      const ix = joinQuest({
+        quest,
+        character,
+        nftMint,
+        clock: web3.SYSVAR_CLOCK_PUBKEY,
+        owner: publicKey,
+      })
 
-    tx.recentBlockhash = latest.blockhash
-    tx.add(ix)
+      const latest = await connection.getLatestBlockhash()
+      const tx = new web3.Transaction()
 
-    const txid = await sendTransaction(tx, connection)
+      tx.recentBlockhash = latest.blockhash
+      tx.add(ix)
 
-    await connection.confirmTransaction({
-      blockhash: latest.blockhash,
-      lastValidBlockHeight: latest.lastValidBlockHeight,
-      signature: txid,
-    })
+      const txid = await sendTransaction(tx, connection)
 
-    fetchCharacters()
+      await connection.confirmTransaction({
+        blockhash: latest.blockhash,
+        lastValidBlockHeight: latest.lastValidBlockHeight,
+        signature: txid,
+      })
+
+      await fetchCharacters()
+
+      toast.success(`Joined!`, {
+        id: loadingToast,
+      })
+    } catch (e) {
+      const msg = fromTxError(e) || e
+
+      toast(msg + "", {
+        id: loadingToast,
+      })
+    }
   }
 
   const handleClaimFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const data = new FormData(e.currentTarget)
+    const loadingToast = toast.loading("Claiming...")
 
-    if (!selectedCharacter) throw new Error("Select a character first")
-    const nftMint = selectedCharacter.nft.mint.address
+    try {
+      const data = new FormData(e.currentTarget)
 
-    const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
+      if (!selectedCharacter) throw new Error("Select a character first")
+      const nftMint = selectedCharacter.nft.mint.address
 
-    const id = data.get("id").toString()
+      const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
 
-    const quest = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("quest"), Buffer.from(id)],
-      PROGRAM_ID
-    )[0]
+      const id = data.get("id").toString()
 
-    const ix = claimQuest({
-      quest,
-      character,
-      nftMint,
-      clock: web3.SYSVAR_CLOCK_PUBKEY,
-      owner: publicKey,
-    })
+      const quest = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("quest"), Buffer.from(id)],
+        PROGRAM_ID
+      )[0]
 
-    const latest = await connection.getLatestBlockhash()
-    const tx = new web3.Transaction()
+      const ix = claimQuest({
+        quest,
+        character,
+        nftMint,
+        clock: web3.SYSVAR_CLOCK_PUBKEY,
+        owner: publicKey,
+      })
 
-    tx.recentBlockhash = latest.blockhash
-    tx.add(ix)
+      const latest = await connection.getLatestBlockhash()
+      const tx = new web3.Transaction()
 
-    const txid = await sendTransaction(tx, connection)
+      tx.recentBlockhash = latest.blockhash
+      tx.add(ix)
 
-    await connection.confirmTransaction({
-      blockhash: latest.blockhash,
-      lastValidBlockHeight: latest.lastValidBlockHeight,
-      signature: txid,
-    })
+      const txid = await sendTransaction(tx, connection)
 
-    fetchCharacters()
+      await connection.confirmTransaction({
+        blockhash: latest.blockhash,
+        lastValidBlockHeight: latest.lastValidBlockHeight,
+        signature: txid,
+      })
+
+      await fetchCharacters()
+
+      toast.success(`Reward claimed!`, {
+        id: loadingToast,
+      })
+    } catch (e) {
+      const msg = fromTxError(e) || e
+
+      toast(msg + "", {
+        id: loadingToast,
+      })
+    }
   }
 
   const currentCharacterMissionData = useMemo(() => {

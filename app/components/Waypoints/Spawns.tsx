@@ -33,6 +33,7 @@ import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import { PublicKey } from "@solana/web3.js"
 import { monsters } from "data/monsters"
+import { fromTxError } from "lib/gen/errors"
 
 type SpawnInstanceResponse = {
   pubkey: web3.PublicKey
@@ -127,7 +128,7 @@ export function Spawns() {
       )
 
       if (newCharacterAcc.deaths > previousCharacterAccount.deaths) {
-        toast.error("Died ", {
+        toast("Died ", {
           id: loadingToast,
         })
       } else {
@@ -143,7 +144,8 @@ export function Spawns() {
       fetchCharacters()
     } catch (e) {
       console.log(e)
-      toast.error(e + "", {
+      const errorMsg = fromTxError(e)
+      toast(errorMsg + "", {
         id: loadingToast,
       })
     }

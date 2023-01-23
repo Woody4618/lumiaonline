@@ -31,6 +31,8 @@ use state::*;
 
 declare_id!("D6o7C1xgcgvDRRnNp8KFUNQ1Ki1pMrVGVqbuh9YF9vGb");
 
+const NAME_MAX_LENGTH: usize = 16;
+
 #[program]
 pub mod chainquest {
     use super::*;
@@ -40,6 +42,11 @@ pub mod chainquest {
         ctx: Context<CreateCharacter>,
         name: String
     ) -> Result<()> {
+        require!(
+            name.len() <= NAME_MAX_LENGTH,
+            LibError::MaxNameLengthExceeded
+        );
+
         let character = CharacterAccount::new(
             ctx.accounts.owner.key(),
             ctx.accounts.nft_mint.key(),
@@ -116,7 +123,7 @@ pub mod chainquest {
             require_gte!(
                 ctx.accounts.clock.unix_timestamp,
                 required_timestamp,
-                SpawnTypeError::InvalidTimestamp
+                LibError::InvalidSpawnTimestamp
             );
         }
 
@@ -165,7 +172,7 @@ pub mod chainquest {
         require_gte!(
             ctx.accounts.clock.unix_timestamp,
             required_timestamp,
-            QuestError::InvalidTimestamp
+            LibError::InvalidQuestTimestamp
         );
 
         ctx.accounts.character.add_exp(ctx.accounts.quest.reward_exp);
@@ -410,7 +417,7 @@ impl<'info> CreateCharacter<'info> {
                 &ctx.accounts.nft_mint.to_account_info(),
                 &ctx.accounts.owner_token_account.to_account_info()
             )
-            .map_err(|_| CharacterError::InvalidOwner.into())
+            .map_err(|_| LibError::InvalidOwner.into())
     }
 
     pub fn validate_nft(ctx: &Context<Self>) -> Result<()> {
@@ -535,21 +542,13 @@ pub struct SplWithdraw<'info> {
 }
 
 #[error_code]
-pub enum CharacterError {
+pub enum LibError {
     #[msg("Name is too long. Max. length is 16 bytes.")]
     MaxNameLengthExceeded,
     #[msg("Owner must be the current holder.")]
     InvalidOwner,
-}
-
-#[error_code]
-pub enum QuestError {
     #[msg("The character hasn't been on this quest long enough.")]
-    InvalidTimestamp,
-}
-
-#[error_code]
-pub enum SpawnTypeError {
+    InvalidQuestTimestamp,
     #[msg("The monster hasn't spawned yet.")]
-    InvalidTimestamp,
+    InvalidSpawnTimestamp,
 }

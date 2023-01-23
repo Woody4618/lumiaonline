@@ -86,15 +86,8 @@ pub struct CharacterAccount {
     pub melee_skill: u8,
 }
 
-const NAME_MAX_LENGTH: usize = 16;
-
 impl CharacterAccount {
     pub fn new(owner: Pubkey, nft_mint: Pubkey, name: &str) -> Result<Self> {
-        require!(
-            name.len() <= NAME_MAX_LENGTH,
-            CharacterError::MaxNameLengthExceeded
-        );
-
         let account = CharacterAccount {
             name: name.to_string(),
             experience: 0,
@@ -143,12 +136,4 @@ impl Vault {
     pub fn seeds(&self) -> [&[u8]; 4] {
         [Self::PREFIX, self.owner.as_ref(), self.authority.as_ref(), &self.bump]
     }
-}
-
-#[error_code]
-pub enum CharacterError {
-    #[msg("Name is too long. Max. length is 16 bytes.")]
-    MaxNameLengthExceeded,
-    #[msg("Owner must be the current holder.")]
-    InvalidOwner,
 }
