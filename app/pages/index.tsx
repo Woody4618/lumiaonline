@@ -176,7 +176,7 @@ export default function Home() {
             Latest news
           </Heading>
 
-          <NewsContentBlock title="Closed Alpha launch." date="2023-01-23">
+          <NewsContentBlock title="Open Alpha launch." date="2023-01-23">
             <Text>
               Dear Lumia community, <br />
               You can now start creating your character

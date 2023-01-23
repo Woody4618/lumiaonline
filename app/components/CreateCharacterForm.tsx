@@ -32,6 +32,8 @@ import {
 } from "lib/program-utils"
 import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
 import WalletConnectButton from "@/components/WalletConnectButton"
+import { toast } from "react-hot-toast"
+import { fromTxError } from "lib/gen/errors"
 
 const systemProgram = web3.SystemProgram.programId
 
@@ -43,39 +45,55 @@ export function CreateCharacterForm() {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const data = new FormData(e.currentTarget)
+    const loadingToast = toast.loading("Creating your character...")
 
-    const name = data.get("name").toString()
-    const nftMint = new web3.PublicKey(data.get("mint").toString())
+    try {
+      const data = new FormData(e.currentTarget)
 
-    const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
+      const name = data.get("name").toString()
+      const nftMint = new web3.PublicKey(data.get("mint").toString())
 
-    const ix = createCharacter(
-      {
-        name,
-      },
-      {
-        character,
-        owner: publicKey,
-        systemProgram,
-        ownerTokenAccount: await associatedAddress({
-          mint: nftMint,
+      const character = getCharacterAddress(publicKey, nftMint, PROGRAM_ID)
+
+      const ix = createCharacter(
+        {
+          name,
+        },
+        {
+          character,
           owner: publicKey,
-        }),
-        nftMint,
-        tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-        tokenMetadata: getTokenMetadataAddress(nftMint),
-      }
-    )
+          systemProgram,
+          ownerTokenAccount: await associatedAddress({
+            mint: nftMint,
+            owner: publicKey,
+          }),
+          nftMint,
+          tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+          tokenMetadata: getTokenMetadataAddress(nftMint),
+        }
+      )
 
-    const latest = await connection.getLatestBlockhash()
-    const tx = new web3.Transaction()
+      const latest = await connection.getLatestBlockhash()
+      const tx = new web3.Transaction()
 
-    tx.recentBlockhash = latest.blockhash
-    tx.add(ix)
+      tx.recentBlockhash = latest.blockhash
+      tx.add(ix)
 
-    const txid = await sendTransaction(tx, connection)
-    console.log(txid)
+      const txid = await sendTransaction(tx, connection)
+      console.log(txid)
+
+      await connection.confirmTransaction(txid)
+
+      toast.success(`Your character was created successfully!`, {
+        id: loadingToast,
+      })
+    } catch (e) {
+      console.log(e)
+      const errorMsg = fromTxError(e)
+      toast(errorMsg + "", {
+        id: loadingToast,
+      })
+    }
   }
 
   return (

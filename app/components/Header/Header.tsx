@@ -195,10 +195,6 @@ const Header = () => {
                 <Link href="/battles" passHref>
                   <ThemeLink>Latest Battles</ThemeLink>
                 </Link>
-
-                <Link href="/highscores" passHref>
-                  <ThemeLink>Highscores</ThemeLink>
-                </Link>
               </Flex>
             </Flex>
 

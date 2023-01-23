@@ -1,8 +1,7 @@
 export const spawns = [
   {
     monsterName: "Fish",
-    /** For test purposes, the spawntime is 0 */
-    spawntime: 0,
+    spawntime: 5,
     town: 1,
   },
   {

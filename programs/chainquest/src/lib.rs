@@ -29,7 +29,7 @@ pub mod state;
 
 use state::*;
 
-declare_id!("D6o7C1xgcgvDRRnNp8KFUNQ1Ki1pMrVGVqbuh9YF9vGb");
+declare_id!("FTntTxns1WBfqQZp9ng1b2knmg24r5jXz2wAtPPAzFK7");
 
 const NAME_MAX_LENGTH: usize = 16;
 
