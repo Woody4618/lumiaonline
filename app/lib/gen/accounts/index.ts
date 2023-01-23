@@ -17,3 +17,5 @@ export type {
   CharacterAccountFields,
   CharacterAccountJSON,
 } from "./CharacterAccount"
+export { Vault } from "./Vault"
+export type { VaultFields, VaultJSON } from "./Vault"
