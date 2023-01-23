@@ -35,6 +35,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import {
   ArrowLeftIcon,
+  CloseIcon,
   Divider,
   SettingsIcon,
   ShirtIcon,
@@ -53,6 +54,7 @@ export default function Play() {
   const { query } = useRouter()
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [audioVolume, setAudioVolume] = useState(DEFAULT_BACKGROUND_VOLUME)
+  const [isModalOpen, setIsModalOpen] = useState(true)
   const effectsAudioRef = useRef<HTMLAudioElement>()
   const backgroundAudioRef = useRef<HTMLAudioElement>()
 
@@ -289,6 +291,8 @@ export default function Play() {
       ]
     : null
 
+  console.log(isModalOpen)
+
   return (
     <Flex
       sx={{
@@ -319,8 +323,10 @@ export default function Play() {
             alignSelf: "flex-start",
             alignItems: "stretch",
             gap: "3.2rem",
+            visibility: isModalOpen ? "visible" : "hidden",
+            opacoty: isModalOpen ? 1 : 0,
 
-            position: "fixed",
+            position: "absolute",
             margin: "auto",
             left: 0,
             right: 0,
@@ -335,6 +341,18 @@ export default function Play() {
             },
           }}
         >
+          <Button
+            variant="resetted"
+            sx={{
+              position: "absolute",
+              right: "1.6rem",
+              top: "1.6rem",
+              cursor: "pointer",
+            }}
+            onClick={() => setIsModalOpen((prev) => !prev)}
+          >
+            <CloseIcon />
+          </Button>
           <Flex
             sx={{
               flexDirection: "column",
@@ -346,7 +364,6 @@ export default function Play() {
 
               "@media (min-width: 768px)": {
                 maxWidth: "24rem",
-                overflowY: "scroll",
               },
             }}
           >
@@ -542,7 +559,6 @@ export default function Play() {
             <Flex
               sx={{
                 flexDirection: "column",
-                overflowY: "scroll",
               }}
             >
               {currentWaypoint ? <WaypointComponent /> : null}
@@ -552,19 +568,23 @@ export default function Play() {
         <Flex
           sx={{
             order: 1,
-            maxHeight: "100vh",
             "@media (min-width: 768px)": {
               flexDirection: "row",
               order: 2,
             },
           }}
         >
-          <img
-            sx={{
-              opacity: 0.6,
-            }}
-            src="/assets/teristraz.png"
-          />
+          <Button
+            variant="resetted"
+            onClick={() => setIsModalOpen((prev) => !prev)}
+          >
+            <img
+              sx={{
+                opacity: 0.6,
+              }}
+              src="/assets/teristraz.png"
+            />
+          </Button>
         </Flex>
       </Flex>
 
