@@ -32,8 +32,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (!endpoint) throw new Error("No RPC endpoint configured.")
 
-    const connection = new web3.Connection(endpoint, "confirmed")
-
+    const connection = new web3.Connection(endpoint, {
+      httpHeaders: {
+        "Content-Type": "application/json",
+        Referer: "https://www.lumia.online/",
+      },
+      commitment: "confirmed",
+    })
     const { characterAddress, monsterAddress, owner } = req.query
 
     const characterPubKey = new web3.PublicKey(characterAddress)
