@@ -157,7 +157,7 @@ export function Missions() {
       <Flex
         sx={{
           flexDirection: "column",
-          gap: "1.6rem",
+          gap: "3.2rem",
 
           "@media (min-width: 768px)": {
             flexDirection: "row",
@@ -187,9 +187,6 @@ export function Missions() {
                   alignItems: "center",
                   flexDirection: "column",
                   gap: ".8rem",
-                  borderTop: "1px solid",
-                  borderBottom: "1px solid",
-                  borderColor: "primary",
                   padding: ".8rem 0",
                 }}
                 key={quest.pubkey.toString()}

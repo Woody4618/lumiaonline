@@ -48,47 +48,6 @@ export function Layout({
           },
         }}
       >
-        {/* <Flex
-          aria-label="menu"
-          sx={{
-            display: "none",
-
-            flexDirection: "column",
-            minWidth: "26rem",
-            padding: "1.6rem 3.2rem",
-            listStyle: "none",
-            gap: "1.6rem",
-            borderRight: "1px solid",
-            borderColor: "background2",
-
-            "@media (min-width: 768px)": {
-              display: "flex",
-            },
-          }}
-          role="menu"
-        >
-          <Heading mb="1.6rem" variant="heading3">
-            Community
-          </Heading>
-          <Flex
-            sx={{
-              flexDirection: "column",
-              gap: ".8rem",
-            }}
-          >
-            <Link href="/characters" passHref>
-              <ThemeLink variant="gameButton">Characters</ThemeLink>
-            </Link>
-
-            <Link href="/battles" passHref>
-              <ThemeLink variant="gameButton">Latest Battles</ThemeLink>
-            </Link>
-
-            <Link href="/highscores" passHref>
-              <ThemeLink variant="gameButton">Highscores</ThemeLink>
-            </Link>
-          </Flex>
-        </Flex> */}
         <main
           sx={{
             display: "flex",

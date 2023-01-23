@@ -48,14 +48,19 @@ import {
   getCharacterExperienceForLevel,
   getCharacterGainedExperience,
 } from "lib/character-utils"
+import CharacterSelect from "@/components/Layout/CharacterSelect"
 
 const DEFAULT_BACKGROUND_VOLUME = 0.4
 const DEFAULT_EFFECTS_VOLUME = 0.2
 
 export default function Play() {
   const { publicKey, isWalletReady } = useWalletWrapper()
-  const { selectedCharacter, isLoading: isCharacterLoading } =
-    useContext(characterContext)
+  const {
+    characters,
+    selectedCharacter,
+    isLoading: isCharacterLoading,
+    setSelectedCharacter,
+  } = useContext(characterContext)
   const { query } = useRouter()
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [audioVolume, setAudioVolume] = useState(DEFAULT_BACKGROUND_VOLUME)
@@ -155,16 +160,23 @@ export default function Play() {
               alignItems: "center",
             }}
           >
-            <img
-              sx={{
-                maxWidth: "6.4rem",
-                borderRadius: ".4rem",
+            <CharacterSelect
+              name="selected_character"
+              characters={characters}
+              onChange={(e) => {
+                const character = characters.find(
+                  (char) => char.pubkey.toString() === e.value
+                )
+                setSelectedCharacter(character)
               }}
-              src={selectedCharacter.nft.json.image}
             />
-            <Heading mb=".8rem" ml=".8rem" variant="heading1">
-              {selectedCharacter.account.name.toString()}
-            </Heading>
+            {/* <Link href={`/characters/${selectedCharacter.pubkey.toString()}`}>
+              <a>
+                <Heading mb=".8rem" ml=".8rem" variant="heading1">
+                  {selectedCharacter.account.name.toString()}
+                </Heading>
+              </a>
+            </Link> */}
           </Flex>
           <Flex
             sx={{

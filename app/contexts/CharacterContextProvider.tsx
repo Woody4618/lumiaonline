@@ -87,11 +87,19 @@ export function CharacterContextProvider({ children }) {
     setCharacters(withNft)
 
     if (withNft.length) {
-      setSelectedCharacter(withNft[0])
+      /** Select the first character, or the previous selected character to update the object */
+      const selectedCharacterIndex = selectedCharacter
+        ? characters.findIndex(
+            (char) =>
+              char.pubkey.toString() === selectedCharacter.pubkey.toString()
+          )
+        : 0
+
+      setSelectedCharacter(withNft[selectedCharacterIndex])
     }
 
     setIsLoading(false)
-  }, [isWalletReady, publicKey])
+  }, [isWalletReady, publicKey, selectedCharacter])
 
   useEffect(() => {
     if (isWalletReady && publicKey) {

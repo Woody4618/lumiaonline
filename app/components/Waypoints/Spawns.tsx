@@ -158,7 +158,7 @@ export function Spawns() {
       {monsterSpawns ? (
         <Flex
           sx={{
-            gap: "1.6rem",
+            gap: "3.2rem",
           }}
         >
           {monsterSpawns.map(
@@ -177,9 +177,6 @@ export function Spawns() {
                     alignItems: "center",
                     flexDirection: "column",
                     gap: ".8rem",
-                    borderTop: "1px solid",
-                    borderBottom: "1px solid",
-                    borderColor: "primary",
                     padding: ".8rem 0",
                   }}
                   key={pubkey.toString()}
@@ -199,9 +196,9 @@ export function Spawns() {
                       alignItems: "flex-start",
                     }}
                   >
-                    <Text>Hitpoints: {monster.hitpoints.toNumber()}</Text>
+                    {/* <Text>Hitpoints: {monster.hitpoints.toNumber()}</Text>
                     <Text>meleeSkill: {monster.meleeSkill}</Text>
-                    <Text>Spawntime: {spawntime.toNumber()}</Text>
+                    <Text>Spawntime: {spawntime.toNumber()}</Text> */}
                   </Flex>
                   <form sx={{}} onSubmit={handleJoinFormSubmit}>
                     <input
