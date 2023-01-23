@@ -128,11 +128,12 @@ pub mod chainquest {
             ctx.accounts.character.experience +=
                 ctx.accounts.monster_type.experience;
 
+            let next_level = ctx.accounts.character.level + 1;
             // leveling up formula
             let exp_for_next_level =
                 // @todo using "as i64" to prevent overflow is a workaround
-                50 * (u64::pow(ctx.accounts.character.level, 2) as i64) -
-                150 * (ctx.accounts.character.level as i64) +
+                50 * (u64::pow(next_level, 2) as i64) -
+                150 * (next_level as i64) +
                 200;
 
             msg!("{}", exp_for_next_level);

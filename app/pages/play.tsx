@@ -43,6 +43,11 @@ import {
 import WayPoints from "components/Waypoints"
 import { useRouter } from "next/router"
 import { Modal } from "@/components/Modal/Modal"
+import { ProgressBar } from "@/components/ProgressBar/ProgressBar"
+import {
+  getCharacterExperienceForLevel,
+  getCharacterGainedExperience,
+} from "lib/character-utils"
 
 const DEFAULT_BACKGROUND_VOLUME = 0.4
 const DEFAULT_EFFECTS_VOLUME = 0.2
@@ -130,6 +135,16 @@ export default function Play() {
     }
 
     if (selectedCharacter) {
+      const characterTotalExperienceToNextLevel = getCharacterGainedExperience(
+        selectedCharacter.account.level.toNumber()
+      )
+
+      const characterExperienceGainedInCurrentLevel =
+        selectedCharacter.account.experience.toNumber() -
+        getCharacterExperienceForLevel(
+          selectedCharacter.account.level.toNumber()
+        )
+
       return (
         <>
           <Flex
@@ -149,7 +164,7 @@ export default function Play() {
               {selectedCharacter.account.name.toString()}
             </Heading>
           </Flex>
-          {/* <Flex
+          <Flex
             sx={{
               flexDirection: "column",
             }}
@@ -160,17 +175,6 @@ export default function Play() {
                 maxWidth: "20rem",
               }}
             >
-              <Flex
-                mb=".4rem"
-                sx={{
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "5rem",
-                }}
-              >
-                <Text>Attribute</Text>
-                <Text>Value</Text>
-              </Flex>
               <Flex
                 sx={{
                   flexDirection: "column",
@@ -193,6 +197,34 @@ export default function Play() {
                 </Flex>
                 <Flex
                   sx={{
+                    flexDirection: "column",
+                  }}
+                >
+                  <Flex
+                    sx={{
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "5rem",
+                    }}
+                  >
+                    <Text variant="small" color="lightText">
+                      Level
+                    </Text>
+                    <Text variant="small">
+                      {selectedCharacter.account.level.toString()}
+                    </Text>
+                  </Flex>
+
+                  <ProgressBar
+                    type="experience"
+                    value={characterExperienceGainedInCurrentLevel}
+                    maxvalue={characterTotalExperienceToNextLevel}
+                    level={selectedCharacter.account.level.toNumber()}
+                  />
+                </Flex>
+
+                <Flex
+                  sx={{
                     alignItems: "center",
                     justifyContent: "space-between",
                     gap: "5rem",
@@ -205,51 +237,9 @@ export default function Play() {
                     {selectedCharacter.account.hitpoints.toString()}
                   </Text>
                 </Flex>
-                <Flex
-                  sx={{
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "5rem",
-                  }}
-                >
-                  <Text variant="small" color="lightText">
-                    Deaths
-                  </Text>
-                  <Text variant="small">
-                    {selectedCharacter.account.deaths.toString()}
-                  </Text>
-                </Flex>
-                <Flex
-                  sx={{
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "5rem",
-                  }}
-                >
-                  <Text variant="small" color="lightText">
-                    Melee Skill
-                  </Text>
-                  <Text variant="small">
-                    {selectedCharacter.account.meleeSkill.toString()}
-                  </Text>
-                </Flex>
-                <Flex
-                  sx={{
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "5rem",
-                  }}
-                >
-                  <Text variant="small" color="lightText">
-                    In Quest
-                  </Text>
-                  <Text variant="small">
-                    {selectedCharacter.account.questState ? "true" : "false"}
-                  </Text>
-                </Flex>
               </Flex>
             </Flex>
-          </Flex> */}
+          </Flex>
         </>
       )
     }
@@ -290,8 +280,6 @@ export default function Play() {
         currentWaypoint?.charAt(0).toUpperCase() + currentWaypoint?.slice(1)
       ]
     : null
-
-  console.log(isModalOpen)
 
   return (
     <Flex
