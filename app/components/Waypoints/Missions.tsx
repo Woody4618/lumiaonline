@@ -296,11 +296,11 @@ export function Missions() {
                       </Text>
                       <Text>
                         Time Left:{" "}
-                        {Number(questProgress.time.toFixed(2)) < 0
+                        {Number(questProgress.time?.toFixed(2)) < 0
                           ? "done"
-                          : questProgress.time.toFixed(2)}
+                          : questProgress.time?.toFixed(2)}
                         <ProgressBar
-                          value={Number(questProgress.time.toFixed(2))}
+                          value={Number(questProgress.time?.toFixed(2))}
                           maxvalue={currentCharacterMissionData?.duration}
                           type={"mission"}
                         />
