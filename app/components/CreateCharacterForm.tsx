@@ -20,7 +20,7 @@ import { Label, Input, Button } from "@theme-ui/components"
 
 import NFTSelectInput from "@/components/NFTSelectInput/NFTSelectInput"
 import useWalletNFTs from "@/hooks/useWalletNFTs"
-import { FormEvent } from "react"
+import { FormEvent, useContext } from "react"
 import { createCharacter } from "lib/gen/instructions"
 import { PROGRAM_ID } from "lib/gen/programId"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
@@ -34,6 +34,8 @@ import { associatedAddress } from "@project-serum/anchor/dist/cjs/utils/token"
 import WalletConnectButton from "@/components/WalletConnectButton"
 import { toast } from "react-hot-toast"
 import { fromTxError } from "lib/gen/errors"
+import { characterContext } from "contexts/CharacterContextProvider"
+import { useRouter } from "next/router"
 
 const systemProgram = web3.SystemProgram.programId
 
@@ -41,6 +43,8 @@ export function CreateCharacterForm() {
   const { walletNFTs } = useWalletNFTs()
   const { publicKey, sendTransaction } = useWallet()
   const { connection } = useConnection()
+  const { fetchCharacters } = useContext(characterContext)
+  const router = useRouter()
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -87,6 +91,10 @@ export function CreateCharacterForm() {
       toast.success(`Your character was created successfully!`, {
         id: loadingToast,
       })
+
+      await fetchCharacters()
+
+      router.push("/play")
     } catch (e) {
       console.log(e)
       const errorMsg = fromTxError(e)
