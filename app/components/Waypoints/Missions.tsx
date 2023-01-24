@@ -18,7 +18,15 @@
 /** @jsxImportSource theme-ui */
 import { Heading, Text, Button, Flex } from "@theme-ui/components"
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { web3 } from "@project-serum/anchor"
 import { getCharacterAddress, getQuests } from "lib/program-utils"
@@ -31,10 +39,29 @@ import { useContext } from "react"
 import { characterContext } from "contexts/CharacterContextProvider"
 import { toast } from "react-hot-toast"
 import { fromTxError } from "lib/gen/errors"
+import { count } from "console"
+import { ProgressBar } from "../ProgressBar/ProgressBar"
 
 type MissionResponse = {
   pubkey: web3.PublicKey
   account: QuestAccount
+}
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect
+
+function useInterval(callback: () => void, delay: number) {
+  const savedCallback = useRef(callback)
+  useIsomorphicLayoutEffect(() => {
+    savedCallback.current = callback
+  }, [callback])
+  useEffect(() => {
+    if (!delay && delay !== 0) {
+      return
+    }
+    const id = setInterval(() => savedCallback.current(), delay)
+    return () => clearInterval(id)
+  }, [delay])
 }
 
 export function Missions() {
@@ -42,6 +69,10 @@ export function Missions() {
   const { publicKey, sendTransaction } = useWallet()
   const [missions, setMissions] = useState<MissionResponse[]>(null)
   const { selectedCharacter, fetchCharacters } = useContext(characterContext)
+  const [questProgress, setQuestProgress] = useState<{
+    questId: string
+    time: number
+  }>({ questId: null, time: null })
 
   const fetchMissions = useCallback(async () => {
     const missions = await getQuests(connection)
@@ -177,10 +208,26 @@ export function Missions() {
       const questData = missionsData.find(
         (questData) => questData.id === characterQuestId
       )
-
       return questData
     }
   }, [selectedCharacter])
+
+  useInterval(async () => {
+    if (missions.length > 0) {
+      const timeLeftForMission = currentCharacterMissionData
+        ? selectedCharacter?.account.questState?.startedAt.toNumber() +
+          currentCharacterMissionData?.duration -
+          new Date().getTime() / 1000
+        : null
+
+      timeLeftForMission
+        ? setQuestProgress({
+            questId: currentCharacterMissionData.id,
+            time: timeLeftForMission,
+          })
+        : null
+    }
+  }, 1000)
 
   return (
     <>
@@ -199,22 +246,12 @@ export function Missions() {
             const questData = missionsData.find(
               (questData) => questData.id === quest.account.id
             )
-
-            const characterQuestId =
-              selectedCharacter?.account.questState?.questId
-
-            const isQuestInProgress = characterQuestId === questData.id
-
-            const timeLeftForMission = isQuestInProgress
-              ? selectedCharacter?.account.questState?.startedAt.toNumber() +
-                currentCharacterMissionData?.duration -
-                new Date().getTime() / 1000
-              : null
-
+            const isQuestInProgress =
+              currentCharacterMissionData?.id === questData?.id
             return (
               <Flex
                 sx={{
-                  alignItems: "center",
+                  alignItems: "flex-start",
                   flexDirection: "column",
                   gap: ".8rem",
                   padding: ".8rem 0",
@@ -259,7 +296,14 @@ export function Missions() {
                       </Text>
                       <Text>
                         Time Left:{" "}
-                        {timeLeftForMission < 0 ? "done" : timeLeftForMission}
+                        {Number(questProgress.time.toFixed(2)) < 0
+                          ? "done"
+                          : questProgress.time.toFixed(2)}
+                        <ProgressBar
+                          value={Number(questProgress.time.toFixed(2))}
+                          maxvalue={currentCharacterMissionData?.duration}
+                          type={"mission"}
+                        />
                       </Text>
                     </>
                   ) : null}
@@ -277,7 +321,7 @@ export function Missions() {
                     name="id"
                     value={quest.account.id.toString()}
                   />
-                  <Button type="submit" mt="1.6rem">
+                  <Button type="submit">
                     {isQuestInProgress ? "Claim" : "Accept Mission"}
                   </Button>
                 </form>

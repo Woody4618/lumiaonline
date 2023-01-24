@@ -4,7 +4,7 @@ import { Flex, Text } from "theme-ui"
 export interface IAppProps {
   value: number
   maxvalue: number
-  type: "health" | "mana" | "experience"
+  type: "health" | "mana" | "experience" | "mission"
   level?: number
 }
 
@@ -22,6 +22,7 @@ export function ProgressBar(props: IAppProps) {
         : ["#5bd65b", "#00af00", "#008900"],
     mana: ["#004aa5", "#003474", "#00326f"],
     experience: ["#c00000", "#c00000", "#000"],
+    mission: ["#F7B77D", "#F7B705", "#000"],
   }
 
   const colors = colorsByType[type]
